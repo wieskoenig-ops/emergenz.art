@@ -1,1 +1,346 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergenz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.85rem,1.4vw,1.1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.4); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,0.9); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase; pointer-events: none; z-index: 20;
+    }
+
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    /* Perkolation-Notiz */
+    #perc-note {
+      position: fixed;
+      bottom: clamp(10px,2vh,24px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.6rem,0.95vw,0.82rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.45); font-style: italic;
+      line-height: 1.7; pointer-events: none; z-index: 20;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.7rem 1rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+    }
+
+    /* Navigations-Panel — sofort sichtbar */
+    #nav {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      gap: 0;
+    }
+
+    #nav-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.4rem,6vw,5rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.95);
+      text-transform: uppercase;
+      margin-bottom: clamp(2rem,5vh,4rem);
+      animation: fadein 1.2s ease forwards;
+      opacity: 0;
+    }
+
+    .nav-item {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(1.2rem,2.4vw,1.9rem);
+      letter-spacing: 0.22em;
+      color: rgba(160,210,230,0.75);
+      text-transform: lowercase;
+      text-decoration: none;
+      padding: clamp(0.5rem,1.2vh,1rem) clamp(1.5rem,3vw,3rem);
+      transition: color 0.3s ease, letter-spacing 0.4s ease;
+      opacity: 0;
+      animation: fadein 0.8s ease forwards;
+      position: relative;
+      text-shadow: 0 0 20px rgba(160,210,230,0.15);
+    }
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0.5px;
+      background: rgba(160,210,230,0.4);
+      transition: width 0.4s ease;
+    }
+    .nav-item:hover {
+      color: rgba(200,235,245,1);
+      letter-spacing: 0.28em;
+      text-shadow: 0 0 30px rgba(160,210,230,0.35);
+    }
+    .nav-item:hover::before { width: clamp(1rem,2vw,1.8rem); }
+
+    .nav-item:nth-child(1) { animation-delay: 0.2s; }
+    .nav-item:nth-child(2) { animation-delay: 0.4s; }
+    .nav-item:nth-child(3) { animation-delay: 0.6s; }
+    .nav-item:nth-child(4) { animation-delay: 0.8s; }
+    .nav-item:nth-child(5) { animation-delay: 1.0s; }
+
+    .nav-number {
+      font-size: 0.6em;
+      letter-spacing: 0.1em;
+      color: rgba(160,210,230,0.3);
+      margin-right: 0.8em;
+      vertical-align: middle;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <a id="back" href="/start/">start</a>
+  <div id="page-name">emergenz</div>
+  <div id="perc-note">Perkolation — ab einem kritischen Schwellenwert<br>entsteht plötzlich ein durchgehender Pfad.<br>Dieser Phasenübergang ist Emergenz.</div>
+
+  <canvas id="canvas"></canvas>
+
+  <div id="nav">
+    <div id="nav-title">Emergenz</div>
+    <a class="nav-item" href="/emergenz/das-phaenomen/"><span class="nav-number">01</span>das phänomen</a>
+    <a class="nav-item" href="/emergenz/fachrichtungen/"><span class="nav-number">02</span>fachrichtungen</a>
+    <a class="nav-item" href="/emergenz/scheinbare-emergenz/"><span class="nav-number">03</span>scheinbare emergenz</a>
+    <a class="nav-item" href="/emergenz/selbstbezug/"><span class="nav-number">04</span>selbstbezug · rekursion</a>
+    <a class="nav-item" href="/emergenz/stille-emergenz/"><span class="nav-number">05</span>stille emergenz · agi</a>
+  </div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H, CELL, GW, GH;
+let grid, filled, component;
+let frame = 0, phase = 'fill', fillIdx = 0;
+let percolates = false;
+
+const FILL_PROB  = 0.0015; // Felder pro Frame zufällig füllen
+const TARGET_DENSITY = 0.62; // knapp über kritischem Schwellenwert
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  CELL = 14;
+  GW = Math.floor(W / CELL);
+  GH = Math.floor(H / CELL);
+  grid      = new Uint8Array(GW * GH); // 1 = gefüllt
+  filled    = new Uint8Array(GW * GH); // für BFS
+  component = new Int32Array(GW * GH).fill(-1);
+  frame = 0; phase = 'fill'; fillIdx = 0; percolates = false;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Union-Find für verbundene Komponenten
+const parent = new Int32Array(0);
+function makeUF(n) {
+  const p = new Int32Array(n);
+  for (let i=0;i<n;i++) p[i]=i;
+  return p;
+}
+function find(p, x) {
+  while(p[x]!==x){ p[x]=p[p[x]]; x=p[x]; } return x;
+}
+function union(p, a, b) {
+  a=find(p,a); b=find(p,b); if(a!==b) p[a]=b;
+}
+
+let uf;
+
+function initUF() {
+  uf = makeUF(GW * GH + 2); // +2: virtueller Top und Bottom
+}
+initUF();
+
+const TOP    = GW * GH;
+const BOTTOM = GW * GH + 1;
+
+function openCell(x, y) {
+  if (x<0||x>=GW||y<0||y>=GH) return;
+  const i = y*GW+x;
+  if (grid[i]) return;
+  grid[i] = 1;
+  // Verbinde mit Nachbarn
+  const dirs = [[0,-1],[0,1],[-1,0],[1,0]];
+  for (const [dx,dy] of dirs) {
+    const nx=x+dx, ny=y+dy;
+    if (nx<0||nx>=GW||ny<0||ny>=GH) continue;
+    if (grid[ny*GW+nx]) union(uf, i, ny*GW+nx);
+  }
+  // Rand-Verbindungen
+  if (y===0)    union(uf, i, TOP);
+  if (y===GH-1) union(uf, i, BOTTOM);
+}
+
+function checkPercolation() {
+  return find(uf, TOP) === find(uf, BOTTOM);
+}
+
+// Zellen schrittweise öffnen
+let toOpen = [];
+function buildOpenOrder() {
+  toOpen = [];
+  for (let y=0;y<GH;y++)
+    for (let x=0;x<GW;x++)
+      toOpen.push([x,y]);
+  // Shuffle
+  for (let i=toOpen.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));
+    [toOpen[i],toOpen[j]]=[toOpen[j],toOpen[i]];
+  }
+}
+buildOpenOrder();
+
+let openedCount = 0;
+const CELLS_PER_FRAME = 1;
+
+// Farben für verbundene Komponenten
+const COMP_COLORS = [
+  [60,80,180],   // Indigo
+  [20,140,120],  // Teal
+  [180,90,20],   // Amber
+  [140,60,180],  // Violett
+  [20,120,180],  // Blau
+];
+
+function getCompColor(root) {
+  const idx = root % COMP_COLORS.length;
+  return COMP_COLORS[idx];
+}
+
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.fillRect(0,0,W,H);
+
+  // Zellen öffnen
+  if (phase === 'fill' && openedCount < toOpen.length) {
+    const target = Math.min(openedCount + CELLS_PER_FRAME, toOpen.length);
+    while (openedCount < target) {
+      const [x,y] = toOpen[openedCount++];
+      openCell(x, y);
+    }
+    // Perkolation erreicht?
+    if (!percolates && checkPercolation()) {
+      percolates = true;
+      phase = 'percolated';
+    }
+    // Maximale Dichte erreicht → kurz warten, dann neu starten
+    const density = openedCount / (GW*GH);
+    if (density >= TARGET_DENSITY && !percolates) {
+      phase = 'reset';
+    }
+  }
+
+  if (phase === 'percolated') {
+    // Kurz halten, dann langsam neu starten
+    if (frame % 500 === 499) {
+      phase = 'reset';
+    }
+  }
+
+  if (phase === 'reset' && frame % 6 === 0) {
+    // Sanft zurücksetzen
+    const allFilled = grid.reduce((s,v)=>s+v,0);
+    if (allFilled === 0) {
+      initUF();
+      buildOpenOrder();
+      openedCount = 0;
+      percolates = false;
+      phase = 'fill';
+    } else {
+      // Zellen einzeln löschen
+      for (let k=0;k<8;k++) {
+        const ri = Math.floor(Math.random()*GW*GH);
+        grid[ri] = 0;
+      }
+    }
+  }
+
+  // Zeichnen
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#000';
+  ctx.fillRect(0,0,W,H);
+
+  for (let y=0;y<GH;y++) {
+    for (let x=0;x<GW;x++) {
+      const i = y*GW+x;
+      if (!grid[i]) continue;
+
+      const root = find(uf, i);
+      const isConnectedTop    = find(uf,TOP)    === find(uf,i);
+      const isConnectedBottom = find(uf,BOTTOM) === find(uf,i);
+      const isPath = percolates && isConnectedTop && isConnectedBottom;
+
+      let r,g,b,a;
+      if (isPath) {
+        // Perkolationspfad — leuchtend cremeweiß
+        r=232; g=220; b=195; a=0.9;
+      } else if (isConnectedTop || isConnectedBottom) {
+        // Verbunden mit einem Rand — heller
+        const col = getCompColor(root % 5);
+        r=col[0]+60; g=col[1]+60; b=col[2]+60; a=0.6;
+      } else {
+        // Isolierte Insel — dezent
+        const col = getCompColor(root % 5);
+        r=col[0]; g=col[1]; b=col[2]; a=0.25;
+      }
+
+      ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+      ctx.fillRect(x*CELL+1, y*CELL+1, CELL-2, CELL-2);
+    }
+  }
+
+  // Wenn perkoliert: kurze helle Linie von oben nach unten
+  if (percolates) {
+    const pulse = 0.3 + 0.15 * Math.sin(frame * 0.05);
+    ctx.strokeStyle = `rgba(232,220,195,${pulse})`;
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash([2,4]);
+    ctx.beginPath();
+    ctx.moveTo(W/2, 0); ctx.lineTo(W/2, H);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  frame++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>
