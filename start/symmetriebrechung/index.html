@@ -1,1 +1,250 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Symmetriebrechung — Emergenz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    #back {
+      position: fixed;
+      top: clamp(8px,2vh,20px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.75rem,1.3vw,1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.5); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,0.95); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(8px,2vh,20px); right: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.55rem,1vw,0.78rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase; pointer-events: none; z-index: 20;
+    }
+
+    #chladni-note {
+      position: fixed;
+      bottom: clamp(10px,2vh,24px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.7rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.5); font-style: italic;
+      line-height: 1.7; pointer-events: none; z-index: 20;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.7rem 1rem;
+      border-left: 0.5px solid rgba(140,210,200,0.2);
+    }
+
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: flex-end;
+      padding-right: clamp(40px,8vw,120px);
+      z-index: 10; pointer-events: none;
+    }
+
+    #text-block {
+      max-width: 340px; opacity: 0;
+      animation: fadein 2.4s ease 1.5s forwards;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 2rem 2.2rem 2rem 2rem;
+      border-left: 0.5px solid rgba(140,210,200,0.15);
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .label {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.72rem); letter-spacing: 0.3em;
+      color: rgba(232,224,208,0.3); text-transform: lowercase; margin-bottom: 1.4rem;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.4rem,3vw,2.4rem); letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.9); text-transform: lowercase;
+      margin-bottom: 1.8rem; line-height: 1.3;
+    }
+    .definition {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.82); line-height: 1.9; margin-bottom: 2rem;
+    }
+    .definition em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .role {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.85rem,1.2vw,1rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.55); font-style: italic; line-height: 1.8;
+      border-left: 0.5px solid rgba(140,210,200,0.2);
+      padding-left: 1rem; margin-bottom: 2rem;
+    }
+    .thinkers {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.72rem); letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.2); text-transform: lowercase;
+    }
+  </style>
+</head>
+<body>
+
+  <a id="back" href="/start/">start</a>
+  <div id="page-name">symmetriebrechung</div>
+  <div id="chladni-note">Chladni-Figuren — Sand auf einer schwingenden Platte.<br>Die Knotenlinien der stehenden Wellen werden sichtbar.<br>Ernst Chladni, 1787. Napoleon war begeistert.</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="panel">
+    <div id="text-block">
+      <div class="label">emergenz · symmetriebrechung</div>
+      <h1>symmetrie·<br>brechung</h1>
+      <div class="definition">
+        Die Platte ist symmetrisch.<br>
+        Die Schwingung ist symmetrisch.<br>
+        <em>Das Muster bricht die Symmetrie.</em>
+      </div>
+      <div class="role">
+        Wo Energie nicht fließen kann,<br>
+        sammelt sich der Sand —<br>
+        in den Knotenlinien der stehenden Welle.<br>
+        Aus Gleichmäßigkeit emergiert Form.
+      </div>
+      <div class="thinkers">Chladni · Higgs · Prigogine</div>
+    </div>
+  </div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H, frame = 0;
+
+// Chladni-Figuren: stehende Wellen auf quadratischer Platte
+// z(x,y) = cos(m·π·x) · cos(n·π·y) — cos(n·π·x) · cos(m·π·y)
+// Knotenlinien: wo z ≈ 0
+
+const PRESETS = [
+  [2,3],[3,4],[4,5],[2,5],[3,5],[4,7],[5,6],[3,7],[6,7],[4,9]
+];
+let presetIdx = 0;
+let m = PRESETS[0][0], n = PRESETS[0][1];
+let targetM = m, targetN = n;
+
+// Für Übergang: alpha der aktuellen und nächsten Figur
+let currentAlpha = 0;   // blendet ein
+let transTimer   = 0;
+const HOLD_TIME  = 380;
+const FADE_TIME  = 120;
+let phase = 'fadein'; // fadein | hold | fadeout
+
+// Offscreen-Canvas für Chladni-Muster
+let offscreen, offCtx;
+let needsRedraw = true;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  offscreen = document.createElement('canvas');
+  offscreen.width  = W;
+  offscreen.height = H;
+  offCtx = offscreen.getContext('2d');
+  needsRedraw = true;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function drawChladni(cm, cn, alpha) {
+  const SIZE  = Math.min(W, H) * 0.82;
+  const ox    = (W - SIZE) / 2;
+  const oy    = (H - SIZE) / 2;
+  const RES   = 2; // pixel pro Zelle
+  const COLS  = Math.floor(SIZE / RES);
+
+  const img = offCtx.createImageData(COLS, COLS);
+  const d   = img.data;
+
+  for (let row = 0; row < COLS; row++) {
+    for (let col = 0; col < COLS; col++) {
+      const x = col / COLS;  // 0..1
+      const y = row / COLS;  // 0..1
+
+      // Chladni-Formel
+      const z = Math.cos(cm * Math.PI * x) * Math.cos(cn * Math.PI * y)
+              - Math.cos(cn * Math.PI * x) * Math.cos(cm * Math.PI * y);
+
+      // Knotenlinien: wo |z| klein ist
+      const node = Math.max(0, 1 - Math.abs(z) * 6);
+      const node2 = node * node; // schärfer
+
+      // Farbe: Cyan-Türkis (Symmetriebrechung-Farbe)
+      const i = (row * COLS + col) * 4;
+      d[i]   = Math.floor(node2 * 140);   // R
+      d[i+1] = Math.floor(node2 * 210);   // G
+      d[i+2] = Math.floor(node2 * 200);   // B
+      d[i+3] = Math.floor(node2 * 255);   // A
+    }
+  }
+
+  offCtx.putImageData(img, 0, 0);
+
+  // Auf Hauptcanvas skaliert zeichnen
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(offscreen, 0, 0, COLS, COLS, ox, oy, SIZE, SIZE);
+
+  // Sehr dezente quadratische Umrandung
+  ctx.strokeStyle = `rgba(140,210,200,${alpha * 0.15})`;
+  ctx.lineWidth   = 0.5;
+  ctx.strokeRect(ox, oy, SIZE, SIZE);
+  ctx.restore();
+}
+
+function draw() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  if (phase === 'fadein') {
+    currentAlpha = Math.min(1, transTimer / FADE_TIME);
+    drawChladni(m, n, currentAlpha);
+    transTimer++;
+    if (transTimer >= FADE_TIME) { phase = 'hold'; transTimer = 0; }
+
+  } else if (phase === 'hold') {
+    drawChladni(m, n, 1);
+    transTimer++;
+    if (transTimer >= HOLD_TIME) { phase = 'fadeout'; transTimer = 0; }
+
+  } else if (phase === 'fadeout') {
+    currentAlpha = Math.max(0, 1 - transTimer / FADE_TIME);
+    drawChladni(m, n, currentAlpha);
+    transTimer++;
+    if (transTimer >= FADE_TIME) {
+      // Nächstes Preset
+      presetIdx = (presetIdx + 1) % PRESETS.length;
+      m = PRESETS[presetIdx][0];
+      n = PRESETS[presetIdx][1];
+      phase = 'fadein'; transTimer = 0;
+    }
+  }
+
+  frame++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>
