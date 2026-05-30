@@ -1,1 +1,249 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selbstorganisation — Emergenz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    #back {
+      position: fixed;
+      top: clamp(8px,2vh,20px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.75rem,1.3vw,1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.5); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,0.95); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(8px,2vh,20px); right: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.55rem,1vw,0.78rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase; pointer-events: none; z-index: 20;
+    }
+
+    #gol-note {
+      position: fixed;
+      bottom: clamp(10px,2vh,24px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.7rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.5); font-style: italic;
+      line-height: 1.7; pointer-events: none; z-index: 20;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.7rem 1rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+    }
+
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: flex-end;
+      padding-right: clamp(40px,8vw,120px);
+      z-index: 10; pointer-events: none;
+    }
+
+    #text-block {
+      max-width: 340px; opacity: 0;
+      animation: fadein 2.4s ease 1.5s forwards;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 2rem 2.2rem 2rem 2rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .label {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.72rem); letter-spacing: 0.3em;
+      color: rgba(232,224,208,0.3); text-transform: lowercase; margin-bottom: 1.4rem;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.4rem,3vw,2.4rem); letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.9); text-transform: lowercase;
+      margin-bottom: 1.8rem; line-height: 1.3;
+    }
+    .definition {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.82); line-height: 1.9; margin-bottom: 2rem;
+    }
+    .definition em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .role {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.85rem,1.2vw,1rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.55); font-style: italic; line-height: 1.8;
+      border-left: 0.5px solid rgba(232,224,208,0.2);
+      padding-left: 1rem; margin-bottom: 2rem;
+    }
+    .thinkers {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.72rem); letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.2); text-transform: lowercase;
+    }
+  </style>
+</head>
+<body>
+
+  <a id="back" href="/start/">start</a>
+  <div id="page-name">selbstorganisation</div>
+  <div id="gol-note">Conway's Game of Life — drei Regeln, keine Absicht.<br>Gleiter, Oszillatoren, stabile Strukturen emergieren.<br>John Conway, 1970.</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="panel">
+    <div id="text-block">
+      <div class="label">emergenz · selbstorganisation</div>
+      <h1>selbst·<br>organisation</h1>
+      <div class="definition">
+        Kein Dirigent.<br>
+        Kein Plan.<br>
+        <em>Ordnung aus lokalen Regeln.</em>
+      </div>
+      <div class="role">
+        Lebende Zelle: überlebe mit 2–3 Nachbarn.<br>
+        Tote Zelle: erwache mit genau 3 Nachbarn.<br>
+        Sonst: stirb oder bleib tot.<br>
+        Aus diesen drei Regeln emergiert alles.
+      </div>
+      <div class="thinkers">Conway · Turing · Wolfram</div>
+    </div>
+  </div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H, CELL, GW, GH;
+let grid, next, age;
+let frame = 0;
+const SPEED = 14; // frames zwischen Generationen — langsamer
+
+// Bekannte stabile Muster als Seeds einstreuen
+const GLIDER    = [[0,1],[1,2],[2,0],[2,1],[2,2]];
+const LWSS      = [[0,1],[0,3],[1,0],[2,0],[3,0],[3,3],[4,0],[4,1],[4,2]]; // leichtes Raumschiff
+const BLINKER   = [[0,0],[0,1],[0,2]];
+const PULSAR_SEED = [[0,0],[0,1],[0,2],[1,0],[2,0]]; // wächst zu Pulsar
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  CELL = 7;
+  GW = Math.floor(W / CELL);
+  GH = Math.floor(H / CELL);
+  age = new Float32Array(GW * GH);
+  initGrid();
+}
+
+function initGrid() {
+  grid = new Uint8Array(GW * GH);
+  next = new Uint8Array(GW * GH);
+
+  // Zufälliger Startuntergrund — nicht zu dicht
+  for (let i = 0; i < GW * GH; i++) {
+    grid[i] = Math.random() < 0.22 ? 1 : 0;
+    age[i]  = grid[i] ? 1 : 0;  // sofort sichtbar
+  }
+
+  // Bekannte Muster einpflanzen — sie werden aus dem Rauschen emergieren
+  const patterns = [
+    { pat: GLIDER, x: Math.floor(GW*0.2), y: Math.floor(GH*0.2) },
+    { pat: GLIDER, x: Math.floor(GW*0.4), y: Math.floor(GH*0.7) },
+    { pat: GLIDER, x: Math.floor(GW*0.6), y: Math.floor(GH*0.3) },
+    { pat: BLINKER, x: Math.floor(GW*0.3), y: Math.floor(GH*0.5) },
+    { pat: BLINKER, x: Math.floor(GW*0.7), y: Math.floor(GH*0.6) },
+  ];
+  patterns.forEach(({pat, x, y}) => {
+    pat.forEach(([dy, dx]) => {
+      const gx = (x+dx+GW)%GW, gy = (y+dy+GH)%GH;
+      grid[gy*GW+gx] = 1;
+    });
+  });
+}
+
+function countNeighbors(x, y) {
+  let n = 0;
+  for (let dy = -1; dy <= 1; dy++)
+    for (let dx = -1; dx <= 1; dx++) {
+      if (dx===0 && dy===0) continue;
+      const nx = (x+dx+GW)%GW, ny = (y+dy+GH)%GH;
+      n += grid[ny*GW+nx];
+    }
+  return n;
+}
+
+function step() {
+  for (let y = 0; y < GH; y++) {
+    for (let x = 0; x < GW; x++) {
+      const alive = grid[y*GW+x];
+      const n     = countNeighbors(x, y);
+      if (alive) {
+        next[y*GW+x] = (n===2 || n===3) ? 1 : 0;
+      } else {
+        next[y*GW+x] = (n===3) ? 1 : 0;
+      }
+    }
+  }
+  [grid, next] = [next, grid];
+}
+
+// Altersgitter wird in resize() initialisiert
+
+function draw() {
+  // Schritt alle SPEED frames
+  if (frame % SPEED === 0) {
+    for (let i = 0; i < GW*GH; i++) {
+      if (grid[i]) age[i] = Math.min(1, age[i] + 0.12);
+      else         age[i] = Math.max(0, age[i] - 0.2);
+    }
+    step();
+    if (frame > 0 && frame % (SPEED * 900) === 0) {
+      initGrid(); age.fill(0);
+    }
+  }
+
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  for (let y = 0; y < GH; y++) {
+    for (let x = 0; x < GW; x++) {
+      const alive = grid[y*GW+x];
+      const a     = age[y*GW+x];
+      if (!alive && a < 0.01) continue;
+
+      const t = alive ? Math.max(a, 0.85) : a; // junge Zellen sofort hell
+      const r = Math.floor(220 * t);
+      const g = Math.floor(180 * t * (1 - t*0.4));
+      const b = Math.floor(80  + 175 * t * t);
+
+      ctx.globalAlpha = Math.max(t, alive ? 0.85 : 0) * 0.95;
+      ctx.fillStyle   = `rgb(${r},${g},${b})`;
+      ctx.fillRect(x*CELL+1, y*CELL+1, CELL-2, CELL-2);
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  frame++;
+  requestAnimationFrame(draw);
+}
+
+resize();
+window.addEventListener('resize', () => { resize(); age.fill(0); });
+draw();
+</script>
+</body>
+</html>
