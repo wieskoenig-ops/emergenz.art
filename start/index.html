@@ -6,17 +6,11 @@
   <title>Start — Emergenz</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      width: 100%; height: 100%;
-      background: #000;
-      overflow: hidden;
-      font-family: 'Cormorant Garamond', serif;
-    }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
-    /* Zurück-Link */
     #back {
       position: fixed;
       top: clamp(8px, 2vh, 20px);
@@ -25,81 +19,312 @@
       font-weight: 300;
       font-size: clamp(0.55rem, 1vw, 0.78rem);
       letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.2);
+      color: rgba(232,224,208,0.15);
       text-transform: lowercase;
       text-decoration: none;
       transition: color 0.4s ease;
-      z-index: 10;
-      cursor: pointer;
+      z-index: 20;
     }
-    #back:hover { color: rgba(232,224,208,0.7); }
-    #back::before {
-      content: '← ';
-      letter-spacing: 0;
+    #back:hover { color: rgba(232,224,208,0.6); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
     }
 
-    /* Seitenname oben rechts */
-    #page-name {
+    /* Satellite HTML-Labels — nur Text, Kreis wird auf Canvas gezeichnet */
+    .sat-label {
       position: fixed;
-      top: clamp(8px, 2vh, 20px);
-      right: clamp(12px, 2.5vw, 32px);
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: clamp(0.55rem, 1vw, 0.78rem);
-      letter-spacing: 0.28em;
-      color: #7a3a20;
-      text-transform: lowercase;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    /* Inhalt zentriert */
-    #content {
-      position: fixed;
-      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
-      gap: 2rem;
-      animation: fadein 1.8s ease forwards;
-      opacity: 0;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    h1 {
-      font-weight: 300;
-      font-size: clamp(1.8rem, 5vw, 4rem);
-      letter-spacing: 0.3em;
-      color: #e8e0d0;
-      text-transform: uppercase;
-    }
-
-    p {
-      font-weight: 300;
-      font-size: clamp(0.85rem, 1.4vw, 1.1rem);
-      letter-spacing: 0.08em;
-      color: rgba(232,224,208,0.4);
-      font-style: italic;
-      max-width: 480px;
       text-align: center;
-      line-height: 1.8;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 10;
+      transform: translate(-50%, -50%);
+    }
+    .sat-label span {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.75);
+      text-transform: lowercase;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
-
   <a id="back" href="/">emergenz</a>
-  <div id="page-name">start</div>
+  <canvas id="canvas"></canvas>
 
-  <div id="content">
-    <h1>Start</h1>
-    <p>Diese Seite wartet noch auf ihren Inhalt.</p>
-  </div>
+  <div class="sat-label" id="lbl-komplexitaet"><span>Komplexität</span></div>
+  <div class="sat-label" id="lbl-dissipation"><span>Dissipation</span></div>
+  <div class="sat-label" id="lbl-kausal"><span>not·<br>wendigkeit</span></div>
 
+<script>
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+// ── Geometrie ─────────────────────────────────────
+// Drei gleich große Kreise, die sich in der Mitte überlappen
+// Kreiszentren auf einem Dreieck, Mittelpunkt = Bildmitte
+// Überlappung so, dass alle drei sich in der Mitte treffen
+
+let CX, CY, R, ORBIT;  // R = Kreisradius, ORBIT = Abstand Kreiszentrum von Mitte
+
+function calcGeometry() {
+  CX = W / 2;
+  CY = H / 2;
+  R  = Math.min(W, H) * 0.30;      // Kreisradius
+  ORBIT = R * 0.62;                 // Abstand der Kreiszentren vom Bildmittelpunkt
+}
+
+// Winkel der drei Satelliten: oben, unten-links, unten-rechts
+const ANGLES = [-Math.PI/2, -Math.PI/2 + 2*Math.PI/3, -Math.PI/2 + 4*Math.PI/3];
+
+function satCenter(i) {
+  return {
+    x: CX + Math.cos(ANGLES[i]) * ORBIT,
+    y: CY + Math.sin(ANGLES[i]) * ORBIT
+  };
+}
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  calcGeometry();
+  positionLabels();
+}
+
+function positionLabels() {
+  const ids = ['lbl-komplexitaet','lbl-dissipation','lbl-kausal'];
+  const LABEL_FONT_SIZE = Math.min(W, H) * 0.038;
+  ids.forEach((id, i) => {
+    const el = document.getElementById(id);
+    const c  = satCenter(i);
+    // Label sitzt im äußeren Drittel des Kreises, weg vom Zentrum
+    const lx = CX + Math.cos(ANGLES[i]) * ORBIT * 1.85;
+    const ly = CY + Math.sin(ANGLES[i]) * ORBIT * 1.85;
+    el.style.left     = lx + 'px';
+    el.style.top      = ly + 'px';
+    el.style.width    = (R * 0.9) + 'px';
+    el.querySelector('span').style.fontSize = LABEL_FONT_SIZE + 'px';
+  });
+}
+
+resize();
+window.addEventListener('resize', resize);
+
+// ── Boids ─────────────────────────────────────────
+const NUM_BOIDS    = 360;
+const FLOCK_FRAMES = 180;
+const FORM_FRAMES  = 260;
+const HOLD_FRAMES  = 100;
+
+let boids = [], phase = 'flock', phaseTimer = 0;
+let satAlpha = 0, emergenzAlpha = 0;
+let satPhaseTimer = 0;
+
+function sampleWordPoints(text, count) {
+  const off = document.createElement('canvas');
+  // Schriftgröße: gleich groß wie Satelliten-Labels
+  const fontSize = Math.min(W, H) * 0.028 * 2.2; // etwas größer für gut sichtbaren Schwarm
+  off.width = W; off.height = H;
+  const c = off.getContext('2d');
+  c.fillStyle = '#fff';
+  c.font = `300 ${fontSize}px 'Cormorant Garamond', serif`;
+  c.textBaseline = 'middle';
+  c.textAlign    = 'center';
+  c.fillText(text, W/2, H/2);
+  const data = c.getImageData(0, 0, W, H).data;
+  const pts  = [];
+  for (let y = 0; y < H; y += 3)
+    for (let x = 0; x < W; x += 3)
+      if (data[(y*W+x)*4+3] > 128) pts.push([x, y]);
+  for (let i = pts.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [pts[i],pts[j]] = [pts[j],pts[i]];
+  }
+  return pts.slice(0, count);
+}
+
+function makeBoid() {
+  const edge = Math.floor(Math.random()*4);
+  let x, y;
+  if      (edge===0){x=Math.random()*W;y=-10;}
+  else if (edge===1){x=Math.random()*W;y=H+10;}
+  else if (edge===2){x=-10;y=Math.random()*H;}
+  else              {x=W+10;y=Math.random()*H;}
+  const a=Math.random()*Math.PI*2, s=1.5+Math.random()*2;
+  return {x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,tx:0,ty:0};
+}
+
+boids = Array.from({length:NUM_BOIDS}, makeBoid);
+// Ziele vorberechnen
+let wordTargets = [];
+// Warten bis Schrift geladen — dann samplen
+document.fonts.ready.then(() => {
+  wordTargets = sampleWordPoints('EMERGENZ', NUM_BOIDS);
+  boids.forEach((b,i) => {
+    b.tx = wordTargets[i] ? wordTargets[i][0] : W/2;
+    b.ty = wordTargets[i] ? wordTargets[i][1] : H/2;
+  });
+});
+
+const VR=70,AD=22,MAXS=3.2,MINS=1.0;
+function stepFlock() {
+  for (const b of boids) {
+    let avgVx=0,avgVy=0,avgX=0,avgY=0,sepX=0,sepY=0,n=0;
+    for (const o of boids) {
+      if(o===b)continue;
+      const dx=o.x-b.x,dy=o.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<VR){avgVx+=o.vx;avgVy+=o.vy;avgX+=o.x;avgY+=o.y;n++;
+        if(d<AD){sepX-=dx/(d+0.1);sepY-=dy/(d+0.1);}}
+    }
+    if(n>0){b.vx+=(avgVx/n-b.vx)*0.04;b.vy+=(avgVy/n-b.vy)*0.04;
+      b.vx+=(avgX/n-b.x)*0.003;b.vy+=(avgY/n-b.y)*0.003;}
+    b.vx+=sepX*0.06;b.vy+=sepY*0.06;
+    const m=80;
+    if(b.x<m)b.vx+=0.4;if(b.x>W-m)b.vx-=0.4;
+    if(b.y<m)b.vy+=0.4;if(b.y>H-m)b.vy-=0.4;
+    const spd=Math.sqrt(b.vx*b.vx+b.vy*b.vy)||0.001;
+    if(spd>MAXS){b.vx=b.vx/spd*MAXS;b.vy=b.vy/spd*MAXS;}
+    if(spd<MINS){b.vx=b.vx/spd*MINS;b.vy=b.vy/spd*MINS;}
+    b.x+=b.vx;b.y+=b.vy;
+  }
+}
+
+function stepForm(t) {
+  const ease=t<1?t*t*(3-2*t):1;
+  for (const b of boids) {
+    const dx=b.tx-b.x,dy=b.ty-b.y;
+    b.vx+=dx*0.05*ease;b.vy+=dy*0.05*ease;
+    const spd=Math.sqrt(b.vx*b.vx+b.vy*b.vy)||0.001;
+    const maxS=4+ease*7;
+    if(spd>maxS){b.vx=b.vx/spd*maxS;b.vy=b.vy/spd*maxS;}
+    b.vx*=0.87;b.vy*=0.87;b.x+=b.vx;b.y+=b.vy;
+  }
+}
+
+// ── Satelliten einblenden ─────────────────────────
+function showSatellites() {
+  const labels = document.querySelectorAll('.sat-label');
+  const delays = [0, 500, 1000];
+  labels.forEach((el, i) => {
+    setTimeout(() => {
+      el.style.transition = 'opacity 1.6s ease';
+      el.style.opacity    = '1';
+      el.style.pointerEvents = 'auto';
+    }, delays[i]);
+  });
+}
+
+// ── Canvas-Kreise zeichnen ────────────────────────
+function drawCircles(alpha) {
+  for (let i = 0; i < 3; i++) {
+    const c = satCenter(i);
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, R, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(232,224,208,${alpha * 0.3})`;
+    ctx.lineWidth   = 0.6;
+    ctx.stroke();
+  }
+}
+
+// ── EMERGENZ im Zentrum ───────────────────────────
+function drawEmergenz(alpha) {
+  if (alpha <= 0) return;
+  const fontSize = Math.min(W, H) * 0.034;
+  const lineH    = fontSize * 1.15;
+  ctx.save();
+  ctx.globalAlpha  = alpha;
+  ctx.fillStyle    = '#e8e0d0';
+  ctx.font         = `300 ${fontSize}px 'Cormorant Garamond', serif`;
+  ctx.textBaseline = 'middle';
+  ctx.textAlign    = 'center';
+  ctx.letterSpacing = '0.18em';
+  ctx.fillText('EMER', CX, CY - lineH * 0.5);
+  ctx.fillText('GENZ', CX, CY + lineH * 0.5);
+  ctx.restore();
+}
+
+// ── Hauptschleife ─────────────────────────────────
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.20)';
+  ctx.fillRect(0, 0, W, H);
+
+  const t = phaseTimer;
+
+  if (phase === 'flock') {
+    stepFlock();
+    if (t > FLOCK_FRAMES) { phase='form'; phaseTimer=0; }
+
+  } else if (phase === 'form') {
+    stepForm(t/FORM_FRAMES);
+    if (t > FORM_FRAMES) { phase='hold'; phaseTimer=0; }
+
+  } else if (phase === 'hold') {
+    stepForm(1);
+    if (t > HOLD_FRAMES) { phase='disperse'; phaseTimer=0; }
+
+  } else if (phase === 'disperse') {
+    // Vögel fliegen auseinander
+    for (const b of boids) {
+      const dx=b.x-W/2,dy=b.y-H/2,d=Math.sqrt(dx*dx+dy*dy)||1;
+      b.vx+=dx/d*0.35; b.vy+=dy/d*0.35;
+      const spd=Math.sqrt(b.vx*b.vx+b.vy*b.vy)||0.001;
+      if(spd>7){b.vx=b.vx/spd*7;b.vy=b.vy/spd*7;}
+      b.x+=b.vx; b.y+=b.vy;
+    }
+    emergenzAlpha = Math.min(1, t/80);
+    satAlpha      = Math.max(0, (t-60)/100);
+    if (t > 200) {
+      phase='satellites'; phaseTimer=0;
+      showSatellites();
+    }
+
+  } else if (phase === 'satellites') {
+    satAlpha = Math.min(1, satAlpha + 0.008);
+    emergenzAlpha = 1;
+  }
+
+  // Boids zeichnen (nur bis disperse fertig)
+  if (phase !== 'satellites') {
+    const fadeOut = phase==='disperse' ? Math.max(0, 1-t/140) : 1;
+    if (fadeOut > 0) {
+      for (const b of boids) {
+        if (phase==='form'||phase==='hold') {
+          const glow=phase==='hold'?1:t/FORM_FRAMES;
+          ctx.shadowColor=`rgba(232,224,208,${0.4*glow})`;
+          ctx.shadowBlur=3*glow;
+          ctx.fillStyle=`rgba(232,224,208,${(0.5+0.5*glow)*fadeOut})`;
+          ctx.beginPath(); ctx.arc(b.x,b.y,1.6,0,Math.PI*2); ctx.fill();
+          ctx.shadowBlur=0;
+        } else {
+          const angle=Math.atan2(b.vy,b.vx);
+          ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(angle);
+          ctx.fillStyle=`rgba(232,224,208,${0.85*fadeOut})`;
+          ctx.beginPath(); ctx.moveTo(3.5,0); ctx.lineTo(-2.5,-1.8);
+          ctx.lineTo(-1.2,0); ctx.lineTo(-2.5,1.8); ctx.closePath(); ctx.fill();
+          ctx.restore();
+        }
+      }
+    }
+  }
+
+  // Kreise + EMERGENZ
+  if (satAlpha > 0)      drawCircles(satAlpha);
+  if (emergenzAlpha > 0) drawEmergenz(emergenzAlpha);
+
+  phaseTimer++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
 </body>
 </html>
