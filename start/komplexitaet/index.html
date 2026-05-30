@@ -14,12 +14,12 @@
     #back {
       position: fixed;
       top: clamp(8px,2vh,20px); left: clamp(12px,2.5vw,32px);
-      font-family: 'Cormorant Garamond', serif; font-weight: 300;
-      font-size: clamp(0.55rem,1vw,0.78rem); letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.15); text-transform: lowercase;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.75rem,1.3vw,1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.5); text-transform: lowercase;
       text-decoration: none; transition: color 0.4s ease; z-index: 20;
     }
-    #back:hover { color: rgba(232,224,208,0.6); }
+    #back:hover { color: rgba(232,224,208,0.95); }
     #back::before { content: '← '; letter-spacing: 0; }
 
     #page-name {
@@ -30,7 +30,19 @@
       color: #7a3a20; text-transform: lowercase; pointer-events: none; z-index: 20;
     }
 
-    /* Reaction-Diffusion canvas — Hintergrund */
+    #turing-note {
+      position: fixed;
+      bottom: clamp(10px,2vh,24px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.7rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.5); font-style: italic;
+      line-height: 1.7; pointer-events: none; z-index: 20;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.7rem 1rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+    }
     #rd-canvas {
       position: fixed; inset: 0;
       width: 100%; height: 100%;
@@ -132,6 +144,7 @@
 
   <a id="back" href="/start/">start</a>
   <div id="page-name">komplexität</div>
+  <div id="turing-note">Reaction-Diffusion — zwei Substanzen,<br>lokale Regeln, globales Muster.<br>Alan Turing, 1952.</div>
   <canvas id="rd-canvas"></canvas>
 
   <div id="panel">
@@ -170,7 +183,7 @@ function runCanvasFallback() {
   document.body.insertBefore(c, document.getElementById('panel'));
   canvas.remove();
 
-  const SCALE = 2;
+  const SCALE = 4;
   let W, H;
   function resize() {
     W = Math.floor(window.innerWidth  / SCALE);
@@ -242,7 +255,7 @@ function runCanvasFallback() {
 
   let frame = 0;
   function loop() {
-    for (let i = 0; i < 2; i++) step();
+    for (let i = 0; i < 1; i++) step();
     render();
     frame++;
     // alle 300 frames kleinen neuen Seed setzen damit es nie stirbt
