@@ -3,49 +3,235 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dissipation — Emergenz</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+
     #back {
-      position: fixed; top: clamp(8px,2vh,20px); left: clamp(12px,2.5vw,32px);
-      font-family: "Cormorant Garamond", serif; font-weight: 300;
-      font-size: clamp(0.55rem,1vw,0.78rem); letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.15); text-transform: lowercase;
+      position: fixed;
+      top: clamp(8px,2vh,20px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.75rem,1.3vw,1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.5); text-transform: lowercase;
       text-decoration: none; transition: color 0.4s ease; z-index: 20;
     }
-    #back:hover { color: rgba(232,224,208,0.6); }
-    #back::before { content: "← "; letter-spacing: 0; }
+    #back:hover { color: rgba(232,224,208,0.95); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
     #page-name {
-      position: fixed; top: clamp(8px,2vh,20px); right: clamp(12px,2.5vw,32px);
-      font-family: "Cormorant Garamond", serif; font-weight: 300;
+      position: fixed;
+      top: clamp(8px,2vh,20px); right: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
       font-size: clamp(0.55rem,1vw,0.78rem); letter-spacing: 0.28em;
       color: #7a3a20; text-transform: lowercase; pointer-events: none; z-index: 20;
     }
-    #content {
-      position: fixed; inset: 0; display: flex; align-items: center;
-      justify-content: center; flex-direction: column; gap: 2rem;
-      animation: fadein 1.8s ease forwards; opacity: 0;
+
+    #benard-note {
+      position: fixed;
+      bottom: clamp(10px,2vh,24px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.7rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.5); font-style: italic;
+      line-height: 1.7; pointer-events: none; z-index: 20;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.7rem 1rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
     }
+
+    #canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+    }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: flex-end;
+      padding-right: clamp(40px,8vw,120px);
+      z-index: 10; pointer-events: none;
+    }
+
+    #text-block {
+      max-width: 340px; opacity: 0;
+      animation: fadein 2.4s ease 1.5s forwards;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 2rem 2.2rem 2rem 2rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+    }
+
     @keyframes fadein {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    h1 { font-weight: 300; font-size: clamp(1.8rem,5vw,4rem);
-      letter-spacing: 0.3em; color: #e8e0d0; text-transform: lowercase; }
-    p { font-weight: 300; font-size: clamp(0.85rem,1.4vw,1.1rem);
-      letter-spacing: 0.08em; color: rgba(232,224,208,0.3); font-style: italic;
-      max-width: 480px; text-align: center; line-height: 1.8; }
+
+    .label {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.72rem); letter-spacing: 0.3em;
+      color: rgba(232,224,208,0.3); text-transform: lowercase; margin-bottom: 1.4rem;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.4rem,3vw,2.4rem); letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.9); text-transform: lowercase;
+      margin-bottom: 1.8rem; line-height: 1.3;
+    }
+    .definition {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.82); line-height: 1.9; margin-bottom: 2rem;
+    }
+    .definition em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .role {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.85rem,1.2vw,1rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.55); font-style: italic; line-height: 1.8;
+      border-left: 0.5px solid rgba(232,224,208,0.2);
+      padding-left: 1rem; margin-bottom: 2rem;
+    }
+    .thinkers {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.72rem); letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.2); text-transform: lowercase;
+    }
   </style>
 </head>
 <body>
+
   <a id="back" href="/start/">start</a>
   <div id="page-name">dissipation</div>
-  <div id="content">
-    <h1>dissipation</h1>
-    <p>Diese Seite wartet noch auf ihren Inhalt.</p>
+  <div id="benard-note">Flamme — Energie fließt hindurch,<br>Struktur entsteht und vergeht.<br>Dissipative Struktur par excellence.</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="panel">
+    <div id="text-block">
+      <div class="label">emergenz · dissipation</div>
+      <h1>dissi·<br>pation</h1>
+      <div class="definition">
+        Wo fließt Energie hindurch<br>
+        und erzeugt dabei <em>Struktur?</em>
+      </div>
+      <div class="role">
+        Dissipation stellt sicher, dass<br>
+        Energie das System durchströmt —<br>
+        Ordnung entsteht fern vom Gleichgewicht.
+      </div>
+      <div class="thinkers">Prigogine · Haken · Schrödinger</div>
+    </div>
   </div>
+
+<script>
+// ── Flammen-Simulation ────────────────────────────
+// Klassischer Fire-Algorithmus: von unten nach oben,
+// jede Zeile mittelt Nachbarn der Zeile darunter
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+
+let W, H, SCALE, GW, GH, fire, frame = 0;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  SCALE = 4;
+  GW = Math.floor(W / SCALE);
+  GH = Math.floor(H / SCALE);
+  fire = new Float32Array(GW * GH);
+  // unterste Zeile: Glut
+  for (let x = 0; x < GW; x++) {
+    fire[(GH-1)*GW + x] = 0.8 + Math.random() * 0.2;
+  }
+}
+
+function step() {
+  // unterste Zeile flackern
+  for (let x = 0; x < GW; x++) {
+    fire[(GH-1)*GW + x] = Math.random() > 0.05
+      ? 0.75 + Math.random() * 0.25
+      : 0.3 + Math.random() * 0.3;
+  }
+
+  // von unten nach oben propagieren
+  for (let y = 0; y < GH - 1; y++) {
+    for (let x = 0; x < GW; x++) {
+      const below  = fire[(y+1)*GW + x];
+      const bleft  = fire[(y+1)*GW + Math.max(0, x-1)];
+      const bright = fire[(y+1)*GW + Math.min(GW-1, x+1)];
+      const bbelow = fire[Math.min(GH-1, y+2)*GW + x];
+
+      // Mittelwert + leichter Aufstieg (Wind nach links/rechts)
+      const wind = Math.sin(frame * 0.008 + y * 0.05) * 0.3;
+      const avg  = (below + bleft + bright + bbelow) / 4.0;
+      const cool = 0.012 + Math.random() * 0.008; // Abkühlung nach oben
+
+      fire[y*GW + x] = Math.max(0, avg - cool + wind * 0.01);
+    }
+  }
+}
+
+function render() {
+  const img = ctx.createImageData(GW, GH);
+  const d   = img.data;
+
+  for (let i = 0; i < GW * GH; i++) {
+    const v = fire[i];
+    // Palette: schwarz → dunkelrot → orange → amber → cremeweiß
+    let r, g, b;
+    if (v < 0.25) {
+      // schwarz → dunkelrot
+      const t = v / 0.25;
+      r = Math.floor(t * 120);
+      g = Math.floor(t * 8);
+      b = Math.floor(t * 4);
+    } else if (v < 0.5) {
+      // dunkelrot → orange
+      const t = (v - 0.25) / 0.25;
+      r = Math.floor(120 + t * 115);
+      g = Math.floor(8   + t * 72);
+      b = Math.floor(4);
+    } else if (v < 0.75) {
+      // orange → amber
+      const t = (v - 0.5) / 0.25;
+      r = Math.floor(235 + t * 10);
+      g = Math.floor(80  + t * 80);
+      b = Math.floor(4   + t * 16);
+    } else {
+      // amber → cremeweiß
+      const t = (v - 0.75) / 0.25;
+      r = Math.floor(245 + t * 10);
+      g = Math.floor(160 + t * 68);
+      b = Math.floor(20  + t * 100);
+    }
+    d[i*4]   = Math.min(255, r);
+    d[i*4+1] = Math.min(255, g);
+    d[i*4+2] = Math.min(255, b);
+    d[i*4+3] = 255;
+  }
+
+  const offscreen = document.createElement('canvas');
+  offscreen.width = GW; offscreen.height = GH;
+  offscreen.getContext('2d').putImageData(img, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(offscreen, 0, 0, W, H);
+}
+
+function loop() {
+  step();
+  render();
+  frame++;
+  requestAnimationFrame(loop);
+}
+
+resize();
+window.addEventListener('resize', resize);
+loop();
+</script>
 </body>
 </html>
