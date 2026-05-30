@@ -45,6 +45,8 @@
       opacity: 0;
       z-index: 10;
       transform: translate(-50%, -50%);
+      text-decoration: none;
+      cursor: pointer;
     }
     .sat-label span {
       font-family: 'Cormorant Garamond', serif;
@@ -53,16 +55,18 @@
       color: rgba(232,224,208,0.75);
       text-transform: lowercase;
       line-height: 1.5;
+      transition: color 0.3s ease;
     }
+    .sat-label:hover span { color: rgba(232,224,208,1); }
   </style>
 </head>
 <body>
   <a id="back" href="/">emergenz</a>
   <canvas id="canvas"></canvas>
 
-  <div class="sat-label" id="lbl-komplexitaet"><span>Komplexität</span></div>
-  <div class="sat-label" id="lbl-dissipation"><span>Dissipation</span></div>
-  <div class="sat-label" id="lbl-kausal"><span>not·<br>wendigkeit</span></div>
+  <a class="sat-label" id="lbl-komplexitaet" href="/start/komplexitaet/"><span>Komplexität</span></a>
+  <a class="sat-label" id="lbl-dissipation" href="/start/dissipation/"><span>Dissipation</span></a>
+  <a class="sat-label" id="lbl-kausal" href="/start/notwendigkeit/"><span>not·<br>wendigkeit</span></a>
 
 <script>
 const canvas = document.getElementById('canvas');
