@@ -1,1 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deterministisches Chaos — Emergenz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    #back {
+      position: fixed;
+      top: clamp(8px,2vh,20px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.75rem,1.3vw,1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.5); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,0.95); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(8px,2vh,20px); right: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.55rem,1vw,0.78rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase; pointer-events: none; z-index: 20;
+    }
+
+    #lorenz-note {
+      position: fixed;
+      bottom: clamp(10px,2vh,24px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.7rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.5); font-style: italic;
+      line-height: 1.7; pointer-events: none; z-index: 20;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.7rem 1rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+    }
+
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: flex-end;
+      padding-right: clamp(40px,8vw,120px);
+      z-index: 10; pointer-events: none;
+    }
+
+    #text-block {
+      max-width: 340px; opacity: 0;
+      animation: fadein 2.4s ease 1.5s forwards;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 2rem 2.2rem 2rem 2rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .label {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.72rem); letter-spacing: 0.3em;
+      color: rgba(232,224,208,0.3); text-transform: lowercase; margin-bottom: 1.4rem;
+    }
+    h1 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.2rem,2.5vw,2rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.9); text-transform: lowercase;
+      margin-bottom: 1.8rem; line-height: 1.3;
+    }
+    .definition {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.82); line-height: 1.9; margin-bottom: 2rem;
+    }
+    .definition em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .role {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.85rem,1.2vw,1rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.55); font-style: italic; line-height: 1.8;
+      border-left: 0.5px solid rgba(232,224,208,0.2);
+      padding-left: 1rem; margin-bottom: 2rem;
+    }
+    .thinkers {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.85vw,0.72rem); letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.2); text-transform: lowercase;
+    }
+  </style>
+</head>
+<body>
+
+  <a id="back" href="/start/">start</a>
+  <div id="page-name">deterministisches chaos</div>
+  <div id="lorenz-note">Lorenz-Attraktor — drei gekoppelte Differentialgleichungen.<br>Deterministisch, niemals sich wiederholend.<br>Edward Lorenz, 1963.</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="panel">
+    <div id="text-block">
+      <div class="label">emergenz · deterministisches chaos</div>
+      <h1>determi·<br>nistisches<br>chaos</h1>
+      <div class="definition">
+        Die Gleichungen sind bekannt.<br>
+        Der Anfang ist bekannt.<br>
+        <em>Die Zukunft bleibt unvorhersehbar.</em>
+      </div>
+      <div class="role">
+        Kleine Unterschiede im Anfangszustand<br>
+        wachsen exponentiell —<br>
+        der Schmetterling in Brasilien<br>
+        und der Tornado in Texas.
+      </div>
+      <div class="thinkers">Lorenz · Poincaré · Mandelbrot</div>
+    </div>
+  </div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ── Lorenz-System ─────────────────────────────────
+// dx/dt = σ(y - x)
+// dy/dt = x(ρ - z) - y
+// dz/dt = xy - βz
+const sigma = 10, rho = 28, beta = 8/3;
+const dt = 0.005;
+
+// Mehrere Trajektorien mit leicht unterschiedlichen Startwerten
+// — zeigt sensitive Abhängigkeit vom Anfangszustand
+const NUM_TRAILS = 3;
+const trails = [];
+const TRAIL_LEN = 800;
+
+const startColors = [
+  { r: 200, g: 160, b: 255 }, // Lavendel
+  { r: 160, g: 200, b: 255 }, // Hellblau
+  { r: 255, g: 200, b: 160 }, // Pfirsich
+];
+
+for (let i = 0; i < NUM_TRAILS; i++) {
+  trails.push({
+    x: 0.1 + i * 0.0001,  // minimaler Unterschied
+    y: 0,
+    z: 0,
+    points: [],
+    color: startColors[i],
+  });
+}
+
+// Projektion: 3D → 2D (leichte Drehung für guten Blickwinkel)
+function project(x, y, z) {
+  // Lorenz bewegt sich ca. zwischen -20..20 in x,y und 0..50 in z
+  // Zentrieren und skalieren
+  const scale = Math.min(W, H) * 0.012;
+  const px = W/2 + (x * Math.cos(0.4) - y * Math.sin(0.4)) * scale;
+  const py = H/2 - (z - 25) * scale * 0.85 + (x * Math.sin(0.4) + y * Math.cos(0.4)) * scale * 0.3;
+  return { px, py };
+}
+
+function stepLorenz(t) {
+  const dx = sigma * (t.y - t.x);
+  const dy = t.x * (rho - t.z) - t.y;
+  const dz = t.x * t.y - beta * t.z;
+  t.x += dx * dt;
+  t.y += dy * dt;
+  t.z += dz * dt;
+  const p = project(t.x, t.y, t.z);
+  t.points.push(p);
+  if (t.points.length > TRAIL_LEN) t.points.shift();
+}
+
+// Warmup — Attraktor einschwingen lassen ohne zu zeichnen
+for (let i = 0; i < 2000; i++) trails.forEach(stepLorenz);
+
+let frame = 0;
+// Langsame Rotation der Projektion
+let angle = 0.4;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.06)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Mehrere Schritte pro Frame für flüssige Bewegung
+  for (let s = 0; s < 3; s++) {
+    trails.forEach(t => {
+      const dx = sigma * (t.y - t.x);
+      const dy = t.x * (rho - t.z) - t.y;
+      const dz = t.x * t.y - beta * t.z;
+      t.x += dx * dt;
+      t.y += dy * dt;
+      t.z += dz * dt;
+      const scale = Math.min(W, H) * 0.012;
+      const px = W/2 + (t.x * Math.cos(angle) - t.y * Math.sin(angle)) * scale;
+      const py = H/2 - (t.z - 25) * scale * 0.85 + (t.x * Math.sin(angle) + t.y * Math.cos(angle)) * scale * 0.3;
+      t.points.push({ px, py });
+      if (t.points.length > TRAIL_LEN) t.points.shift();
+    });
+  }
+
+  // Sehr langsame Rotation
+  angle += 0.0003;
+
+  // Trajektorien zeichnen
+  trails.forEach(t => {
+    const col = t.color;
+    for (let i = 1; i < t.points.length; i++) {
+      const age   = i / t.points.length;
+      const alpha = Math.pow(age, 1.8) * 0.7;
+      ctx.strokeStyle = `rgba(${col.r},${col.g},${col.b},${alpha})`;
+      ctx.lineWidth   = 0.5 + age * 0.8;
+      ctx.beginPath();
+      ctx.moveTo(t.points[i-1].px, t.points[i-1].py);
+      ctx.lineTo(t.points[i].px,   t.points[i].py);
+      ctx.stroke();
+    }
+    // Leuchtpunkt
+    const last = t.points[t.points.length-1];
+    if (last) {
+      ctx.beginPath();
+      ctx.arc(last.px, last.py, 2, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${col.r},${col.g},${col.b},0.95)`;
+      ctx.shadowColor = `rgba(${col.r},${col.g},${col.b},0.6)`;
+      ctx.shadowBlur  = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  });
+
+  frame++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>
