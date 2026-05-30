@@ -3,49 +3,272 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Komplexität — Emergenz</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+
     #back {
-      position: fixed; top: clamp(8px,2vh,20px); left: clamp(12px,2.5vw,32px);
-      font-family: "Cormorant Garamond", serif; font-weight: 300;
+      position: fixed;
+      top: clamp(8px,2vh,20px); left: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
       font-size: clamp(0.55rem,1vw,0.78rem); letter-spacing: 0.28em;
       color: rgba(232,224,208,0.15); text-transform: lowercase;
       text-decoration: none; transition: color 0.4s ease; z-index: 20;
     }
     #back:hover { color: rgba(232,224,208,0.6); }
-    #back::before { content: "← "; letter-spacing: 0; }
+    #back::before { content: '← '; letter-spacing: 0; }
+
     #page-name {
-      position: fixed; top: clamp(8px,2vh,20px); right: clamp(12px,2.5vw,32px);
-      font-family: "Cormorant Garamond", serif; font-weight: 300;
+      position: fixed;
+      top: clamp(8px,2vh,20px); right: clamp(12px,2.5vw,32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
       font-size: clamp(0.55rem,1vw,0.78rem); letter-spacing: 0.28em;
       color: #7a3a20; text-transform: lowercase; pointer-events: none; z-index: 20;
     }
-    #content {
-      position: fixed; inset: 0; display: flex; align-items: center;
-      justify-content: center; flex-direction: column; gap: 2rem;
-      animation: fadein 1.8s ease forwards; opacity: 0;
+
+    /* Reaction-Diffusion canvas — Hintergrund */
+    #rd-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      transition: opacity 3s ease;
+      z-index: 1;
+      image-rendering: pixelated;
     }
+    #rd-canvas.visible { opacity: 1; }
+
+    /* Text-Panel */
+    #panel {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: clamp(40px, 8vw, 120px);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    #text-block {
+      max-width: 340px;
+      opacity: 0;
+      animation: fadein 2.4s ease 1.5s forwards;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 2rem 2.2rem 2rem 2rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+    }
+
     @keyframes fadein {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    h1 { font-weight: 300; font-size: clamp(1.8rem,5vw,4rem);
-      letter-spacing: 0.3em; color: #e8e0d0; text-transform: lowercase; }
-    p { font-weight: 300; font-size: clamp(0.85rem,1.4vw,1.1rem);
-      letter-spacing: 0.08em; color: rgba(232,224,208,0.3); font-style: italic;
-      max-width: 480px; text-align: center; line-height: 1.8; }
+
+    .label {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(0.5rem, 0.85vw, 0.72rem);
+      letter-spacing: 0.3em;
+      color: rgba(232,224,208,0.3);
+      text-transform: lowercase;
+      margin-bottom: 1.4rem;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(1.4rem, 3vw, 2.4rem);
+      letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.9);
+      text-transform: lowercase;
+      margin-bottom: 1.8rem;
+      line-height: 1.3;
+    }
+
+    .definition {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.82);
+      line-height: 1.9;
+      margin-bottom: 2rem;
+    }
+
+    .definition em {
+      font-style: italic;
+      color: rgba(232,224,208,0.95);
+    }
+
+    .role {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(0.85rem, 1.2vw, 1rem);
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.55);
+      font-style: italic;
+      line-height: 1.8;
+      border-left: 0.5px solid rgba(232,224,208,0.2);
+      padding-left: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .thinkers {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(0.5rem, 0.85vw, 0.72rem);
+      letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.2);
+      text-transform: lowercase;
+    }
   </style>
 </head>
 <body>
+
   <a id="back" href="/start/">start</a>
   <div id="page-name">komplexität</div>
-  <div id="content">
-    <h1>komplexität</h1>
-    <p>Diese Seite wartet noch auf ihren Inhalt.</p>
+  <canvas id="rd-canvas"></canvas>
+
+  <div id="panel">
+    <div id="text-block">
+      <div class="label">emergenz · komplexität</div>
+      <h1>komple·<br>xität</h1>
+      <div class="definition">
+        Viele interagierende Teile.<br>
+        <em>Nichtlinear. Sensitiv.</em><br>
+        Kleine Ursachen, große Wirkungen.
+      </div>
+      <div class="role">
+        Komplexität stellt sicher,<br>
+        dass genug Teile interagieren.
+      </div>
+      <div class="thinkers">Anderson · Kauffman</div>
+    </div>
   </div>
+
+<script>
+// ── Reaction-Diffusion (Gray-Scott) ──────────────
+const canvas = document.getElementById('rd-canvas');
+const gl = canvas.getContext('webgl');
+
+if (!gl) {
+  // Fallback: einfaches Canvas-RD
+  runCanvasFallback();
+} else {
+  runWebGL();
+}
+
+function runCanvasFallback() {
+  // Software Gray-Scott auf 2D canvas
+  const c = document.createElement('canvas');
+  c.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;opacity:0;transition:opacity 3s ease;z-index:1;image-rendering:pixelated;';
+  document.body.insertBefore(c, document.getElementById('panel'));
+  canvas.remove();
+
+  const SCALE = 2;
+  let W, H;
+  function resize() {
+    W = Math.floor(window.innerWidth  / SCALE);
+    H = Math.floor(window.innerHeight / SCALE);
+    c.width = W; c.height = H;
+    c.style.width  = window.innerWidth  + 'px';
+    c.style.height = window.innerHeight + 'px';
+    init();
+  }
+
+  const ctx2d = c.getContext('2d');
+  let A, B, nA, nB;
+
+  // Gray-Scott — coral pattern, läuft stabil durch
+  const dA = 1.0, dB = 0.5, f = 0.055, k = 0.062;
+
+  function init() {
+    A  = new Float32Array(W * H).fill(1);
+    B  = new Float32Array(W * H).fill(0);
+    nA = new Float32Array(W * H);
+    nB = new Float32Array(W * H);
+    // viele kleine Seeds
+    for (let s = 0; s < 40; s++) {
+      const cx = Math.floor(Math.random() * W);
+      const cy = Math.floor(Math.random() * H);
+      const r  = 2 + Math.floor(Math.random() * 3);
+      for (let dy = -r; dy <= r; dy++)
+        for (let dx = -r; dx <= r; dx++) {
+          if (dx*dx+dy*dy > r*r) continue;
+          const idx = ((cy+dy+H)%H)*W + ((cx+dx+W)%W);
+          B[idx] = 1; A[idx] = 0;
+        }
+    }
+    setTimeout(() => { c.style.opacity = '1'; }, 200);
+  }
+
+  function step() {
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const i  = y*W+x;
+        const n  = ((y-1+H)%H)*W+x;
+        const s  = ((y+1)%H)*W+x;
+        const ww = y*W+(x-1+W)%W;
+        const e  = y*W+(x+1)%W;
+        const lapA = A[n]+A[s]+A[ww]+A[e] - 4*A[i];
+        const lapB = B[n]+B[s]+B[ww]+B[e] - 4*B[i];
+        const a = A[i], b = B[i];
+        const abb = a*b*b;
+        nA[i] = Math.max(0, Math.min(1, a + dA*lapA*0.1 - abb + f*(1-a)));
+        nB[i] = Math.max(0, Math.min(1, b + dB*lapB*0.1 + abb - (k+f)*b));
+      }
+    }
+    [A, nA] = [nA, A];
+    [B, nB] = [nB, B];
+  }
+
+  function render() {
+    const img = ctx2d.createImageData(W, H);
+    const d   = img.data;
+    for (let i = 0; i < W*H; i++) {
+      const v = Math.max(0, Math.min(1, 1 - B[i] * 3));
+      d[i*4]   = Math.floor(4  + v * 160);
+      d[i*4+1] = Math.floor(4  + v * 148);
+      d[i*4+2] = Math.floor(4  + v * 120);
+      d[i*4+3] = 255;
+    }
+    ctx2d.putImageData(img, 0, 0);
+  }
+
+  let frame = 0;
+  function loop() {
+    for (let i = 0; i < 2; i++) step();
+    render();
+    frame++;
+    // alle 300 frames kleinen neuen Seed setzen damit es nie stirbt
+    if (frame % 300 === 0) {
+      const cx = Math.floor(Math.random() * W);
+      const cy = Math.floor(Math.random() * H);
+      for (let dy = -2; dy <= 2; dy++)
+        for (let dx = -2; dx <= 2; dx++) {
+          const idx = ((cy+dy+H)%H)*W+((cx+dx+W)%W);
+          B[idx] = 0.5; A[idx] = 0.5;
+        }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  loop();
+}
+
+function runWebGL() {
+  // WebGL Gray-Scott — ping-pong textures
+  // (simplified: falls back gracefully)
+  runCanvasFallback();
+  canvas.remove();
+}
+</script>
 </body>
 </html>
