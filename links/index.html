@@ -1,1 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Links — Emergenz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.7); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,1); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 20;
+    }
+
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 10; pointer-events: none;
+      padding: clamp(80px,12vh,140px) clamp(40px,8vw,120px);
+      gap: clamp(2rem,4vh,4rem);
+    }
+
+    blockquote {
+      max-width: 580px;
+      opacity: 0;
+      animation: fadein 2s ease 0.6s forwards;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: clamp(1.5rem,3vh,2.5rem) clamp(1.5rem,3vw,2.5rem);
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      text-align: center;
+    }
+
+    blockquote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: italic;
+      font-size: clamp(1.1rem,2vw,1.6rem);
+      letter-spacing: 0.06em; line-height: 1.8;
+      color: rgba(232,224,208,0.9);
+      margin-bottom: 1.2rem;
+    }
+
+    blockquote cite {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: normal;
+      font-size: clamp(0.65rem,1vw,0.82rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.3);
+      text-transform: lowercase;
+    }
+
+    .note {
+      max-width: 580px;
+      opacity: 0;
+      animation: fadein 1.5s ease 1.4s forwards;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: italic;
+      font-size: clamp(0.75rem,1.2vw,1rem);
+      letter-spacing: 0.12em; line-height: 1.8;
+      color: rgba(232,224,208,0.25);
+      text-align: center;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <a id="back" href="/">← emergenz</a>
+  <div id="page-name">links</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="panel">
+    <blockquote>
+      <p>„The whole is more than the sum of its parts."</p>
+      <cite>Aristoteles — zitiert von Douglas Hofstadter</cite>
+    </blockquote>
+    <div class="note">Aus dem Zusammenspiel vieler Einzelteile entstehen Eigenschaften,<br>die in keinem der Teile für sich allein enthalten sind.<br><br>Diese Seite entsteht noch.</div>
+  </div>
+
+<script>
+// ── Wachsendes Netzwerk — noch nicht verbunden ────
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H, nodes = [], frame = 0;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  initNodes();
+}
+
+function initNodes() {
+  nodes = [];
+  const count = Math.floor((W * H) / 18000);
+  for (let i = 0; i < count; i++) {
+    nodes.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 1 + Math.random() * 1.5,
+      alpha: 0,
+      born: Math.floor(Math.random() * 200),
+    });
+  }
+}
+
+const CONNECT_DIST = 120;
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Knoten einblenden
+  for (const n of nodes) {
+    if (frame >= n.born) {
+      n.alpha = Math.min(0.35, n.alpha + 0.004);
+    }
+  }
+
+  // Verbindungen zwischen nahen Knoten
+  for (let i = 0; i < nodes.length; i++) {
+    const a = nodes[i];
+    if (a.alpha < 0.01) continue;
+    for (let j = i+1; j < nodes.length; j++) {
+      const b = nodes[j];
+      if (b.alpha < 0.01) continue;
+      const dx = a.x - b.x, dy = a.y - b.y;
+      const d  = Math.sqrt(dx*dx + dy*dy);
+      if (d < CONNECT_DIST) {
+        const strength = (1 - d/CONNECT_DIST) * Math.min(a.alpha, b.alpha) * 0.4;
+        ctx.strokeStyle = `rgba(232,224,208,${strength})`;
+        ctx.lineWidth   = 0.4;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Knoten zeichnen
+  for (const n of nodes) {
+    if (n.alpha < 0.01) continue;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(232,224,208,${n.alpha})`;
+    ctx.fill();
+  }
+
+  frame++;
+  requestAnimationFrame(draw);
+}
+
+resize();
+window.addEventListener('resize', resize);
+draw();
+</script>
+</body>
+</html>
