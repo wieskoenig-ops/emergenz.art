@@ -1,1 +1,182 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Literatur — Emergenz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.7); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,1); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 20;
+    }
+
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 10; pointer-events: none;
+      padding: clamp(80px,12vh,140px) clamp(40px,8vw,120px);
+      gap: clamp(2rem,4vh,4rem);
+    }
+
+    blockquote {
+      max-width: 580px;
+      opacity: 0;
+      animation: fadein 2s ease 0.6s forwards;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: clamp(1.5rem,3vh,2.5rem) clamp(1.5rem,3vw,2.5rem);
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      text-align: center;
+    }
+
+    blockquote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: italic;
+      font-size: clamp(1.1rem,2vw,1.6rem);
+      letter-spacing: 0.06em; line-height: 1.8;
+      color: rgba(232,224,208,0.9);
+      margin-bottom: 1.2rem;
+    }
+
+    blockquote cite {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: normal;
+      font-size: clamp(0.65rem,1vw,0.82rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.3);
+      text-transform: lowercase;
+    }
+
+    .note {
+      max-width: 580px;
+      opacity: 0;
+      animation: fadein 1.5s ease 1.4s forwards;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: italic;
+      font-size: clamp(0.75rem,1.2vw,1rem);
+      letter-spacing: 0.12em; line-height: 1.8;
+      color: rgba(232,224,208,0.25);
+      text-align: center;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <a id="back" href="/">← emergenz</a>
+  <div id="page-name">literatur</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="panel">
+    <blockquote>
+      <p>„Auf jeder Stufe zunehmender Komplexität treten völlig neue Eigenschaften hervor."</p>
+      <cite>Philip W. Anderson — More Is Different, 1972</cite>
+    </blockquote>
+    <div class="note">Diese Seite entsteht noch.<br>Literaturempfehlungen zum Thema Emergenz folgen.</div>
+  </div>
+
+<script>
+// ── Langsam aufsteigende Buchstaben / Partikel ────
+// Zufällige Buchstaben aus dem Zitat steigen auf
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+const QUOTE = 'KOMPLEXITÄT EMERGENZ ANDERSON EIGENSCHAFTEN STUFE MUSTER STRUKTUR ORDNUNG CHAOS SYSTEM';
+const CHARS = QUOTE.split(' ').join('').split('');
+
+let particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function makeParticle() {
+  return {
+    x: Math.random() * W,
+    y: H + 20,
+    char: CHARS[Math.floor(Math.random() * CHARS.length)],
+    speed: 0.15 + Math.random() * 0.35,
+    size: clamp(10, Math.random() * 28 + 8, 38),
+    alpha: 0,
+    fadeIn: 0.003 + Math.random() * 0.004,
+    drift: (Math.random() - 0.5) * 0.3,
+    life: 1,
+  };
+}
+
+function clamp(min, v, max) { return Math.max(min, Math.min(max, v)); }
+
+// Startpopulation
+for (let i = 0; i < 40; i++) {
+  const p = makeParticle();
+  p.y = Math.random() * H;
+  p.alpha = Math.random() * 0.06;
+  particles.push(p);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Gelegentlich neue Partikel
+  if (Math.random() < 0.4 && particles.length < 80) {
+    particles.push(makeParticle());
+  }
+
+  particles = particles.filter(p => p.y > -40);
+
+  for (const p of particles) {
+    p.y   -= p.speed;
+    p.x   += p.drift;
+    p.alpha = Math.min(0.07, p.alpha + p.fadeIn);
+    // verblasst wenn oben
+    if (p.y < H * 0.3) p.alpha -= 0.001;
+
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.alpha);
+    ctx.fillStyle   = '#e8e0d0';
+    ctx.font        = `300 ${p.size}px 'Cormorant Garamond', serif`;
+    ctx.textBaseline = 'middle';
+    ctx.textAlign   = 'center';
+    ctx.fillText(p.char, p.x, p.y);
+    ctx.restore();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>
