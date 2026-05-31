@@ -24,7 +24,19 @@
 
     #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
 
-    /* Satellite labels */
+    #hint-begriffe {
+      position: fixed;
+      bottom: clamp(8px,1.8vh,20px);
+      left: 0; right: 0;
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.6rem,0.95vw,0.8rem); letter-spacing: 0.22em;
+      color: #b05830; text-transform: lowercase;
+      pointer-events: none; z-index: 20;
+      opacity: 0;
+      animation: fadein 2s ease 12s forwards;
+    }
+    @keyframes fadein { from { opacity:0; } to { opacity:1; } }
     .sat-label {
       position: fixed;
       display: flex; align-items: center; justify-content: center;
@@ -53,6 +65,7 @@
 </head>
 <body>
   <a id="back" href="/">emergenz</a>
+  <div id="hint-begriffe">die begriffe werden auf den folgenden seiten erläutert</div>
   <canvas id="canvas"></canvas>
 
   <a class="sat-label" id="lbl-komplexitaet" href="/start/komplexitaet/"><span>Komplexität</span></a>
