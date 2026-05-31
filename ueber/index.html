@@ -1,1 +1,209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Über emergenz.art</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.85rem,1.4vw,1.1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.4); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,0.9); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 20;
+    }
+
+    #canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 1; opacity: 0;
+      transition: opacity 3s ease;
+    }
+    #canvas.visible { opacity: 1; }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10; pointer-events: none;
+      padding: clamp(60px,10vh,120px) clamp(40px,8vw,120px);
+      overflow-y: auto;
+    }
+
+    #text-block {
+      max-width: 620px;
+      width: 100%;
+      opacity: 0;
+      animation: fadein 2s ease 0.8s forwards;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: clamp(1.5rem,3vh,3rem) clamp(1.5rem,3vw,3rem);
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+      pointer-events: auto;
+      margin: auto;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .site-name {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.6rem,1vw,0.82rem); letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.3); text-transform: lowercase;
+      margin-bottom: clamp(1.5rem,3vh,2.5rem);
+    }
+
+    p {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.05rem,1.8vw,1.35rem); letter-spacing: 0.05em;
+      color: rgba(232,224,208,0.82); line-height: 2;
+      margin-bottom: clamp(1.2rem,2.5vh,2rem);
+    }
+
+    p em {
+      font-style: italic;
+      color: rgba(232,224,208,0.95);
+    }
+
+    p:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+  <a id="back" href="/">emergenz</a>
+  <div id="page-name">über emergenz.art</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="panel">
+    <div id="text-block">
+      <div class="site-name">emergenz.art</div>
+
+      <p>Der Begriff <em>Emergenz</em> beschreibt das überraschende Entstehen neuer Eigenschaften aus dem Zusammenspiel vieler einfacher Elemente. Gerade im Kontext der Diskussion um AGI gewinnt er zunehmend an Bedeutung.</p>
+
+      <p>Mathematische Modelle und grafische Visualisierungen machen sichtbar, wie aus wenigen Regeln komplexe, oft atemberaubend schöne Muster entstehen — Strukturen, die auf den ersten Blick verblüffen und beim zweiten faszinieren.</p>
+
+      <p><em>emergenz.art</em> ist eine Einladung, dieses Phänomen mit den Augen zu erkunden. Nicht durch abstrakte Definitionen, sondern durch Simulationen und mathematisch erzeugte Formen — ein künstlerisch-wissenschaftlicher Versuch, Emergenz nicht nur zu erklären, sondern erfahrbar zu machen.</p>
+    </div>
+  </div>
+
+<script>
+// ── Brownsche Bewegung / Diffusion ────────────────
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+const NUM_PARTICLES = 120;
+const TRAIL_LEN     = 180;
+const SPEED         = 0.6;
+
+let particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  initParticles();
+}
+
+function initParticles() {
+  particles = [];
+  for (let i = 0; i < NUM_PARTICLES; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      trail: [],
+      // jedes Partikel hat ein leicht unterschiedliches Diffusionsverhalten
+      speed: SPEED * (0.4 + Math.random() * 0.8),
+      // sehr langsame Richtungsänderung
+      angle: Math.random() * Math.PI * 2,
+      turnSpeed: (Math.random() - 0.5) * 0.08,
+    });
+  }
+}
+
+function stepParticles() {
+  for (const p of particles) {
+    // Brownsche Bewegung: zufälliger Richtungsstoß + sanfte Eigenbewegung
+    p.angle += p.turnSpeed + (Math.random() - 0.5) * 0.15;
+    p.turnSpeed *= 0.98; // dämpfen
+    p.turnSpeed += (Math.random() - 0.5) * 0.02; // neuer Impuls
+
+    p.x += Math.cos(p.angle) * p.speed;
+    p.y += Math.sin(p.angle) * p.speed;
+
+    // Weiche Randbehandlung — umlenken
+    const margin = 40;
+    if (p.x < margin)  p.angle += 0.12;
+    if (p.x > W-margin) p.angle -= 0.12;
+    if (p.y < margin)  p.angle += 0.12;
+    if (p.y > H-margin) p.angle -= 0.12;
+
+    // Spur aufzeichnen
+    p.trail.push({ x: p.x, y: p.y });
+    if (p.trail.length > TRAIL_LEN) p.trail.shift();
+  }
+}
+
+function draw() {
+  // Sehr sanftes Nachleuchten — Spur verblasst langsam
+  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  ctx.fillRect(0, 0, W, H);
+
+  stepParticles();
+
+  for (const p of particles) {
+    if (p.trail.length < 2) continue;
+
+    for (let i = 1; i < p.trail.length; i++) {
+      const age   = i / p.trail.length;
+      const alpha = Math.pow(age, 2) * 0.18; // sehr dezent
+      ctx.strokeStyle = `rgba(232,224,208,${alpha})`;
+      ctx.lineWidth   = age * 0.8;
+      ctx.beginPath();
+      ctx.moveTo(p.trail[i-1].x, p.trail[i-1].y);
+      ctx.lineTo(p.trail[i].x,   p.trail[i].y);
+      ctx.stroke();
+    }
+
+    // Partikel selbst — kaum sichtbar
+    const last = p.trail[p.trail.length-1];
+    ctx.beginPath();
+    ctx.arc(last.x, last.y, 0.8, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(232,224,208,0.25)';
+    ctx.fill();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+resize();
+window.addEventListener('resize', resize);
+
+// Canvas erst einblenden wenn Partikel sich etwas gesetzt haben
+setTimeout(() => {
+  canvas.classList.add('visible');
+}, 600);
+
+draw();
+</script>
+</body>
+</html>
