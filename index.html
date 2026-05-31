@@ -16,10 +16,8 @@
       font-family: 'Cormorant Garamond', serif;
     }
 
-    /* ── Layout ── */
     #layout {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       display: grid;
       grid-template-rows: 1fr 2fr 1fr;
     }
@@ -33,50 +31,49 @@
     .cell {
       position: relative;
       cursor: pointer;
-      transition: background 0.4s ease;
+      transition: background 1s ease;
+      text-decoration: none;
+      display: block;
     }
     .cell.clicked { background: rgba(30,30,30,0.92) !important; }
 
-    /* feine Umrandung on hover */
     .cell::after {
       content: '';
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       border: 0.5px solid rgba(232,224,208,0);
       transition: border-color 0.4s ease;
       pointer-events: none;
     }
-    .cell:hover::after {
-      border-color: rgba(232,224,208,0.25);
-    }
+    .cell:hover::after { border-color: rgba(232,224,208,0.25); }
 
-    /* Hover-Label für verlinkte Zellen */
-    .cell .cell-label {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* Labels — immer schwach sichtbar, bei Hover deutlich */
+    .cell-label {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
       font-family: 'Cormorant Garamond', serif;
       font-weight: 300;
-      font-size: clamp(0.55rem, 1vw, 0.78rem);
+      font-size: clamp(0.85rem, 1.6vw, 1.3rem);
       letter-spacing: 0.28em;
-      color: rgba(232,224,208,0);
+      color: rgba(232,224,208,0.12);
       text-transform: lowercase;
       transition: color 0.5s ease;
       pointer-events: none;
       user-select: none;
+      text-align: center;
     }
-    .cell:hover .cell-label {
-      color: rgba(232,224,208,0.5);
-    }
+    .cell:hover .cell-label { color: rgba(232,224,208,0.75); }
 
-    /* ── Mitte: EMERGENZ ── */
+    /* Block 2 Start — dauerhaft hell */
+    #c1 .cell-label {
+      color: rgba(232,224,208,0.65) !important;
+      font-size: clamp(1rem, 1.8vw, 1.5rem);
+    }
+    #c1:hover .cell-label { color: rgba(232,224,208,1) !important; }
+
+    /* Mitte EMERGENZ */
     #middle {
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
 
     #word {
@@ -91,8 +88,7 @@
       animation: breathe 10s ease-in-out infinite;
       transition: opacity 3s ease;
       white-space: nowrap;
-      position: relative;
-      z-index: 2;
+      position: relative; z-index: 2;
     }
     #word.hidden { opacity: 0; pointer-events: none; }
 
@@ -102,86 +98,50 @@
       100% { opacity: 0.1; }
     }
 
-    /* ── Labels ── */
-    #label-soon {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      display: flex;
-      justify-content: center;
-      padding-top: clamp(6px, 1.8vh, 18px);
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: clamp(0.55rem, 1vw, 0.78rem);
-      letter-spacing: 0.22em;
-      color: #7a3a20;
-      text-transform: lowercase;
-      pointer-events: none;
-      z-index: 10;
-    }
-
     #label-name {
-      position: fixed;
-      bottom: 0; right: 0;
-      padding-bottom: clamp(6px, 1.8vh, 18px);
-      padding-right: clamp(10px, 2vw, 28px);
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      font-size: clamp(0.55rem, 1vw, 0.78rem);
-      letter-spacing: 0.22em;
-      color: #7a3a20;
-      text-transform: lowercase;
-      pointer-events: none;
-      z-index: 10;
+      position: fixed; bottom: 0; right: 0;
+      padding-bottom: clamp(8px, 2vh, 24px);
+      padding-right: clamp(12px, 2vw, 32px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.75rem, 1.3vw, 1rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 10;
     }
 
-    /* ── Canvas (Schwarm) ── */
     #canvas {
-      position: fixed;
-      inset: 0;
-      width: 100%; height: 100%;
-      opacity: 0;
-      transition: opacity 1.2s ease;
-      pointer-events: none;
-      z-index: 5;
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      opacity: 0; transition: opacity 1.2s ease;
+      pointer-events: none; z-index: 5;
     }
     #canvas.visible { opacity: 1; }
 
-    /* ── Spark canvas ── */
     #sparks {
-      position: fixed;
-      inset: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 4;
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 4;
     }
   </style>
 </head>
 <body>
 
-  <div id="label-soon">coming soon</div>
   <div id="label-name">mkoenighaus</div>
-
   <canvas id="sparks"></canvas>
   <canvas id="canvas"></canvas>
 
   <div id="layout">
-    <!-- Oben: 3 Felder -->
     <div class="band" id="band-top">
-      <div class="cell" id="c0"></div>
-      <div class="cell" id="c1" onclick="window.location.href='/start/'"><span class="cell-label">start</span></div>
-      <div class="cell" id="c2"></div>
+      <a class="cell" id="c0" href="/ueber/"><span class="cell-label">über emergenz.art</span></a>
+      <a class="cell" id="c1" href="/start/"><span class="cell-label">start</span></a>
+      <a class="cell" id="c2" href="/mathematik/"><span class="cell-label">mathematik</span></a>
     </div>
 
-    <!-- Mitte: EMERGENZ -->
     <div id="middle">
       <span id="word">Emergenz</span>
     </div>
 
-    <!-- Unten: 3 Felder -->
     <div class="band" id="band-bot">
-      <div class="cell" id="c3"></div>
-      <div class="cell" id="c4"></div>
-      <div class="cell" id="c5" onclick="window.location.href='mailto:mail.emergenz@web.de'"><span class="cell-label">kontakt</span></div>
+      <a class="cell" id="c3" href="/literatur/"><span class="cell-label">literatur</span></a>
+      <a class="cell" id="c4" href="/links/"><span class="cell-label">links</span></a>
+      <a class="cell" id="c5" href="mailto:mail.emergenz@wrb.de"><span class="cell-label">kontakt</span></a>
     </div>
   </div>
 
@@ -193,39 +153,50 @@ const sparkCanvas = document.getElementById('sparks');
 const sc = sparkCanvas.getContext('2d');
 let sparks = [];
 
-function resizeSparks() {
-  sparkCanvas.width  = window.innerWidth;
-  sparkCanvas.height = window.innerHeight;
-}
-resizeSparks();
-window.addEventListener('resize', resizeSparks);
+// Perkolations-Farbtöne + Weiß
+const SPARK_COLORS = [
+  [255,255,255],   // weiß
+  [255,255,255],   // weiß (häufiger)
+  [255,255,255],   // weiß
+  [100,160,230],   // Indigo-Blau
+  [20,180,160],    // Teal
+  [220,140,40],    // Amber
+];
 
-// Spawn kurze weiße Funken entlang einer Grenze (vertikal oder horizontal)
-// axis: 'v' = vertikale Linie bei x=pos, 'h' = horizontale Linie bei y=pos
-function spawnBorderSparks(pos, axis, bandRect) {
-  const count = 5 + Math.floor(Math.random() * 5);
+function spawnBorderSparks(pos, axis, bandRect, intense) {
+  const count = intense
+    ? 60 + Math.floor(Math.random() * 40)
+    : 12 + Math.floor(Math.random() * 8);
+
   for (let i = 0; i < count; i++) {
     let x, y, vx, vy;
+    const col = SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)];
+    const speed = intense
+      ? 1.5 + Math.random() * 5
+      : 0.8 + Math.random() * 2;
+
     if (axis === 'v') {
-      // vertikale Grenze: Funken fliegen links/rechts weg
       x = pos;
       y = bandRect.top + Math.random() * bandRect.height;
       const dir = Math.random() < 0.5 ? -1 : 1;
-      vx = dir * (0.6 + Math.random() * 1.4);
-      vy = (Math.random() - 0.5) * 1.0;
+      vx = dir * speed;
+      vy = (Math.random() - 0.5) * speed * 0.8;
     } else {
-      // horizontale Grenze: Funken fliegen oben/unten weg
       x = bandRect.left + Math.random() * bandRect.width;
       y = pos;
-      vx = (Math.random() - 0.5) * 1.0;
+      vx = (Math.random() - 0.5) * speed * 0.8;
       const dir = Math.random() < 0.5 ? -1 : 1;
-      vy = dir * (0.6 + Math.random() * 1.4);
+      vy = dir * speed;
     }
     sparks.push({
-      x, y, vx, vy,
+      x, y, vx, vy, col,
       life: 1,
-      decay: 0.07 + Math.random() * 0.08,
-      len: 2 + Math.random() * 3   // kurz!
+      decay: intense
+        ? 0.012 + Math.random() * 0.018
+        : 0.04  + Math.random() * 0.04,
+      len: intense
+        ? 5 + Math.random() * 12
+        : 2 + Math.random() * 4
     });
   }
 }
@@ -234,12 +205,13 @@ function animateSparks() {
   sc.clearRect(0, 0, sparkCanvas.width, sparkCanvas.height);
   sparks = sparks.filter(s => s.life > 0);
   for (const s of sparks) {
+    const [r,g,b] = s.col;
     sc.save();
     sc.globalAlpha = s.life;
-    sc.strokeStyle = `rgba(255,255,255,${s.life})`;
-    sc.lineWidth = 0.6;
-    sc.shadowColor = 'rgba(220,235,255,0.9)';
-    sc.shadowBlur = 3;
+    sc.strokeStyle = `rgba(${r},${g},${b},${s.life})`;
+    sc.lineWidth = 0.8 + s.life * 0.6;
+    sc.shadowColor = `rgba(${r},${g},${b},0.9)`;
+    sc.shadowBlur = 6;
     sc.beginPath();
     sc.moveTo(s.x, s.y);
     sc.lineTo(s.x + s.vx * s.len, s.y + s.vy * s.len);
@@ -253,13 +225,17 @@ function animateSparks() {
 }
 animateSparks();
 
-// Nachbarschafts-Map: welche inneren Grenzen hat jede Zelle?
-// Felder 0,1,2 = obere Reihe | 3,4,5 = untere Reihe
-// Grenzen: 'left' = linke Grenze zu Nachbar, 'right' = rechte Grenze zu Nachbar
+function resizeSparks() {
+  sparkCanvas.width  = window.innerWidth;
+  sparkCanvas.height = window.innerHeight;
+}
+resizeSparks();
+window.addEventListener('resize', resizeSparks);
+
 const cellNeighborBorders = {
-  'c0': ['right'],           // nur rechts (Nachbar c1)
-  'c1': ['left', 'right'],   // links (c0) und rechts (c2)
-  'c2': ['left'],            // nur links (Nachbar c1)
+  'c0': ['right'],
+  'c1': ['left', 'right'],
+  'c2': ['left'],
   'c3': ['right'],
   'c4': ['left', 'right'],
   'c5': ['left'],
@@ -272,28 +248,36 @@ cells.forEach(cell => {
   const id = cell.id;
 
   cell.addEventListener('mouseenter', () => {
-    // Laufenden Leave-Timer abbrechen
     if (leaveTimers[id]) { clearTimeout(leaveTimers[id]); delete leaveTimers[id]; }
-
     const r = cell.getBoundingClientRect();
     const borders = cellNeighborBorders[id] || [];
-
     borders.forEach(side => {
-      const pos  = side === 'left' ? r.left : r.right;
-      spawnBorderSparks(pos, 'v', r);
+      spawnBorderSparks(side === 'left' ? r.left : r.right, 'v', r, false);
     });
   });
 
   cell.addEventListener('mouseleave', () => {
-    // Nach 1 Sekunde clicked-Klasse entfernen → zurück zu transparent
     leaveTimers[id] = setTimeout(() => {
       cell.classList.remove('clicked');
       delete leaveTimers[id];
     }, 1000);
   });
 
-  cell.addEventListener('click', () => {
-    cell.classList.toggle('clicked');
+  cell.addEventListener('click', e => {
+    // Intensive Funken an allen Nachbargrenzen beim Klick
+    const r = cell.getBoundingClientRect();
+    const borders = cellNeighborBorders[id] || [];
+    borders.forEach(side => {
+      spawnBorderSparks(side === 'left' ? r.left : r.right, 'v', r, true);
+    });
+    cell.classList.add('clicked');
+    // Für mailto: kein preventDefault nötig
+    // Für interne Links: kurze Verzögerung damit Funken sichtbar sind
+    const href = cell.getAttribute('href');
+    if (href && !href.startsWith('mailto:')) {
+      e.preventDefault();
+      setTimeout(() => { window.location.href = href; }, 320);
+    }
   });
 });
 
@@ -304,10 +288,10 @@ const canvas  = document.getElementById('canvas');
 const ctx     = canvas.getContext('2d');
 const word    = document.getElementById('word');
 
-const NUM_BOIDS     = 420;
-const FLOCK_FRAMES  = 520;
-const FORM_FRAMES   = 260;
-const HOLD_FRAMES   = 180;
+const NUM_BOIDS    = 420;
+const FLOCK_FRAMES = 520;
+const FORM_FRAMES  = 260;
+const HOLD_FRAMES  = 180;
 
 let W, H, boids = [], phase = 'idle', phaseTimer = 0;
 let animId = null;
@@ -326,139 +310,115 @@ function sampleWordPoints(text, count) {
   const c = off.getContext('2d');
   c.fillStyle = '#fff';
   c.font = `300 ${fontSize}px 'Cormorant Garamond', serif`;
-  c.textBaseline = 'middle';
-  c.textAlign = 'center';
-  c.fillText(text, W / 2, H / 2);
-  const data = c.getImageData(0, 0, W, H).data;
+  c.textBaseline = 'middle'; c.textAlign = 'center';
+  c.fillText(text, W/2, H/2);
+  const data = c.getImageData(0,0,W,H).data;
   const pts = [];
-  const step = 3;
-  for (let y = 0; y < H; y += step)
-    for (let x = 0; x < W; x += step)
-      if (data[(y * W + x) * 4 + 3] > 128) pts.push([x, y]);
-  for (let i = pts.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pts[i], pts[j]] = [pts[j], pts[i]];
+  for (let y=0;y<H;y+=3) for (let x=0;x<W;x+=3)
+    if (data[(y*W+x)*4+3]>128) pts.push([x,y]);
+  for (let i=pts.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));
+    [pts[i],pts[j]]=[pts[j],pts[i]];
   }
-  return pts.slice(0, count);
+  return pts.slice(0,count);
 }
 
 function makeBoid() {
-  const edge = Math.floor(Math.random() * 4);
-  let x, y;
-  if (edge === 0)      { x = Math.random() * W; y = -10; }
-  else if (edge === 1) { x = Math.random() * W; y = H + 10; }
-  else if (edge === 2) { x = -10; y = Math.random() * H; }
-  else                 { x = W + 10; y = Math.random() * H; }
-  const angle = Math.random() * Math.PI * 2;
-  const spd = 1.5 + Math.random() * 2;
-  return { x, y, vx: Math.cos(angle)*spd, vy: Math.sin(angle)*spd, tx: 0, ty: 0 };
+  const edge=Math.floor(Math.random()*4);
+  let x,y;
+  if(edge===0){x=Math.random()*W;y=-10;}
+  else if(edge===1){x=Math.random()*W;y=H+10;}
+  else if(edge===2){x=-10;y=Math.random()*H;}
+  else{x=W+10;y=Math.random()*H;}
+  const a=Math.random()*Math.PI*2,s=1.5+Math.random()*2;
+  return{x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,tx:0,ty:0};
 }
-function initBoids() { boids = Array.from({ length: NUM_BOIDS }, makeBoid); }
+function initBoids(){boids=Array.from({length:NUM_BOIDS},makeBoid);}
 
-const VR = 70, AD = 22, MAXS = 3.2, MINS = 1.0;
-function stepFlock() {
-  for (const b of boids) {
+const VR=70,AD=22,MAXS=3.2,MINS=1.0;
+function stepFlock(){
+  for(const b of boids){
     let avgVx=0,avgVy=0,avgX=0,avgY=0,sepX=0,sepY=0,n=0;
-    for (const o of boids) {
-      if (o===b) continue;
-      const dx=o.x-b.x, dy=o.y-b.y, d=Math.sqrt(dx*dx+dy*dy);
-      if (d<VR) {
-        avgVx+=o.vx; avgVy+=o.vy; avgX+=o.x; avgY+=o.y; n++;
-        if (d<AD) { sepX-=dx/(d+0.1); sepY-=dy/(d+0.1); }
-      }
+    for(const o of boids){
+      if(o===b)continue;
+      const dx=o.x-b.x,dy=o.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<VR){avgVx+=o.vx;avgVy+=o.vy;avgX+=o.x;avgY+=o.y;n++;
+        if(d<AD){sepX-=dx/(d+0.1);sepY-=dy/(d+0.1);}}
     }
-    if (n>0) {
-      b.vx+=(avgVx/n-b.vx)*0.04; b.vy+=(avgVy/n-b.vy)*0.04;
-      b.vx+=(avgX/n-b.x)*0.003;  b.vy+=(avgY/n-b.y)*0.003;
-    }
-    b.vx+=sepX*0.06; b.vy+=sepY*0.06;
+    if(n>0){b.vx+=(avgVx/n-b.vx)*0.04;b.vy+=(avgVy/n-b.vy)*0.04;
+      b.vx+=(avgX/n-b.x)*0.003;b.vy+=(avgY/n-b.y)*0.003;}
+    b.vx+=sepX*0.06;b.vy+=sepY*0.06;
     const m=80;
-    if (b.x<m) b.vx+=0.4; if (b.x>W-m) b.vx-=0.4;
-    if (b.y<m) b.vy+=0.4; if (b.y>H-m) b.vy-=0.4;
+    if(b.x<m)b.vx+=0.4;if(b.x>W-m)b.vx-=0.4;
+    if(b.y<m)b.vy+=0.4;if(b.y>H-m)b.vy-=0.4;
     const spd=Math.sqrt(b.vx*b.vx+b.vy*b.vy)||0.001;
-    if (spd>MAXS){b.vx=b.vx/spd*MAXS;b.vy=b.vy/spd*MAXS;}
-    if (spd<MINS){b.vx=b.vx/spd*MINS;b.vy=b.vy/spd*MINS;}
-    b.x+=b.vx; b.y+=b.vy;
+    if(spd>MAXS){b.vx=b.vx/spd*MAXS;b.vy=b.vy/spd*MAXS;}
+    if(spd<MINS){b.vx=b.vx/spd*MINS;b.vy=b.vy/spd*MINS;}
+    b.x+=b.vx;b.y+=b.vy;
   }
 }
 
-function stepForm(t) {
-  const ease = t<1 ? t*t*(3-2*t) : 1;
-  for (const b of boids) {
-    const dx=b.tx-b.x, dy=b.ty-b.y;
-    b.vx+=dx*0.05*ease; b.vy+=dy*0.05*ease;
+function stepForm(t){
+  const ease=t<1?t*t*(3-2*t):1;
+  for(const b of boids){
+    const dx=b.tx-b.x,dy=b.ty-b.y;
+    b.vx+=dx*0.05*ease;b.vy+=dy*0.05*ease;
     const spd=Math.sqrt(b.vx*b.vx+b.vy*b.vy)||0.001;
     const maxS=4+ease*7;
-    if (spd>maxS){b.vx=b.vx/spd*maxS;b.vy=b.vy/spd*maxS;}
-    b.vx*=0.87; b.vy*=0.87;
-    b.x+=b.vx; b.y+=b.vy;
+    if(spd>maxS){b.vx=b.vx/spd*maxS;b.vy=b.vy/spd*maxS;}
+    b.vx*=0.87;b.vy*=0.87;b.x+=b.vx;b.y+=b.vy;
   }
 }
 
-function draw() {
+function draw(){
   ctx.fillStyle='rgba(0,0,0,0.20)';
   ctx.fillRect(0,0,W,H);
   const t=phaseTimer;
-
-  if (phase==='flock') {
+  if(phase==='flock'){
     stepFlock();
-    if (t>FLOCK_FRAMES) {
-      phase='form'; phaseTimer=0;
+    if(t>FLOCK_FRAMES){
+      phase='form';phaseTimer=0;
       const pts=sampleWordPoints('EMERGENZ',NUM_BOIDS);
-      boids.forEach((b,i)=>{ b.tx=pts[i]?pts[i][0]:W/2; b.ty=pts[i]?pts[i][1]:H/2; });
+      boids.forEach((b,i)=>{b.tx=pts[i]?pts[i][0]:W/2;b.ty=pts[i]?pts[i][1]:H/2;});
     }
-  } else if (phase==='form') {
+  } else if(phase==='form'){
     stepForm(t/FORM_FRAMES);
-    if (t>FORM_FRAMES) { phase='hold'; phaseTimer=0; }
-  } else if (phase==='hold') {
+    if(t>FORM_FRAMES){phase='hold';phaseTimer=0;}
+  } else if(phase==='hold'){
     stepForm(1);
-    if (t>HOLD_FRAMES) { phase='done'; phaseTimer=0; }
-  } else if (phase==='done') {
+    if(t>HOLD_FRAMES){phase='done';phaseTimer=0;}
+  } else if(phase==='done'){
     stepFlock();
-    if (t===1) {
-      word.style.animation='none';
-      word.style.opacity='0';
+    if(t===1){
+      word.style.animation='none';word.style.opacity='0';
       word.classList.remove('hidden');
       setTimeout(()=>{
-        word.style.transition='opacity 4s ease';
-        word.style.opacity='1';
-        setTimeout(()=>{ word.style.animation='breathe 10s ease-in-out infinite'; },4000);
+        word.style.transition='opacity 4s ease';word.style.opacity='1';
+        setTimeout(()=>{word.style.animation='breathe 10s ease-in-out infinite';},4000);
       },50);
     }
-    if (t>300) {
-      canvas.style.transition='opacity 2s ease';
-      canvas.style.opacity='0';
-      phase='idle'; phaseTimer=0;
-      setTimeout(()=>{ cancelAnimationFrame(animId); animId=null; },2200);
+    if(t>300){
+      canvas.style.transition='opacity 2s ease';canvas.style.opacity='0';
+      phase='idle';phaseTimer=0;
+      setTimeout(()=>{cancelAnimationFrame(animId);animId=null;},2200);
       return;
     }
   }
-
-  for (const b of boids) {
+  for(const b of boids){
     let alpha=0.85;
-    if (phase==='done') alpha=Math.max(0,0.85-phaseTimer/300);
-    if (phase==='form'||phase==='hold') {
+    if(phase==='done') alpha=Math.max(0,0.85-phaseTimer/300);
+    if(phase==='form'||phase==='hold'){
       const glow=phase==='hold'?1:phaseTimer/FORM_FRAMES;
-      ctx.shadowColor=`rgba(232,224,208,${0.5*glow})`;
-      ctx.shadowBlur=3*glow;
+      ctx.shadowColor=`rgba(232,224,208,${0.5*glow})`;ctx.shadowBlur=3*glow;
       ctx.fillStyle=`rgba(232,224,208,${0.5+0.5*glow})`;
-      ctx.beginPath();
-      ctx.arc(b.x,b.y,1.6,0,Math.PI*2);
-      ctx.fill();
+      ctx.beginPath();ctx.arc(b.x,b.y,1.6,0,Math.PI*2);ctx.fill();
       ctx.shadowBlur=0;
     } else {
       const angle=Math.atan2(b.vy,b.vx);
-      ctx.save();
-      ctx.translate(b.x,b.y);
-      ctx.rotate(angle);
+      ctx.save();ctx.translate(b.x,b.y);ctx.rotate(angle);
       ctx.fillStyle=`rgba(232,224,208,${alpha})`;
-      ctx.beginPath();
-      ctx.moveTo(3.5,0);
-      ctx.lineTo(-2.5,-1.8);
-      ctx.lineTo(-1.2,0);
-      ctx.lineTo(-2.5,1.8);
-      ctx.closePath();
-      ctx.fill();
+      ctx.beginPath();ctx.moveTo(3.5,0);ctx.lineTo(-2.5,-1.8);
+      ctx.lineTo(-1.2,0);ctx.lineTo(-2.5,1.8);ctx.closePath();ctx.fill();
       ctx.restore();
     }
   }
@@ -466,13 +426,12 @@ function draw() {
   animId=requestAnimationFrame(draw);
 }
 
-function startSwarm() {
-  if (phase!=='idle') return;
-  phase='flock'; phaseTimer=0;
+function startSwarm(){
+  if(phase!=='idle') return;
+  phase='flock';phaseTimer=0;
   initBoids();
   word.classList.add('hidden');
-  canvas.classList.add('visible');
-  canvas.style.opacity='1';
+  canvas.classList.add('visible');canvas.style.opacity='1';
   animId=requestAnimationFrame(draw);
 }
 
