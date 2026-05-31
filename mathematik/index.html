@@ -1,1 +1,218 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mathematik — Emergenz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; cursor: crosshair; }
 
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.7); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+      cursor: pointer;
+    }
+    #back:hover { color: rgba(232,224,208,1); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 20;
+    }
+
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    #quote {
+      position: fixed;
+      bottom: clamp(10px,2vh,24px); left: clamp(14px,2.5vw,36px);
+      z-index: 20; pointer-events: none;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.8rem 1.2rem;
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+      max-width: clamp(280px, 40vw, 480px);
+      opacity: 0;
+      animation: fadein 2s ease 1s forwards;
+    }
+
+    #quote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: italic;
+      font-size: clamp(0.85rem,1.3vw,1.05rem);
+      letter-spacing: 0.06em; line-height: 1.8;
+      color: rgba(232,224,208,0.85);
+      margin-bottom: 0.5rem;
+    }
+
+    #quote cite {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: normal;
+      font-size: clamp(0.55rem,0.85vw,0.72rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.3);
+      text-transform: lowercase;
+    }
+
+    #hint {
+      position: fixed;
+      bottom: clamp(10px,2vh,24px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.5rem,0.82vw,0.7rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.2); font-style: italic;
+      pointer-events: none; z-index: 20;
+      opacity: 0; animation: fadein 2s ease 2s forwards;
+    }
+
+    #note {
+      position: fixed;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1vw,0.85rem); letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.2); font-style: italic;
+      pointer-events: none; z-index: 20;
+      opacity: 0; animation: fadein 1.5s ease 3s forwards;
+      text-align: center; line-height: 1.8;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <a id="back" href="/">← emergenz</a>
+  <div id="page-name">mathematik</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="quote">
+    <p>„Das Buch der Natur ist in der Sprache der Mathematik geschrieben."</p>
+    <cite>Galileo Galilei</cite>
+  </div>
+  <div id="hint">klicken zum Zoomen · doppelklick zum Zurücksetzen</div>
+  <div id="note">Diese Seite entsteht noch.<br>Fibonacci · Mandelbrot · und mehr.</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+// Mandelbrot-Parameter
+let centerX = -0.5, centerY = 0;
+let zoom = 1.0;
+let maxIter = 120;
+let rendering = false;
+let dirty = true;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  dirty = true;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Farbpalette — dunkel, cremig, mit leichten Farbtönen
+function getColor(iter, max) {
+  if (iter === max) return [0, 0, 0];
+  const t = iter / max;
+  const smooth = t;
+
+  // Palette: schwarz → tiefes Indigo → dunkles Teal → cremeweiß
+  if (smooth < 0.3) {
+    const s = smooth / 0.3;
+    return [
+      Math.floor(s * 30),
+      Math.floor(s * 40),
+      Math.floor(s * 80),
+    ];
+  } else if (smooth < 0.6) {
+    const s = (smooth - 0.3) / 0.3;
+    return [
+      Math.floor(30 + s * 20),
+      Math.floor(40 + s * 80),
+      Math.floor(80 + s * 60),
+    ];
+  } else {
+    const s = (smooth - 0.6) / 0.4;
+    return [
+      Math.floor(50  + s * 182),
+      Math.floor(120 + s * 104),
+      Math.floor(140 + s * 68),
+    ];
+  }
+}
+
+function renderMandelbrot() {
+  if (rendering) return;
+  rendering = true;
+  dirty = false;
+
+  const scale = 3.5 / (zoom * Math.min(W, H));
+  const img   = ctx.createImageData(W, H);
+  const d     = img.data;
+
+  for (let py = 0; py < H; py++) {
+    for (let px = 0; px < W; px++) {
+      const x0 = centerX + (px - W/2) * scale;
+      const y0 = centerY + (py - H/2) * scale;
+
+      let x = 0, y = 0, iter = 0;
+      while (x*x + y*y <= 4 && iter < maxIter) {
+        const xt = x*x - y*y + x0;
+        y = 2*x*y + y0;
+        x = xt;
+        iter++;
+      }
+
+      const [r,g,b] = getColor(iter, maxIter);
+      const i = (py * W + px) * 4;
+      d[i]   = r; d[i+1] = g; d[i+2] = b; d[i+3] = 255;
+    }
+  }
+
+  ctx.putImageData(img, 0, 0);
+  rendering = false;
+}
+
+// Zoom on click
+canvas.addEventListener('click', e => {
+  const scale = 3.5 / (zoom * Math.min(W, H));
+  const mx = centerX + (e.clientX - W/2) * scale;
+  const my = centerY + (e.clientY - H/2) * scale;
+  centerX = mx; centerY = my;
+  zoom *= 2.8;
+  maxIter = Math.min(400, maxIter + 20);
+  dirty = true;
+  document.getElementById('note').style.opacity = '0';
+});
+
+// Reset on double click
+canvas.addEventListener('dblclick', e => {
+  e.preventDefault();
+  centerX = -0.5; centerY = 0;
+  zoom = 1.0; maxIter = 120;
+  dirty = true;
+});
+
+// Render loop
+function loop() {
+  if (dirty) renderMandelbrot();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
