@@ -1,1 +1,182 @@
-
+404 · HTML
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noch nicht da — Emergenz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+ 
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.7); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,1); }
+    #back::before { content: '← '; letter-spacing: 0; }
+ 
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 20;
+    }
+ 
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+ 
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 10; pointer-events: none;
+      gap: clamp(1.5rem,3vh,3rem);
+      padding: clamp(80px,12vh,140px) clamp(40px,8vw,120px);
+    }
+ 
+    #number {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(4rem,12vw,9rem); letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.06);
+      opacity: 0; animation: fadein 2s ease 0.3s forwards;
+      line-height: 1;
+    }
+ 
+    blockquote {
+      max-width: 520px;
+      opacity: 0; animation: fadein 2s ease 0.8s forwards;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: clamp(1.5rem,3vh,2.5rem) clamp(1.5rem,3vw,2.5rem);
+      border-left: 0.5px solid rgba(232,224,208,0.12);
+      text-align: center;
+    }
+ 
+    blockquote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: italic;
+      font-size: clamp(1.1rem,2vw,1.55rem);
+      letter-spacing: 0.06em; line-height: 1.8;
+      color: rgba(232,224,208,0.88);
+      margin-bottom: 1.2rem;
+    }
+ 
+    blockquote cite {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: normal;
+      font-size: clamp(0.6rem,0.95vw,0.78rem);
+      letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.28);
+      text-transform: lowercase;
+    }
+ 
+    .note {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: italic;
+      font-size: clamp(0.7rem,1.1vw,0.9rem);
+      letter-spacing: 0.18em; line-height: 1.8;
+      color: rgba(232,224,208,0.22);
+      text-align: center;
+      opacity: 0; animation: fadein 1.5s ease 1.6s forwards;
+    }
+ 
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <a id="back" href="/">← emergenz</a>
+  <div id="page-name">noch nicht da</div>
+  <canvas id="canvas"></canvas>
+ 
+  <div id="panel">
+    <div id="number">404</div>
+    <blockquote>
+      <p>„Das Werden ist wichtiger als das Sein."</p>
+      <cite>Friedrich Nietzsche</cite>
+    </blockquote>
+    <div class="note">Diese Seite entsteht noch.<br>Emergenz braucht Zeit.</div>
+  </div>
+ 
+<script>
+// ── Brownsche Bewegung ────────────────────────────
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+ 
+const NUM = 80;
+let particles = [];
+ 
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  init();
+}
+ 
+function init() {
+  particles = [];
+  for (let i = 0; i < NUM; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      trail: [],
+      speed:  0.2 + Math.random() * 0.4,
+      angle:  Math.random() * Math.PI * 2,
+      turn:   (Math.random() - 0.5) * 0.06,
+      alpha:  Math.random() * 0.05,
+    });
+  }
+}
+ 
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  ctx.fillRect(0, 0, W, H);
+ 
+  for (const p of particles) {
+    p.angle += p.turn + (Math.random() - 0.5) * 0.12;
+    p.turn  *= 0.98;
+    p.turn  += (Math.random() - 0.5) * 0.015;
+    p.x += Math.cos(p.angle) * p.speed;
+    p.y += Math.sin(p.angle) * p.speed;
+    const m = 40;
+    if (p.x < m)   p.angle += 0.1;
+    if (p.x > W-m) p.angle -= 0.1;
+    if (p.y < m)   p.angle += 0.1;
+    if (p.y > H-m) p.angle -= 0.1;
+    p.alpha = Math.min(0.06, p.alpha + 0.002);
+ 
+    p.trail.push({ x: p.x, y: p.y });
+    if (p.trail.length > 150) p.trail.shift();
+ 
+    for (let i = 1; i < p.trail.length; i++) {
+      const age = i / p.trail.length;
+      ctx.strokeStyle = `rgba(232,224,208,${age * age * p.alpha})`;
+      ctx.lineWidth   = age * 0.7;
+      ctx.beginPath();
+      ctx.moveTo(p.trail[i-1].x, p.trail[i-1].y);
+      ctx.lineTo(p.trail[i].x,   p.trail[i].y);
+      ctx.stroke();
+    }
+  }
+ 
+  requestAnimationFrame(draw);
+}
+ 
+resize();
+window.addEventListener('resize', resize);
+draw();
+</script>
+</body>
+</html>
