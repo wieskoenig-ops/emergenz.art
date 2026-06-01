@@ -371,47 +371,69 @@ const COLS = 48, ROWS = 24;
 let cells = [];         // 0 = ruhig, 1 = gekippt
 let pressure = 0;       // 0..1
 let connectR = 3;
-let hasFlipped = false; // einmal Kippmoment erkannt
+let hasFlipped = false;
 let flashFrame = 0;
 let simW, simH, cellW, cellH;
+let lastStepTime = 0;
+const STEP_INTERVAL = 120; // ms zwischen Schritten — entkoppelt von Framerate
 
 function initCells() {
   cells = new Array(COLS * ROWS).fill(0);
   hasFlipped = false;
   flashFrame = 0;
+  lastStepTime = 0;
   phaseEl.textContent = 'equilibrium';
-  phaseEl.style.color = '#7a3a20';
+  phaseEl.style.color = '#b05830';
 }
 initCells();
 
 function idx(c, r) { return r * COLS + c; }
 
 function countTipped(c, r) {
-  let count = 0, total = 0;
+  let tipped = 0, stable = 0;
   for (let dc = -connectR; dc <= connectR; dc++) {
     for (let dr = -connectR; dr <= connectR; dr++) {
       if (dc === 0 && dr === 0) continue;
       const nc = c + dc, nr = r + dr;
       if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS) continue;
-      total++;
-      if (cells[idx(nc, nr)] === 1) count++;
+      if (cells[idx(nc, nr)] === 1) tipped++;
+      else stable++;
     }
   }
-  return total > 0 ? count / total : 0;
+  const total = tipped + stable;
+  return total > 0 ? { tipped: tipped / total, stable: stable / total } : { tipped: 0, stable: 1 };
 }
 
 function step() {
   const next = cells.slice();
-  const threshold = 0.25; // lokale Regel: >25% Nachbarn gekippt → kippen
+
+  // Schwellenwert steigt mit sinkendem Druck — bei niedrigem Druck
+  // braucht eine Zelle viel mehr gekippte Nachbarn um selbst zu kippen
+  const threshold = 0.55 - pressure * 0.25; // 0.55 (kein Druck) → 0.30 (voller Druck)
+
+  // Spontane Kipprate: sehr niedrig, erst ab ~40% Druck spürbar
+  // pressure=0.4 → 0.0002 pro Schritt pro Zelle ≈ alle ~5000 Schritte
+  // pressure=1.0 → 0.002  pro Schritt pro Zelle ≈ alle ~500 Schritte
+  const spontaneous = pressure > 0.35
+    ? Math.pow((pressure - 0.35) / 0.65, 2) * 0.003
+    : 0;
 
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       const i = idx(c, r);
       if (cells[i] === 1) { next[i] = 1; continue; } // irreversibel
-      // Spontan kippen durch Druck
-      if (Math.random() < pressure * 0.018) { next[i] = 1; continue; }
-      // Lokale Regel: Nachbardruck
-      if (countTipped(c, r) > threshold) { next[i] = 1; }
+
+      const { tipped, stable } = countTipped(c, r);
+
+      // Stabilisierung: gesunde Nachbarn bremsen das Kippen
+      // Je mehr stabile Nachbarn, desto widerstandsfähiger
+      const resistance = stable * 0.4;
+
+      // Spontan kippen (erst bei höherem Druck)
+      if (Math.random() < spontaneous) { next[i] = 1; continue; }
+
+      // Lokale Regel: Nachbardruck minus Widerstand
+      if (tipped - resistance > threshold) { next[i] = 1; }
     }
   }
   cells = next;
@@ -432,8 +454,12 @@ resizeSim();
 window.addEventListener('resize', resizeSim);
 
 let frame = 0;
-function draw() {
-  step();
+function draw(timestamp) {
+  // Physik nur alle STEP_INTERVAL ms — unabhängig von Framerate
+  if (timestamp - lastStepTime > STEP_INTERVAL) {
+    step();
+    lastStepTime = timestamp;
+  }
 
   const frac = tippedFraction();
 
@@ -511,7 +537,7 @@ btnReset.addEventListener('click', () => {
   initCells();
 });
 
-draw();
+draw(0);
 </script>
 </body>
 </html>
