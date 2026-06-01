@@ -1,116 +1,252 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>emergenz · fachrichtungen · biologie</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biologie — Emergenz</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    background: #0a0a0a;
-    color: #e8e4d9;
-    font-family: 'Georgia', serif;
-    font-size: 18px;
-    line-height: 1.75;
-    padding: 4rem 2rem 6rem;
-  }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-  .container {
-    max-width: 680px;
-    margin: 0 auto;
-  }
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-  .breadcrumb {
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: #5a5a50;
-    text-transform: lowercase;
-    margin-bottom: 3.5rem;
-  }
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.85rem,1.4vw,1.1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.35); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 30;
+    }
+    #back:hover { color: rgba(232,224,208,0.85); }
+    #back::before { content: '← '; letter-spacing: 0; }
 
-  .breadcrumb a {
-    color: #5a5a50;
-    text-decoration: none;
-  }
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
 
-  .breadcrumb a:hover {
-    color: #9a9a8a;
-  }
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
 
-  .breadcrumb span {
-    margin: 0 0.5em;
-  }
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
 
-  .intro {
-    font-size: 15px;
-    color: #7a7a6a;
-    font-style: italic;
-    line-height: 1.6;
-    margin-bottom: 3.5rem;
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid #1e1e1a;
-  }
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
 
-  h2 {
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: lowercase;
-    color: #5a5a50;
-    margin: 3rem 0 1.25rem;
-  }
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+      font-style: italic;
+    }
 
-  p {
-    margin-bottom: 1.5rem;
-    color: #d8d4c8;
-  }
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.3s; }
+    .block:nth-of-type(2) { animation-delay: 0.45s; }
+    .block:nth-of-type(3) { animation-delay: 0.6s; }
+    .block:nth-of-type(4) { animation-delay: 0.75s; }
+    .block:nth-of-type(5) { animation-delay: 0.9s; }
+    .block:nth-of-type(6) { animation-delay: 1.05s; }
 
-  p:last-child {
-    margin-bottom: 0;
-  }
-</style>
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.05rem,1.8vw,1.4rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.72);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .block p strong { font-weight: 400; color: rgba(232,224,208,0.92); }
+
+    .block.coda p { color: rgba(232,224,208,0.82); }
+  </style>
 </head>
 <body>
-<div class="container">
 
-  <div class="breadcrumb">
-    <a href="/">emergenz</a>
-    <span>·</span>
-    <a href="/fachrichtungen/">fachrichtungen</a>
-    <span>·</span>
-    biologie
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/fachrichtungen/">fachrichtungen</a>
+  <div id="page-name">biologie</div>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · fachrichtungen · 01 · biologie</div>
+
+    <div class="intro">
+      <p>Kein Fachgebiet zeigt Emergenz so unmittelbar wie die Biologie. Hier ist sie nicht Abstraktion, sondern Alltag: jede Zelle, jeder Organismus, jedes Ökosystem ist ein emergentes System. Das Leben selbst ist emergent.</p>
+    </div>
+
+    <div class="block">
+      <h2>von der zelle zum organismus</h2>
+      <p>Eine einzelne Herzmuskelzelle ist ein bemerkenswertes Objekt. Im Reagenzglas isoliert, kontrahiert sie rhythmisch, folgt ihrer eigenen inneren Uhr. Aber sie pumpt kein Blut. Das kann sie nicht. Die Fähigkeit, Blut durch einen Körper zu treiben, entsteht erst durch das präzise Zusammenspiel von Millionen Muskelzellen, Bindegewebe, Nervenbahnen und elektrischen Signalen. Die Eigenschaft gehört dem System, nicht dem Teil.</p>
+      <p>Noch deutlicher beim Bewusstsein. Ein einzelnes Neuron leitet elektrische Impulse weiter, das ist alles. Es denkt nicht, fühlt nicht, erinnert sich nicht. Erst das dichte Zusammenspiel von ungefähr 86 Milliarden Neuronen, verbunden durch Billionen von Synapsen, bringt etwas hervor, das wir Gedanken nennen, Gefühle, Selbstwahrnehmung. Wie genau das geschieht, weiß niemand. Wir können jeden einzelnen Schaltkreis kartieren und stehen vor dem Phänomen trotzdem wie vor einer verschlossenen Tür. Die neue Ebene gibt sich nicht preis.</p>
+    </div>
+
+    <div class="block">
+      <h2>die kolonie</h2>
+      <p>Ameisen besitzen kein Gehirn im kollektiven Sinne. Die Königin kommandiert nichts, plant nichts, koordiniert nichts. Jede Arbeiterin folgt simplen lokalen Regeln: folge der stärksten Pheromonspur, hinterlasse selbst eine Spur wenn du Erfolg hast, weiche Hindernissen aus. Das ist das vollständige Regelwerk. Aus diesen Regeln emergiert eine Kolonie, die Straßennetzwerke optimiert, die Nahrungssuche an Wetterbedingungen anpasst, Tote beerdigt, Verwundete pflegt und Verteidigung koordiniert, die militärische Strategen beeindruckt. Keine dieser Fähigkeiten steckt in einer einzelnen Ameise. Alle entstehen aus dem Zusammenspiel.</p>
+      <p>Noch stiller arbeitet das Mykorrhiza-Netzwerk unter dem Waldboden. Einzelne Pilzfäden verbinden sich mit Baumwurzeln, transportieren lokal Nährstoffe, mehr nicht. Aber Milliarden dieser Verbindungen verweben sich zu einem unterirdischen Netz, das nahezu alle Bäume eines Waldgebiets umfasst. Aus diesem Netz emergiert etwas, das kein einzelner Pilzfaden besitzt: ein kollektives Verteilungssystem, das Nährstoffe dorthin lenkt wo sie gebraucht werden, Warnsignale bei Schädlingsbefall weitergibt und junge Bäume im Schatten des Kronendachs mit Zucker versorgt, den sie selbst nicht produzieren können. Der Wald denkt nicht. Aber er verhält sich so, als ob.</p>
+    </div>
+
+    <div class="block">
+      <h2>das ökosystem</h2>
+      <p>Der Amazonas-Regenwald ist vielleicht das eindrücklichste emergente System der Erde. Zwischen 50 und 80 Prozent des Regens, der dort fällt, wird vom Wald selbst erzeugt. Bäume verdunsten Wasser, das als Regen zurückkommt, das neue Bäume speist, die mehr Wasser verdunsten. Ein einzelner Baum kann das nicht. Erst die Masse erzeugt das Klima, das die Masse am Leben erhält. Das Ökosystem ist seine eigene Voraussetzung.</p>
+      <p>Das macht den Regenwald nicht nur komplex, sondern gefährlich nichtlinear. Da er ein emergentes System ist, gilt für ihn, was für alle emergenten Systeme gilt: er lässt sich nicht von unten rekonstruieren. Wer Bäume zählt, versteht den Wald nicht. Und wer den Wald stört, bekommt nicht einfach weniger Wald, sondern riskiert den Kollaps des emergenten Systems selbst. Die Klimamodelle des Max-Planck-Instituts zeigen: ab einem bestimmten Schwellenwert der Abholzung bricht der selbstverstärkende Wasserkreislauf zusammen. Der Kipppunkt ist keine Metapher. Er ist Systemdynamik.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>evolution als emergenz</h2>
+      <p>Evolution wird selten so beschrieben, aber es liegt nahe: Evolution ist das emergente Phänomen schlechthin. Durch zufällige Kombination von Bausteinen, Mutation und Rekombination, entstehen Eigenschaften, die in keinem der Ausgangselemente angelegt waren und aus ihnen nicht vorhergesagt werden konnten. Aus Chemie wurde Biologie. Aus Biologie wurde Bewusstsein. Aus Bewusstsein wurde Kultur.</p>
+      <p>Jede dieser Stufen folgt eigenen Gesetzmäßigkeiten, die auf der Ebene darunter nicht existieren. Die Gesetze der Biochemie lassen sich nicht aus der Quantenmechanik ableiten. Die Gesetze der Ökologie nicht aus der Zellbiologie. Und die Gesetze, nach denen Kulturen entstehen, kollabieren oder sich verwandeln, nicht aus der Neurologie einzelner Gehirne.</p>
+      <p>Evolution ist nicht der Mechanismus, der Leben erzeugt. Sie ist der Mechanismus, durch den die Welt immer tiefere Ebenen der Realität hervorbringt. Jede neue Ebene ist irreduzibler Gewinn.</p>
+    </div>
+
   </div>
 
-  <p class="intro">Kein Fachgebiet zeigt Emergenz so unmittelbar wie die Biologie. Hier ist sie nicht Abstraktion, sondern Alltag: jede Zelle, jeder Organismus, jedes Ökosystem ist ein emergentes System. Das Leben selbst ist emergent.</p>
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
 
-  <h2>von der zelle zum organismus</h2>
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
 
-  <p>Eine einzelne Herzmuskelzelle ist ein bemerkenswertes Objekt. Im Reagenzglas isoliert, kontrahiert sie rhythmisch, folgt ihrer eigenen inneren Uhr. Aber sie pumpt kein Blut. Das kann sie nicht. Die Fähigkeit, Blut durch einen Körper zu treiben, entsteht erst durch das präzise Zusammenspiel von Millionen Muskelzellen, Bindegewebe, Nervenbahnen und elektrischen Signalen. Die Eigenschaft gehört dem System, nicht dem Teil.</p>
+const N = 120;
+const boids = [];
 
-  <p>Noch deutlicher beim Bewusstsein. Ein einzelnes Neuron leitet elektrische Impulse weiter, das ist alles. Es denkt nicht, fühlt nicht, erinnert sich nicht. Erst das dichte Zusammenspiel von ungefähr 86 Milliarden Neuronen, verbunden durch Billionen von Synapsen, bringt etwas hervor, das wir Gedanken nennen, Gefühle, Selbstwahrnehmung. Wie genau das geschieht, weiß niemand. Wir können jeden einzelnen Schaltkreis kartieren und stehen vor dem Phänomen trotzdem wie vor einer verschlossenen Tür. Die neue Ebene gibt sich nicht preis.</p>
+for (let i = 0; i < N; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const speed = 0.6 + Math.random() * 0.5;
+  boids.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: Math.cos(angle) * speed,
+    vy: Math.sin(angle) * speed,
+  });
+}
 
-  <h2>die kolonie</h2>
+const PERC  = 80;
+const SEP   = 22;
+const SPEED = 1.0;
 
-  <p>Ameisen besitzen kein Gehirn im kollektiven Sinne. Die Königin kommandiert nichts, plant nichts, koordiniert nichts. Jede Arbeiterin folgt simplen lokalen Regeln: folge der stärksten Pheromonspur, hinterlasse selbst eine Spur wenn du Erfolg hast, weiche Hindernissen aus. Das ist das vollständige Regelwerk. Aus diesen Regeln emergiert eine Kolonie, die Straßennetzwerke optimiert, die Nahrungssuche an Wetterbedingungen anpasst, Tote beerdigt, Verwundete pflegt und Verteidigung koordiniert, die militärische Strategen beeindruckt. Keine dieser Fähigkeiten steckt in einer einzelnen Ameise. Alle entstehen aus dem Zusammenspiel.</p>
+function step() {
+  for (const b of boids) {
+    let ax = 0, ay = 0;
+    let cx = 0, cy = 0, cn = 0;
+    let mx = 0, my = 0, mn = 0;
+    let sx = 0, sy = 0;
 
-  <p>Noch stiller arbeitet das Mykorrhiza-Netzwerk unter dem Waldboden. Einzelne Pilzfäden verbinden sich mit Baumwurzeln, transportieren lokal Nährstoffe, mehr nicht. Aber Milliarden dieser Verbindungen verweben sich zu einem unterirdischen Netz, das nahezu alle Bäume eines Waldgebiets umfasst. Aus diesem Netz emergiert etwas, das kein einzelner Pilzfaden besitzt: ein kollektives Verteilungssystem, das Nährstoffe dorthin lenkt wo sie gebraucht werden, Warnsignale bei Schädlingsbefall weitergibt und junge Bäume im Schatten des Kronendachs mit Zucker versorgt, den sie selbst nicht produzieren können. Der Wald denkt nicht. Aber er verhält sich so, als ob.</p>
+    for (const o of boids) {
+      if (o === b) continue;
+      const dx = o.x - b.x, dy = o.y - b.y;
+      const d  = Math.sqrt(dx*dx + dy*dy);
+      if (d > PERC) continue;
+      cx += o.x; cy += o.y; cn++;
+      mx += o.vx; my += o.vy; mn++;
+      if (d < SEP) { sx -= dx/d; sy -= dy/d; }
+    }
 
-  <h2>das ökosystem</h2>
+    if (cn > 0) { ax += (cx/cn - b.x) * 0.0005; ay += (cy/cn - b.y) * 0.0005; }
+    if (mn > 0) { ax += (mx/mn - b.vx) * 0.03;  ay += (my/mn - b.vy) * 0.03; }
+    ax += sx * 0.04; ay += sy * 0.04;
 
-  <p>Der Amazonas-Regenwald ist vielleicht das eindrücklichste emergente System der Erde. Zwischen 50 und 80 Prozent des Regens, der dort fällt, wird vom Wald selbst erzeugt. Bäume verdunsten Wasser, das als Regen zurückkommt, das neue Bäume speist, die mehr Wasser verdunsten. Ein einzelner Baum kann das nicht. Erst die Masse erzeugt das Klima, das die Masse am Leben erhält. Das Ökosystem ist seine eigene Voraussetzung.</p>
+    b.vx += ax; b.vy += ay;
+    const spd = Math.sqrt(b.vx*b.vx + b.vy*b.vy);
+    if (spd > SPEED) { b.vx = b.vx/spd*SPEED; b.vy = b.vy/spd*SPEED; }
+    if (spd < 0.3)   { b.vx *= 1.05; b.vy *= 1.05; }
 
-  <p>Das macht den Regenwald nicht nur komplex, sondern gefährlich nichtlinear. Da er ein emergentes System ist, gilt für ihn, was für alle emergenten Systeme gilt: er lässt sich nicht von unten rekonstruieren. Wer Bäume zählt, versteht den Wald nicht. Und wer den Wald stört, bekommt nicht einfach weniger Wald, sondern riskiert den Kollaps des emergenten Systems selbst. Die Klimamodelle des Max-Planck-Instituts zeigen: ab einem bestimmten Schwellenwert der Abholzung bricht der selbstverstärkende Wasserkreislauf zusammen. Der Kipppunkt ist keine Metapher. Er ist Systemdynamik.</p>
+    b.x += b.vx; b.y += b.vy;
+    if (b.x < 0) b.x += W; if (b.x > W) b.x -= W;
+    if (b.y < 0) b.y += H; if (b.y > H) b.y -= H;
+  }
+}
 
-  <h2>evolution als emergenz</h2>
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.18)';
+  ctx.fillRect(0, 0, W, H);
 
-  <p>Evolution wird selten so beschrieben, aber es liegt nahe: Evolution ist das emergente Phänomen schlechthin. Durch zufällige Kombination von Bausteinen, Mutation und Rekombination, entstehen Eigenschaften, die in keinem der Ausgangselemente angelegt waren und aus ihnen nicht vorhergesagt werden konnten. Aus Chemie wurde Biologie. Aus Biologie wurde Bewusstsein. Aus Bewusstsein wurde Kultur.</p>
+  step();
 
-  <p>Jede dieser Stufen folgt eigenen Gesetzmäßigkeiten, die auf der Ebene darunter nicht existieren. Die Gesetze der Biochemie lassen sich nicht aus der Quantenmechanik ableiten. Die Gesetze der Ökologie nicht aus der Zellbiologie. Und die Gesetze, nach denen Kulturen entstehen, kollabieren oder sich verwandeln, nicht aus der Neurologie einzelner Gehirne.</p>
+  for (const b of boids) {
+    const angle = Math.atan2(b.vy, b.vx);
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(4, 0);
+    ctx.lineTo(-3, 1.8);
+    ctx.lineTo(-3, -1.8);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(232,224,208,0.12)';
+    ctx.fill();
+    ctx.restore();
+  }
 
-  <p>Evolution ist nicht der Mechanismus, der Leben erzeugt. Sie ist der Mechanismus, durch den die Welt immer tiefere Ebenen der Realität hervorbringt. Jede neue Ebene ist irreduzibler Gewinn.</p>
+  requestAnimationFrame(draw);
+}
 
-</div>
+draw();
+</script>
 </body>
 </html>
