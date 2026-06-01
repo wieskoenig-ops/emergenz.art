@@ -368,18 +368,18 @@ const sliderC    = document.getElementById('slider-connect');
 const btnReset   = document.getElementById('btn-reset');
 
 const COLS = 48, ROWS = 24;
-let cells = [];         // 0 = ruhig, 1 = gekippt
+let cells = [];         // 0 = stabil, 1 = gekippt
 let pressure = 0;       // 0..1
 let connectR = 3;
-let hasFlipped = false;
+let truelyTipped = false; // echter Kipppunkt: >70% UND Druck hoch genug
 let flashFrame = 0;
 let simW, simH, cellW, cellH;
 let lastStepTime = 0;
-const STEP_INTERVAL = 120; // ms zwischen Schritten — entkoppelt von Framerate
+const STEP_INTERVAL = 120;
 
 function initCells() {
   cells = new Array(COLS * ROWS).fill(0);
-  hasFlipped = false;
+  truelyTipped = false;
   flashFrame = 0;
   lastStepTime = 0;
   phaseEl.textContent = 'equilibrium';
@@ -389,7 +389,7 @@ initCells();
 
 function idx(c, r) { return r * COLS + c; }
 
-function countTipped(c, r) {
+function countNeighbors(c, r) {
   let tipped = 0, stable = 0;
   for (let dc = -connectR; dc <= connectR; dc++) {
     for (let dr = -connectR; dr <= connectR; dr++) {
@@ -406,34 +406,48 @@ function countTipped(c, r) {
 
 function step() {
   const next = cells.slice();
+  const frac = tippedFraction();
 
-  // Schwellenwert steigt mit sinkendem Druck — bei niedrigem Druck
-  // braucht eine Zelle viel mehr gekippte Nachbarn um selbst zu kippen
-  const threshold = 0.55 - pressure * 0.25; // 0.55 (kein Druck) → 0.30 (voller Druck)
+  const irreversible = truelyTipped;
 
-  // Spontane Kipprate: sehr niedrig, erst ab ~40% Druck spürbar
-  // pressure=0.4 → 0.0002 pro Schritt pro Zelle ≈ alle ~5000 Schritte
-  // pressure=1.0 → 0.002  pro Schritt pro Zelle ≈ alle ~500 Schritte
+  // Kipp-Schwellenwert: sinkt mit steigendem Druck
+  const flipThreshold = 0.55 - pressure * 0.25; // 0.55 → 0.30
+
+  // Spontane Kipprate — erst ab 35% Druck, quadratisch
   const spontaneous = pressure > 0.35
     ? Math.pow((pressure - 0.35) / 0.65, 2) * 0.003
     : 0;
 
+  // Erholungswahrscheinlichkeit pro Schritt pro Zelle:
+  // — Nur bei Druck < 30% überhaupt möglich
+  // — Sehr selten: max 0.4% pro Schritt
+  // — Braucht außerdem >80% stabile Nachbarn (strukturelle Voraussetzung)
+  const healProb = pressure < 0.30
+    ? Math.pow((0.30 - pressure) / 0.30, 2) * 0.004
+    : 0;
+  const healNeighborMin = 0.80; // mind. 80% stabile Nachbarn nötig
+
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       const i = idx(c, r);
-      if (cells[i] === 1) { next[i] = 1; continue; } // irreversibel
-
-      const { tipped, stable } = countTipped(c, r);
-
-      // Stabilisierung: gesunde Nachbarn bremsen das Kippen
-      // Je mehr stabile Nachbarn, desto widerstandsfähiger
+      const v = cells[i];
+      const { tipped, stable } = countNeighbors(c, r);
       const resistance = stable * 0.4;
 
-      // Spontan kippen (erst bei höherem Druck)
-      if (Math.random() < spontaneous) { next[i] = 1; continue; }
+      if (v === 0) {
+        // Stabile Zelle: kippt deterministisch oder spontan
+        if (Math.random() < spontaneous) { next[i] = 1; continue; }
+        if (tipped - resistance > flipThreshold) { next[i] = 1; }
 
-      // Lokale Regel: Nachbardruck minus Widerstand
-      if (tipped - resistance > threshold) { next[i] = 1; }
+      } else {
+        // Gekippte Zelle
+        if (irreversible) { next[i] = 1; continue; }
+
+        // Erholung: nur wenn Druck niedrig, Nachbarschaft stabil, UND Zufall
+        if (healProb > 0 && stable > healNeighborMin && Math.random() < healProb) {
+          next[i] = 0;
+        }
+      }
     }
   }
   cells = next;
@@ -463,21 +477,33 @@ function draw(timestamp) {
 
   const frac = tippedFraction();
 
-  // Kipperkennung
-  if (!hasFlipped && frac > 0.5) {
-    hasFlipped = true;
+  // Echter Kipppunkt: >70% gekippt bei hohem Druck — ab hier irreversibel
+  if (!truelyTipped && frac > 0.70 && pressure > 0.55) {
+    truelyTipped = true;
     flashFrame = frame;
+  }
+
+  // Dynamischer Phasenstatus
+  if (truelyTipped && frac > 0.85) {
+    phaseEl.textContent = 'neuer zustand · irreversibel';
+    phaseEl.style.color = 'rgba(220,140,60,0.85)';
+  } else if (truelyTipped) {
     phaseEl.textContent = 'kipppunkt überschritten';
     phaseEl.style.color = 'rgba(220,140,60,0.9)';
-  }
-  if (frac > 0.95) {
-    phaseEl.textContent = 'neuer zustand · stabil';
-    phaseEl.style.color = 'rgba(220,140,60,0.7)';
+  } else if (frac > 0.35) {
+    phaseEl.textContent = 'kritische zone · noch reversibel';
+    phaseEl.style.color = 'rgba(200,180,80,0.85)';
+  } else if (frac > 0.08) {
+    phaseEl.textContent = 'unter druck · erholung möglich';
+    phaseEl.style.color = 'rgba(160,200,160,0.75)';
+  } else {
+    phaseEl.textContent = 'equilibrium';
+    phaseEl.style.color = '#b05830';
   }
 
   // Flash beim Kippen
   const flashAge = frame - flashFrame;
-  const flash = hasFlipped && flashAge < 30
+  const flash = truelyTipped && flashAge < 30
     ? Math.max(0, 1 - flashAge / 30) * 0.12
     : 0;
 
@@ -510,7 +536,7 @@ function draw(timestamp) {
   // Fortschrittsbalken
   ctx.fillStyle = 'rgba(232,224,208,0.06)';
   ctx.fillRect(0, simH - 2, simW, 2);
-  ctx.fillStyle = hasFlipped
+  ctx.fillStyle = truelyTipped
     ? 'rgba(220,140,60,0.5)'
     : 'rgba(232,224,208,0.25)';
   ctx.fillRect(0, simH - 2, simW * frac, 2);
