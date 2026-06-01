@@ -61,11 +61,12 @@
       user-select: none;
       text-align: center;
     }
-    .cell:hover .cell-label { color: rgba(232,224,208,0.75); }
+    .cell-label { color: rgba(232,224,208,0.65); }
+    .cell:hover .cell-label { color: rgba(232,224,208,1); }
 
-    /* Block 2 Start — dauerhaft hell */
+    /* Block 2 Start — minimal heller zum Hervorheben */
     #c1 .cell-label {
-      color: rgba(232,224,208,0.65) !important;
+      color: rgba(232,224,208,0.75) !important;
       font-size: clamp(1rem, 1.8vw, 1.5rem);
     }
     #c1:hover .cell-label { color: rgba(232,224,208,1) !important; }
@@ -140,7 +141,7 @@
 
     <div class="band" id="band-bot">
       <a class="cell" id="c3" href="/literatur/"><span class="cell-label">literatur</span></a>
-      <a class="cell" id="c4" href="/links/"><span class="cell-label">links</span></a>
+      <a class="cell" id="c4" href="/kippunkte/"><span class="cell-label">kippunkte</span></a>
       <a class="cell" id="c5" href="mailto:mail.emergenz@wrb.de"><span class="cell-label">kontakt</span></a>
     </div>
   </div>
@@ -437,39 +438,6 @@ function startSwarm(){
 
 word.addEventListener('mouseenter', startSwarm);
 word.addEventListener('click', startSwarm);
-
-// ── Unregelmäßiges Pulsieren der Labels ──────────
-// c0, c2, c3, c4, c5 — nicht c1 (Start bleibt permanent hell)
-const pulseIds = ['c0','c2','c3','c4','c5'];
-
-// Jeder Block bekommt seinen eigenen Takt — zufällig und unabhängig
-pulseIds.forEach(id => {
-  const el    = document.getElementById(id);
-  const label = el.querySelector('.cell-label');
-
-  function schedulePulse() {
-    // Nächster Puls in 4–18 Sekunden
-    const delay = 4000 + Math.random() * 14000;
-    setTimeout(() => {
-      // Nur pulsieren wenn nicht gerade hover oder clicked
-      if (!el.matches(':hover') && !el.classList.contains('clicked')) {
-        // Einblenden
-        label.style.transition = 'color 0.6s ease';
-        label.style.color      = 'rgba(232,224,208,0.7)';
-        // Nach 2–3 Sekunden wieder verblassen
-        const hold = 2000 + Math.random() * 1000;
-        setTimeout(() => {
-          label.style.transition = 'color 1.2s ease';
-          label.style.color      = 'rgba(232,224,208,0.12)';
-        }, hold);
-      }
-      schedulePulse(); // nächsten Puls planen
-    }, delay);
-  }
-
-  // Gestaffelt starten damit nicht alle gleichzeitig pulsieren
-  setTimeout(schedulePulse, Math.random() * 6000);
-});
 </script>
 </body>
 </html>
