@@ -3,23 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Noch nicht da — Emergenz</title>
+  <title>Fachrichtungen — Emergenz</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
 
     #back {
       position: fixed;
       top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
       font-family: 'Cormorant Garamond', serif; font-weight: 400;
-      font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.7); text-transform: lowercase;
-      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+      font-size: clamp(0.85rem,1.4vw,1.1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.35); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 30;
     }
-    #back:hover { color: rgba(232,224,208,1); }
+    #back:hover { color: rgba(232,224,208,0.85); }
     #back::before { content: '← '; letter-spacing: 0; }
 
     #page-name {
@@ -28,153 +45,323 @@
       font-family: 'Cormorant Garamond', serif; font-weight: 300;
       font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
       color: #7a3a20; text-transform: lowercase;
-      pointer-events: none; z-index: 20;
+      pointer-events: none; z-index: 30;
     }
 
-    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
-
-    #panel {
-      position: fixed; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 10; pointer-events: none;
-      gap: clamp(1.5rem,3vh,3rem);
-      padding: clamp(80px,12vh,140px) clamp(40px,8vw,120px);
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
     }
 
-    #number {
-      font-family: 'Cormorant Garamond', serif; font-weight: 300;
-      font-size: clamp(4rem,12vw,9rem); letter-spacing: 0.35em;
-      color: rgba(232,224,208,0.06);
-      opacity: 0; animation: fadein 2s ease 0.3s forwards;
-      line-height: 1;
-    }
-
-    blockquote {
-      max-width: 520px;
-      opacity: 0; animation: fadein 2s ease 0.8s forwards;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: clamp(1.5rem,3vh,2.5rem) clamp(1.5rem,3vw,2.5rem);
-      border-left: 0.5px solid rgba(232,224,208,0.12);
-      text-align: center;
-    }
-
-    blockquote p {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300; font-style: italic;
-      font-size: clamp(1.1rem,2vw,1.55rem);
-      letter-spacing: 0.06em; line-height: 1.8;
-      color: rgba(232,224,208,0.88);
-      margin-bottom: 1.2rem;
-    }
-
-    blockquote cite {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300; font-style: normal;
-      font-size: clamp(0.6rem,0.95vw,0.78rem);
-      letter-spacing: 0.25em;
-      color: rgba(232,224,208,0.28);
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
       text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
     }
 
-    .note {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300; font-style: italic;
-      font-size: clamp(0.7rem,1.1vw,0.9rem);
-      letter-spacing: 0.18em; line-height: 1.8;
-      color: rgba(232,224,208,0.22);
-      text-align: center;
-      opacity: 0; animation: fadein 1.5s ease 1.6s forwards;
+    /* Einleitung — etwas größer, als Einstieg */
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
     }
 
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(6px); }
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p em { font-style: italic; color: rgba(232,224,208,0.97); }
+
+    /* Kernaussage — groß, allein */
+    .statement {
+      opacity: 0;
+      animation: rise 1s ease 0.3s forwards;
+      margin-bottom: clamp(3rem,6vh,5rem);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.22);
+    }
+
+    .statement p {
+      font-size: clamp(1.3rem,2.4vw,1.85rem);
+      line-height: 1.75;
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.92);
+      font-style: italic;
+    }
+
+    /* Textblöcke */
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.5s; }
+    .block:nth-of-type(2) { animation-delay: 0.65s; }
+    .block:nth-of-type(3) { animation-delay: 0.8s; }
+    .block:nth-of-type(4) { animation-delay: 0.95s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.05rem,1.8vw,1.4rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.72);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .block p strong { font-weight: 400; color: rgba(232,224,208,0.92); }
+
+    /* Anderson-Zitat */
+    .block.quote {
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+    }
+    .block.quote p {
+      color: rgba(232,224,208,0.82);
+    }
+
+    /* Abschlussblock — etwas heller, als Coda */
+    .block.coda h2 { color: rgba(232,224,208,0.82); }
+    .block.coda p  { color: rgba(232,224,208,0.82); }
+
+    /* Trennlinie */
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+    }
+
+    /* Navigations-Grid zu den sechs Fachrichtungen */
+    .nav-grid {
+      opacity: 0;
+      animation: rise 0.9s ease 1.1s forwards;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: clamp(0.8rem,2vw,1.4rem);
+    }
+
+    .nav-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding: clamp(1rem,2vh,1.5rem) clamp(1rem,2vw,1.5rem);
+      border: 0.5px solid rgba(232,224,208,0.1);
+      text-decoration: none;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .nav-card:hover {
+      border-color: rgba(232,224,208,0.3);
+      background: rgba(232,224,208,0.03);
+    }
+
+    .nav-card-num {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.62rem,0.9vw,0.75rem);
+      letter-spacing: 0.3em;
+      color: rgba(232,224,208,0.25);
+    }
+
+    .nav-card-title {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(1rem,1.7vw,1.3rem);
+      letter-spacing: 0.18em;
+      color: rgba(160,210,230,0.75);
+      text-transform: lowercase;
+      transition: color 0.3s ease;
+    }
+    .nav-card:hover .nav-card-title { color: rgba(160,210,230,1); }
+
+    .nav-card-sub {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.1em;
+      color: rgba(232,224,208,0.28);
+      font-style: italic;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
-  <a id="back" href="/">← emergenz</a>
-  <div id="page-name">noch nicht da</div>
-  <canvas id="canvas"></canvas>
 
-  <div id="panel">
-    <div id="number">404</div>
-    <blockquote>
-      <p>„Das Werden ist wichtiger als das Sein."</p>
-      <cite>Friedrich Nietzsche</cite>
-    </blockquote>
-    <div class="note">Diese Seite entsteht noch.<br>Emergenz braucht Zeit.</div>
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/">emergenz</a>
+  <div id="page-name">fachrichtungen</div>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · 03 · fachrichtungen</div>
+
+    <div class="intro">
+      <p>Emergenz ist kein Konzept einer einzelnen Wissenschaft. Sie ist ein Prinzip, das sich quer durch alle Disziplinen zieht, von der Quantenphysik bis zur Soziologie, von der Zellbiologie bis zur Informatik. Überall dasselbe Muster: lokale Regeln, globale Struktur, eine neue Ebene der Realität, die aus dem Zusammenspiel entsteht und sich der Analyse von unten entzieht.</p>
+    </div>
+
+    <div class="statement">
+      <p>Warum ist dieses Prinzip dann so wenig bekannt?</p>
+    </div>
+
+    <div class="block">
+      <p>Disziplinen sind nach Gegenständen organisiert, nicht nach Prinzipien. Der Biologe studiert Zellen, der Ökonom Märkte, der Physiker Teilchen. Dass in allen drei Feldern dasselbe strukturelle Phänomen wirkt, fällt durch das Raster. Hinzu kommt, dass Emergenz der Reduktion Grenzen setzt, und die Wissenschaft ist auf Reduktion gebaut. Eine Grenze der Erklärbarkeit fühlt sich wie eine Niederlage an. Niederlagen werden selten gefeiert.</p>
+      <p>Aber der eigentliche Grund liegt tiefer. Emergenz hat keine Schuldigen.</p>
+    </div>
+
+    <div class="block quote">
+      <p>Klimawandel, Finanzblasen, soziale Polarisierung, der Kollaps von Ökosystemen, diese Phänomene entstehen aus dem kollektiven Verhalten von Millionen Akteuren, die jeweils lokalen Regeln folgen. Jeder handelt rational im Rahmen seiner Situation. Niemand hat das Ergebnis gewollt. Niemand hat es geplant. Es emergiert.</p>
+      <p>Das ist das strukturelle Versagen unserer Politik: sie ist auf Täter ausgerichtet. Auf Ursachen, die man benennen, auf Verantwortliche, die man zur Rechenschaft ziehen kann. Emergente Krisen bieten das nicht. Sie sind das Produkt von Systemen, nicht von Entscheidungen. Und Systeme lassen sich nicht anklagen.</p>
+      <p>Dazu kommt die Zeit. Emergente Prozesse wirken oft über Jahrzehnte, bevor sie sichtbar werden. Politik denkt in Legislaturperioden. Der Kipppunkt liegt jenseits der nächsten Wahl, also existiert er politisch nicht. Bis er existiert. Dann ist er bereits überschritten.</p>
+    </div>
+
+    <div class="block coda">
+      <p>Emergenz zu verstehen bedeutet nicht, Verantwortung aufzulösen. Es bedeutet, sie richtig zu verorten: nicht beim einzelnen Akteur, sondern bei den Regeln des Systems. Wer die Regeln setzt, trägt Verantwortung. Nicht für das, was er wollte, sondern für das, was emergiert.</p>
+      <p>Die folgenden sechs Kapitel zeigen, wie Emergenz in den wichtigsten Wissensgebieten wirkt. Die Beispiele sind verschieden. Das Prinzip ist dasselbe.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="nav-grid">
+      <a class="nav-card" href="/emergenz/fachrichtungen/biologie/">
+        <span class="nav-card-num">01</span>
+        <span class="nav-card-title">biologie</span>
+        <span class="nav-card-sub">ameisenkolonien · gehirn · evolution</span>
+      </a>
+      <a class="nav-card" href="/emergenz/fachrichtungen/physik/">
+        <span class="nav-card-num">02</span>
+        <span class="nav-card-title">physik</span>
+        <span class="nav-card-sub">phasenübergänge · supraleitung · thermodynamik</span>
+      </a>
+      <a class="nav-card" href="/emergenz/fachrichtungen/mathematik/">
+        <span class="nav-card-num">03</span>
+        <span class="nav-card-title">mathematik</span>
+        <span class="nav-card-sub">zelluläre automaten · fraktale · perkolation</span>
+      </a>
+      <a class="nav-card" href="/emergenz/fachrichtungen/soziologie/">
+        <span class="nav-card-num">04</span>
+        <span class="nav-card-title">soziologie</span>
+        <span class="nav-card-sub">sprache · bewegungen · kollektive intelligenz</span>
+      </a>
+      <a class="nav-card" href="/emergenz/fachrichtungen/informatik/">
+        <span class="nav-card-num">05</span>
+        <span class="nav-card-title">informatik</span>
+        <span class="nav-card-sub">internet · ki · schwarmintelligenz</span>
+      </a>
+      <a class="nav-card" href="/emergenz/fachrichtungen/finanzwelt/">
+        <span class="nav-card-num">06</span>
+        <span class="nav-card-title">finanzwelt</span>
+        <span class="nav-card-sub">preisbildung · blasen · flash crashes</span>
+      </a>
+    </div>
+
   </div>
 
 <script>
-// ── Brownsche Bewegung ────────────────────────────
-const canvas = document.getElementById('canvas');
+// Boids — dezenter Schwarm im Hintergrund
+const canvas = document.getElementById('bg-canvas');
 const ctx    = canvas.getContext('2d');
 let W, H;
-
-const NUM = 80;
-let particles = [];
 
 function resize() {
   W = canvas.width  = window.innerWidth;
   H = canvas.height = window.innerHeight;
-  init();
+}
+resize();
+window.addEventListener('resize', resize);
+
+const N = 120;
+const boids = [];
+
+for (let i = 0; i < N; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const speed = 0.6 + Math.random() * 0.5;
+  boids.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: Math.cos(angle) * speed,
+    vy: Math.sin(angle) * speed,
+  });
 }
 
-function init() {
-  particles = [];
-  for (let i = 0; i < NUM; i++) {
-    particles.push({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      trail: [],
-      speed:  0.2 + Math.random() * 0.4,
-      angle:  Math.random() * Math.PI * 2,
-      turn:   (Math.random() - 0.5) * 0.06,
-      alpha:  Math.random() * 0.05,
-    });
+const PERC  = 80;   // Wahrnehmungsradius
+const SEP   = 22;   // Separationsradius
+const SPEED = 1.0;
+
+function step() {
+  for (const b of boids) {
+    let ax = 0, ay = 0;
+    let cx = 0, cy = 0, cn = 0; // Kohäsion
+    let mx = 0, my = 0, mn = 0; // Ausrichtung
+    let sx = 0, sy = 0;         // Separation
+
+    for (const o of boids) {
+      if (o === b) continue;
+      const dx = o.x - b.x, dy = o.y - b.y;
+      const d  = Math.sqrt(dx*dx + dy*dy);
+      if (d > PERC) continue;
+      cx += o.x; cy += o.y; cn++;
+      mx += o.vx; my += o.vy; mn++;
+      if (d < SEP) { sx -= dx/d; sy -= dy/d; }
+    }
+
+    if (cn > 0) { ax += (cx/cn - b.x) * 0.0005; ay += (cy/cn - b.y) * 0.0005; }
+    if (mn > 0) { ax += (mx/mn - b.vx) * 0.03;  ay += (my/mn - b.vy) * 0.03; }
+    ax += sx * 0.04; ay += sy * 0.04;
+
+    b.vx += ax; b.vy += ay;
+    const spd = Math.sqrt(b.vx*b.vx + b.vy*b.vy);
+    if (spd > SPEED) { b.vx = b.vx/spd*SPEED; b.vy = b.vy/spd*SPEED; }
+    if (spd < 0.3)   { b.vx *= 1.05; b.vy *= 1.05; }
+
+    b.x += b.vx; b.y += b.vy;
+    if (b.x < 0) b.x += W; if (b.x > W) b.x -= W;
+    if (b.y < 0) b.y += H; if (b.y > H) b.y -= H;
   }
 }
 
 function draw() {
-  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  ctx.fillStyle = 'rgba(0,0,0,0.18)';
   ctx.fillRect(0, 0, W, H);
 
-  for (const p of particles) {
-    p.angle += p.turn + (Math.random() - 0.5) * 0.12;
-    p.turn  *= 0.98;
-    p.turn  += (Math.random() - 0.5) * 0.015;
-    p.x += Math.cos(p.angle) * p.speed;
-    p.y += Math.sin(p.angle) * p.speed;
-    const m = 40;
-    if (p.x < m)   p.angle += 0.1;
-    if (p.x > W-m) p.angle -= 0.1;
-    if (p.y < m)   p.angle += 0.1;
-    if (p.y > H-m) p.angle -= 0.1;
-    p.alpha = Math.min(0.06, p.alpha + 0.002);
+  step();
 
-    p.trail.push({ x: p.x, y: p.y });
-    if (p.trail.length > 150) p.trail.shift();
-
-    for (let i = 1; i < p.trail.length; i++) {
-      const age = i / p.trail.length;
-      ctx.strokeStyle = `rgba(232,224,208,${age * age * p.alpha})`;
-      ctx.lineWidth   = age * 0.7;
-      ctx.beginPath();
-      ctx.moveTo(p.trail[i-1].x, p.trail[i-1].y);
-      ctx.lineTo(p.trail[i].x,   p.trail[i].y);
-      ctx.stroke();
-    }
+  for (const b of boids) {
+    const angle = Math.atan2(b.vy, b.vx);
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.moveTo(4, 0);
+    ctx.lineTo(-3, 1.8);
+    ctx.lineTo(-3, -1.8);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(232,224,208,0.12)';
+    ctx.fill();
+    ctx.restore();
   }
 
   requestAnimationFrame(draw);
 }
 
-resize();
-window.addEventListener('resize', resize);
 draw();
 </script>
 </body>
