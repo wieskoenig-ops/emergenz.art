@@ -1,1 +1,279 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kippunkte — Emergenz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.7); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,1); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 20;
+    }
+
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10; pointer-events: none;
+      padding: clamp(70px,10vh,120px) clamp(40px,8vw,120px);
+      overflow-y: auto;
+    }
+
+    #text-block {
+      max-width: 640px; width: 100%;
+      opacity: 0; animation: fadein 2s ease 0.8s forwards;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: clamp(1.8rem,3.5vh,3rem) clamp(1.8rem,3.5vw,3rem);
+      border-left: 0.5px solid rgba(232,224,208,0.12);
+      pointer-events: auto; margin: auto;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .site-name {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.6rem,1vw,0.82rem); letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.3); text-transform: lowercase;
+      margin-bottom: clamp(1.5rem,3vh,2.5rem);
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.6rem,3.5vw,2.8rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.92); text-transform: lowercase;
+      margin-bottom: clamp(1.5rem,3vh,2.5rem); line-height: 1.3;
+    }
+
+    p {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1rem,1.7vw,1.25rem); letter-spacing: 0.05em;
+      color: rgba(232,224,208,0.78); line-height: 2;
+      margin-bottom: clamp(1.2rem,2.5vh,2rem);
+    }
+
+    p em { font-style: italic; color: rgba(232,224,208,0.95); }
+    p strong { font-weight: 400; color: rgba(232,224,208,0.92); }
+
+    .note {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.7rem,1.1vw,0.9rem); letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.25); font-style: italic;
+      line-height: 1.8; margin-top: clamp(1.5rem,3vh,2.5rem);
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      padding-top: clamp(1rem,2vh,1.5rem);
+    }
+
+    p:last-of-type { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+  <a id="back" href="/">← emergenz</a>
+  <div id="page-name">kippunkte</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="panel">
+    <div id="text-block">
+      <div class="site-name">emergenz.art · kippunkte</div>
+
+      <h1>emergenz<br>unter druck</h1>
+
+      <p>Ein <em>Kipppunkt</em> ist der Schwellenwert, ab dem lokale Regeln ein neues globales Muster erzwingen. Das ist Emergenz unter Druck. Der Unterschied liegt nur im Zeitfenster: Emergenz beschreibt den Zustand — ein neues Muster entsteht aus lokalen Interaktionen. Kipppunkte beschreiben den <em>Übergang</em> — den Moment, wo ein System die Schwelle überschreitet und in einen neuen emergenten Zustand kippt.</p>
+
+      <p>Der Zusammenhang ist real, aber verkannt. <strong>Kipppunkt</strong> ist dramatisch — er hat einen Täter, ein Opfer, eine Deadline. Er passt in eine Pressemitteilung. <strong>Emergenz</strong> dagegen ist systemisch, ohne klaren Schuldigen, politisch unbequem: sie zeigt die Komplexität, die sich nicht in Handlungsempfehlungen übersetzen lässt.</p>
+
+      <p>Beide Phänomene teilen eine Grundstruktur: <em>Nichtlinearität.</em> Kleine Ursachen, große Wirkungen. Rückkopplungsschleifen. Das Ganze ist mehr als die Summe seiner Teile. Das Amazonas-Ökosystem ist emergent — und hat Kipppunkte. Das Klima ist emergent — und hat Kipppunkte. Das eine hat das andere, weil emergente Systeme per Definition Phasenübergänge kennen.</p>
+
+      <p>Wer nur von Kipppunkten spricht, denkt noch linear — als gäbe es einen Schalter, den man umlegt. Wer Emergenz versteht, weiß: nach dem Kipppunkt entsteht nicht einfach <em>mehr vom Schlechten</em>, sondern etwas qualitativ Neues — ein Zustand mit eigener Logik, eigenen Regeln, der sich der Umkehr widersetzt. <em>Das ist der eigentlich erschreckende Gedanke.</em></p>
+
+      <div class="note">Das Thema wird im Verlauf dieser Website ausführlich besprochen —<br>mit Visualisierungen, Beispielen und der Frage, was das für uns bedeutet.</div>
+    </div>
+  </div>
+
+<script>
+// ── Doppelmulden-Animation — Kugel kippt ──────────
+// Ein Ball rollt in einer Doppelmulde, kippt irgendwann
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H, frame = 0;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Doppelmulden-Potenzial: U(x) = x⁴ - 2x²
+// Minima bei x = ±1, Maximum bei x = 0
+function potential(x) { return x*x*x*x - 2*x*x; }
+function force(x)     { return -(4*x*x*x - 4*x); } // -dU/dx
+
+// Zustand
+let ballX  =  -1.0;  // startet in linker Mulde
+let ballVX =  0.0;
+let noise  =  0.02;  // thermisches Rauschen — treibt den Übergang
+let hasKipped = false;
+let kippFrame = -1;
+
+// Skalierung für Anzeige
+function toScreen(x, y) {
+  const scaleX = Math.min(W, H) * 0.18;
+  const scaleY = Math.min(W, H) * 0.10;
+  const cx = W * 0.35; // etwas links von Mitte wegen Textblock
+  const cy = H * 0.52;
+  return {
+    px: cx + x * scaleX,
+    py: cy - y * scaleY,
+  };
+}
+
+// Potenzial-Kurve zeichnen
+function drawCurve() {
+  ctx.beginPath();
+  let first = true;
+  for (let xi = -1.65; xi <= 1.65; xi += 0.02) {
+    const u = potential(xi);
+    const { px, py } = toScreen(xi, -u);
+    if (first) { ctx.moveTo(px, py); first = false; }
+    else ctx.lineTo(px, py);
+  }
+  ctx.strokeStyle = 'rgba(232,224,208,0.18)';
+  ctx.lineWidth   = 1.2;
+  ctx.stroke();
+}
+
+// Ball zeichnen
+function drawBall(x, glow) {
+  const u = potential(x);
+  const { px, py } = toScreen(x, -u);
+
+  if (glow > 0) {
+    ctx.beginPath();
+    ctx.arc(px, py, 12, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(180,100,40,${glow * 0.15})`;
+    ctx.fill();
+  }
+
+  ctx.beginPath();
+  ctx.arc(px, py, 5, 0, Math.PI*2);
+  const col = hasKipped
+    ? `rgba(220,140,60,0.9)`
+    : `rgba(232,224,208,0.85)`;
+  ctx.fillStyle = col;
+  ctx.shadowColor = hasKipped ? 'rgba(220,140,60,0.6)' : 'rgba(232,224,208,0.3)';
+  ctx.shadowBlur  = hasKipped ? 16 : 6;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+}
+
+// Spur
+const trail = [];
+const TRAIL_LEN = 60;
+
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.12)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Physik
+  const f = force(ballX);
+  ballVX += f * 0.004;
+  ballVX += (Math.random() - 0.5) * noise;
+  ballVX *= 0.985; // Dämpfung
+  ballX  += ballVX;
+
+  // Grenzen
+  if (ballX >  1.65) { ballX =  1.65; ballVX *= -0.5; }
+  if (ballX < -1.65) { ballX = -1.65; ballVX *= -0.5; }
+
+  // Kipperkennung
+  if (!hasKipped && ballX > 0.2) {
+    hasKipped = true;
+    kippFrame = frame;
+    // Nach dem Kippen: mehr Dämpfung, landet in rechter Mulde
+    noise = 0.008;
+  }
+
+  // Spur
+  const u = potential(ballX);
+  const { px, py } = toScreen(ballX, -u);
+  trail.push({ px, py });
+  if (trail.length > TRAIL_LEN) trail.shift();
+
+  // Kurve
+  drawCurve();
+
+  // Spur zeichnen
+  for (let i = 1; i < trail.length; i++) {
+    const age = i / trail.length;
+    ctx.strokeStyle = `rgba(232,224,208,${age * 0.15})`;
+    ctx.lineWidth   = age * 1.5;
+    ctx.beginPath();
+    ctx.moveTo(trail[i-1].px, trail[i-1].py);
+    ctx.lineTo(trail[i].px,   trail[i].py);
+    ctx.stroke();
+  }
+
+  // Glow beim Kippen
+  const kippGlow = kippFrame > 0
+    ? Math.max(0, 1 - (frame - kippFrame) / 60)
+    : 0;
+
+  drawBall(ballX, kippGlow);
+
+  // Beschriftungen
+  const leftMin  = toScreen(-1, -potential(-1));
+  const rightMin = toScreen( 1, -potential( 1));
+  const top      = toScreen( 0, -potential( 0));
+
+  ctx.font = `300 ${Math.min(W,H)*0.016}px 'Cormorant Garamond', serif`;
+  ctx.textAlign = 'center';
+
+  ctx.fillStyle = hasKipped
+    ? 'rgba(232,224,208,0.2)'
+    : 'rgba(232,224,208,0.45)';
+  ctx.fillText('stabiler Zustand', leftMin.px, leftMin.py + 28);
+
+  ctx.fillStyle = hasKipped
+    ? 'rgba(220,140,60,0.6)'
+    : 'rgba(232,224,208,0.2)';
+  ctx.fillText('neuer Zustand', rightMin.px, rightMin.py + 28);
+
+  ctx.fillStyle = 'rgba(232,224,208,0.18)';
+  ctx.fillText('Kipppunkt', top.px, top.py - 16);
+
+  frame++;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>
