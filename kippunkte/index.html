@@ -35,21 +35,23 @@
 
     #panel {
       position: fixed; inset: 0;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: center; justify-content: flex-end;
       z-index: 10; pointer-events: none;
       padding: clamp(70px,10vh,120px) clamp(40px,8vw,120px);
       overflow-y: auto;
     }
 
     #text-block {
-      max-width: 640px; width: 100%;
+      max-width: 420px; width: 100%;
       opacity: 0; animation: fadein 2s ease 0.8s forwards;
       background: rgba(0,0,0,0.62);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      padding: clamp(1.8rem,3.5vh,3rem) clamp(1.8rem,3.5vw,3rem);
+      padding: clamp(1.5rem,3vh,2.5rem) clamp(1.5rem,3vw,2.5rem);
       border-left: 0.5px solid rgba(232,224,208,0.12);
-      pointer-events: auto; margin: auto;
+      pointer-events: auto;
+      align-self: flex-start;
+      margin-top: clamp(70px,10vh,120px);
     }
 
     @keyframes fadein {
@@ -145,14 +147,11 @@ let kippFrame = -1;
 
 // Skalierung für Anzeige
 function toScreen(x, y) {
-  const scaleX = Math.min(W, H) * 0.18;
-  const scaleY = Math.min(W, H) * 0.10;
-  const cx = W * 0.35; // etwas links von Mitte wegen Textblock
-  const cy = H * 0.52;
-  return {
-    px: cx + x * scaleX,
-    py: cy - y * scaleY,
-  };
+  const scaleX = Math.min(W, H) * 0.12;
+  const scaleY = Math.min(W, H) * 0.07;
+  const cx = W * 0.25;
+  const cy = H * 0.48;
+  return { px: cx + x * scaleX, py: cy + y * scaleY };
 }
 
 // Potenzial-Kurve zeichnen
@@ -258,15 +257,15 @@ function draw() {
 
   ctx.fillStyle = hasKipped
     ? 'rgba(232,224,208,0.2)'
-    : 'rgba(232,224,208,0.45)';
+    : 'rgba(232,224,208,0.55)';
   ctx.fillText('stabiler Zustand', leftMin.px, leftMin.py + 28);
 
   ctx.fillStyle = hasKipped
-    ? 'rgba(220,140,60,0.6)'
+    ? 'rgba(220,140,60,0.7)'
     : 'rgba(232,224,208,0.2)';
   ctx.fillText('neuer Zustand', rightMin.px, rightMin.py + 28);
 
-  ctx.fillStyle = 'rgba(232,224,208,0.18)';
+  ctx.fillStyle = 'rgba(232,224,208,0.25)';
   ctx.fillText('Kipppunkt', top.px, top.py - 16);
 
   frame++;
