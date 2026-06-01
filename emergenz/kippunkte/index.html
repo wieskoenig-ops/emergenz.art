@@ -3,23 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Noch nicht da — Emergenz</title>
+  <title>Kippunkte — Emergenz</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Hintergrund: sehr dezente Partikel-Drift */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.18;
+    }
+
+    /* Nav */
     #back {
       position: fixed;
       top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
       font-family: 'Cormorant Garamond', serif; font-weight: 400;
-      font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.7); text-transform: lowercase;
-      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+      font-size: clamp(0.85rem,1.4vw,1.1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.35); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 30;
     }
-    #back:hover { color: rgba(232,224,208,1); }
+    #back:hover { color: rgba(232,224,208,0.85); }
     #back::before { content: '← '; letter-spacing: 0; }
 
     #page-name {
@@ -28,153 +48,469 @@
       font-family: 'Cormorant Garamond', serif; font-weight: 300;
       font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
       color: #7a3a20; text-transform: lowercase;
-      pointer-events: none; z-index: 20;
+      pointer-events: none; z-index: 30;
     }
 
-    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
-
-    #panel {
-      position: fixed; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 10; pointer-events: none;
-      gap: clamp(1.5rem,3vh,3rem);
-      padding: clamp(80px,12vh,140px) clamp(40px,8vw,120px);
+    /* ── Textbereich ── */
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(40px,6vh,60px);
     }
 
-    #number {
-      font-family: 'Cormorant Garamond', serif; font-weight: 300;
-      font-size: clamp(4rem,12vw,9rem); letter-spacing: 0.35em;
-      color: rgba(232,224,208,0.06);
-      opacity: 0; animation: fadein 2s ease 0.3s forwards;
-      line-height: 1;
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2rem,5vh,3.5rem);
     }
 
-    blockquote {
-      max-width: 520px;
-      opacity: 0; animation: fadein 2s ease 0.8s forwards;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: clamp(1.5rem,3vh,2.5rem) clamp(1.5rem,3vw,2.5rem);
-      border-left: 0.5px solid rgba(232,224,208,0.12);
-      text-align: center;
+    /* Vier Abschnitte als schmale Zeilen */
+    .block {
+      margin-bottom: clamp(2.2rem,4.5vh,3.5rem);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-child(2) { animation-delay: 0.1s; }
+    .block:nth-child(3) { animation-delay: 0.25s; }
+    .block:nth-child(4) { animation-delay: 0.4s; }
+    .block:nth-child(5) { animation-delay: 0.55s; }
+
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    blockquote p {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300; font-style: italic;
-      font-size: clamp(1.1rem,2vw,1.55rem);
-      letter-spacing: 0.06em; line-height: 1.8;
-      color: rgba(232,224,208,0.88);
+    .block h2 {
+      font-size: clamp(1.05rem,1.8vw,1.4rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.72);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: 0.9rem;
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.28rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.78);
+    }
+
+    .block p em {
+      font-style: italic;
+      color: rgba(232,224,208,0.96);
+    }
+
+    /* letzter Block: leicht heller, dezente Bordüre */
+    .block.coda {
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      padding-left: clamp(1rem,2vw,1.8rem);
+    }
+    .block.coda h2 { color: rgba(232,224,208,0.82); }
+    .block.coda p  { color: rgba(232,224,208,0.85); }
+
+    /* Trennlinie zur Simulation */
+    .divider {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(1rem,3vh,2rem) 0;
+    }
+
+    /* ── Simulationsbereich ── */
+    #sim-section {
+      position: relative;
+      z-index: 10;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    #sim-label {
+      font-size: clamp(0.78rem,1.2vw,0.95rem);
+      letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.5);
+      text-transform: lowercase;
       margin-bottom: 1.2rem;
     }
 
-    blockquote cite {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300; font-style: normal;
-      font-size: clamp(0.6rem,0.95vw,0.78rem);
-      letter-spacing: 0.25em;
-      color: rgba(232,224,208,0.28);
+    /* Canvas-Wrapper */
+    #sim-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 2 / 1;
+      background: rgba(0,0,0,0.5);
+      border: 0.5px solid rgba(232,224,208,0.08);
+    }
+
+    #sim-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Status-Anzeige über dem Canvas */
+    #sim-status {
+      position: absolute;
+      top: 12px; left: 16px;
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.82rem,1.3vw,1.05rem);
+      letter-spacing: 0.2em;
+      color: rgba(232,224,208,0.75);
+      pointer-events: none;
       text-transform: lowercase;
     }
 
-    .note {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300; font-style: italic;
-      font-size: clamp(0.7rem,1.1vw,0.9rem);
-      letter-spacing: 0.18em; line-height: 1.8;
-      color: rgba(232,224,208,0.22);
-      text-align: center;
-      opacity: 0; animation: fadein 1.5s ease 1.6s forwards;
+    #sim-phase {
+      position: absolute;
+      top: 12px; right: 16px;
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.82rem,1.3vw,1.05rem);
+      letter-spacing: 0.2em;
+      color: #b05830;
+      pointer-events: none;
+      text-transform: lowercase;
+      transition: color 1s ease;
     }
 
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* Steuerung */
+    #sim-controls {
+      display: flex;
+      align-items: center;
+      gap: clamp(1rem,3vw,2.5rem);
+      margin-top: 1.4rem;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .ctrl-label {
+      font-size: clamp(0.75rem,1.1vw,0.9rem);
+      letter-spacing: 0.25em;
+      color: rgba(232,224,208,0.55);
+      text-transform: lowercase;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 1px;
+      background: rgba(232,224,208,0.15);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(232,224,208,0.6);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: rgba(232,224,208,0.95);
+    }
+
+    .ctrl-value {
+      font-size: clamp(0.78rem,1.1vw,0.92rem);
+      letter-spacing: 0.15em;
+      color: rgba(232,224,208,0.62);
+      text-align: right;
+    }
+
+    #btn-reset {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.7rem,1.1vw,0.88rem);
+      letter-spacing: 0.3em;
+      color: rgba(232,224,208,0.35);
+      background: none;
+      border: 0.5px solid rgba(232,224,208,0.15);
+      padding: 0.5rem 1.2rem;
+      cursor: pointer;
+      text-transform: lowercase;
+      transition: color 0.3s, border-color 0.3s;
+      white-space: nowrap;
+    }
+    #btn-reset:hover {
+      color: rgba(232,224,208,0.85);
+      border-color: rgba(232,224,208,0.4);
+    }
+
+    /* Erklärungsnotiz unter Simulation */
+    #sim-note {
+      margin-top: 1.6rem;
+      font-size: clamp(0.82rem,1.2vw,0.96rem);
+      letter-spacing: 0.12em;
+      color: rgba(232,224,208,0.45);
+      font-style: italic;
+      line-height: 1.9;
     }
   </style>
 </head>
 <body>
-  <a id="back" href="/">← emergenz</a>
-  <div id="page-name">noch nicht da</div>
-  <canvas id="canvas"></canvas>
 
-  <div id="panel">
-    <div id="number">404</div>
-    <blockquote>
-      <p>„Das Werden ist wichtiger als das Sein."</p>
-      <cite>Friedrich Nietzsche</cite>
-    </blockquote>
-    <div class="note">Diese Seite entsteht noch.<br>Emergenz braucht Zeit.</div>
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/">emergenz</a>
+  <div id="page-name">kippunkte</div>
+
+  <!-- ── Textbereich ── -->
+  <div id="content">
+    <div class="section-label">emergenz · 02 · kippunkte</div>
+
+    <div class="block">
+      <h2>kritische schwellenwerte</h2>
+      <p>Systeme verändern sich oft lange Zeit schleichend und linear. Sobald jedoch ein exakter kritischer Schwellenwert erreicht wird, genügt ein <em>minimaler Impuls</em>, um das gesamte System abrupt und grundlegend zu verändern. Die Bruchstelle liegt nicht am Ende einer langen Entwicklung — sie liegt oft unerwartet nah.</p>
+    </div>
+
+    <div class="block">
+      <h2>phasenübergänge</h2>
+      <p>Der Moment des Umkippens entspricht einem klassischen <em>Phasenübergang</em>. Das System formiert sich schlagartig neu und wechselt in einen qualitativ völlig veränderten Zustand. Nicht eine Steigerung des Bisherigen — sondern etwas kategorisch Anderes.</p>
+    </div>
+
+    <div class="block">
+      <h2>unumkehrbarkeit</h2>
+      <p>Ist die Schwelle einmal überschritten, lässt sich der Prozess kaum oder gar nicht mehr rückgängig machen. Der <em>Point of no Return</em> ist keine Metapher — er ist eine Eigenschaft nichtlinearer Dynamik. Der neue Zustand hat seine eigene Stabilität, seine eigene innere Logik.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>emergentes verhalten</h2>
+      <p>Die neue Struktur nach dem Kipppunkt ist eine <em>Eigenschaft des Gesamtsystems</em> — nicht vorhersagbar aus der Betrachtung einzelner Teile. Wer Emergenz versteht, weiß: nach dem Kippen entsteht nicht mehr vom Schlechten, sondern etwas qualitativ Neues, das sich der Umkehr widersetzt.</p>
+    </div>
+
+    <hr class="divider">
+  </div>
+
+  <!-- ── Simulation ── -->
+  <div id="sim-section">
+    <div id="sim-label">simulation — lokale regeln · phasenübergang</div>
+
+    <div id="sim-wrapper">
+      <canvas id="sim-canvas"></canvas>
+      <div id="sim-status">druck: <span id="val-pressure">0.00</span></div>
+      <div id="sim-phase">equilibrium</div>
+    </div>
+
+    <div id="sim-controls">
+      <div class="ctrl-group">
+        <div class="ctrl-label">druck</div>
+        <input type="range" id="slider-pressure" min="0" max="100" value="0" step="1">
+        <div class="ctrl-value"><span id="disp-pressure">0</span> %</div>
+      </div>
+      <div class="ctrl-group">
+        <div class="ctrl-label">vernetzung</div>
+        <input type="range" id="slider-connect" min="1" max="8" value="3" step="1">
+        <div class="ctrl-value">radius <span id="disp-connect">3</span></div>
+      </div>
+      <button id="btn-reset">↺ neu starten</button>
+    </div>
+
+    <div id="sim-note">
+      Jeder Punkt folgt einer einfachen lokalen Regel: er kippt, wenn genug Nachbarn bereits gekippt sind.<br>
+      Erhöhe den Druck langsam — und beobachte den Moment, wo das System nicht mehr zurückfindet.
+    </div>
   </div>
 
 <script>
-// ── Brownsche Bewegung ────────────────────────────
-const canvas = document.getElementById('canvas');
-const ctx    = canvas.getContext('2d');
-let W, H;
-
-const NUM = 80;
-let particles = [];
-
-function resize() {
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-  init();
-}
-
-function init() {
-  particles = [];
-  for (let i = 0; i < NUM; i++) {
-    particles.push({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      trail: [],
-      speed:  0.2 + Math.random() * 0.4,
-      angle:  Math.random() * Math.PI * 2,
-      turn:   (Math.random() - 0.5) * 0.06,
-      alpha:  Math.random() * 0.05,
+// ── Hintergrund: dezente Drift-Partikel ─────────────────────────────
+(function() {
+  const bg = document.getElementById('bg-canvas');
+  const bx = bg.getContext('2d');
+  let bW, bH;
+  const pts = [];
+  for (let i = 0; i < 60; i++) {
+    pts.push({
+      x: Math.random(),
+      y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.00015,
+      vy: (Math.random() - 0.5) * 0.00015,
     });
   }
+  function resizeBg() {
+    bW = bg.width  = window.innerWidth;
+    bH = bg.height = window.innerHeight;
+  }
+  resizeBg();
+  window.addEventListener('resize', resizeBg);
+  function drawBg() {
+    bx.clearRect(0, 0, bW, bH);
+    for (const p of pts) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
+      if (p.y < 0) p.y = 1; if (p.y > 1) p.y = 0;
+      bx.beginPath();
+      bx.arc(p.x * bW, p.y * bH, 1.2, 0, Math.PI * 2);
+      bx.fillStyle = 'rgba(232,224,208,0.5)';
+      bx.fill();
+    }
+    requestAnimationFrame(drawBg);
+  }
+  drawBg();
+})();
+
+// ── Simulation ───────────────────────────────────────────────────────
+const simCanvas  = document.getElementById('sim-canvas');
+const ctx        = simCanvas.getContext('2d');
+const phaseEl    = document.getElementById('sim-phase');
+const valPres    = document.getElementById('val-pressure');
+const dispPres   = document.getElementById('disp-pressure');
+const dispConn   = document.getElementById('disp-connect');
+const sliderP    = document.getElementById('slider-pressure');
+const sliderC    = document.getElementById('slider-connect');
+const btnReset   = document.getElementById('btn-reset');
+
+const COLS = 48, ROWS = 24;
+let cells = [];         // 0 = ruhig, 1 = gekippt
+let pressure = 0;       // 0..1
+let connectR = 3;
+let hasFlipped = false; // einmal Kippmoment erkannt
+let flashFrame = 0;
+let simW, simH, cellW, cellH;
+
+function initCells() {
+  cells = new Array(COLS * ROWS).fill(0);
+  hasFlipped = false;
+  flashFrame = 0;
+  phaseEl.textContent = 'equilibrium';
+  phaseEl.style.color = '#7a3a20';
+}
+initCells();
+
+function idx(c, r) { return r * COLS + c; }
+
+function countTipped(c, r) {
+  let count = 0, total = 0;
+  for (let dc = -connectR; dc <= connectR; dc++) {
+    for (let dr = -connectR; dr <= connectR; dr++) {
+      if (dc === 0 && dr === 0) continue;
+      const nc = c + dc, nr = r + dr;
+      if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS) continue;
+      total++;
+      if (cells[idx(nc, nr)] === 1) count++;
+    }
+  }
+  return total > 0 ? count / total : 0;
 }
 
+function step() {
+  const next = cells.slice();
+  const threshold = 0.25; // lokale Regel: >25% Nachbarn gekippt → kippen
+
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const i = idx(c, r);
+      if (cells[i] === 1) { next[i] = 1; continue; } // irreversibel
+      // Spontan kippen durch Druck
+      if (Math.random() < pressure * 0.018) { next[i] = 1; continue; }
+      // Lokale Regel: Nachbardruck
+      if (countTipped(c, r) > threshold) { next[i] = 1; }
+    }
+  }
+  cells = next;
+}
+
+function tippedFraction() {
+  return cells.reduce((s, v) => s + v, 0) / cells.length;
+}
+
+function resizeSim() {
+  const wrapper = simCanvas.parentElement;
+  simW = simCanvas.width  = wrapper.clientWidth;
+  simH = simCanvas.height = wrapper.clientHeight;
+  cellW = simW / COLS;
+  cellH = simH / ROWS;
+}
+resizeSim();
+window.addEventListener('resize', resizeSim);
+
+let frame = 0;
 function draw() {
-  ctx.fillStyle = 'rgba(0,0,0,0.04)';
-  ctx.fillRect(0, 0, W, H);
+  step();
 
-  for (const p of particles) {
-    p.angle += p.turn + (Math.random() - 0.5) * 0.12;
-    p.turn  *= 0.98;
-    p.turn  += (Math.random() - 0.5) * 0.015;
-    p.x += Math.cos(p.angle) * p.speed;
-    p.y += Math.sin(p.angle) * p.speed;
-    const m = 40;
-    if (p.x < m)   p.angle += 0.1;
-    if (p.x > W-m) p.angle -= 0.1;
-    if (p.y < m)   p.angle += 0.1;
-    if (p.y > H-m) p.angle -= 0.1;
-    p.alpha = Math.min(0.06, p.alpha + 0.002);
+  const frac = tippedFraction();
 
-    p.trail.push({ x: p.x, y: p.y });
-    if (p.trail.length > 150) p.trail.shift();
+  // Kipperkennung
+  if (!hasFlipped && frac > 0.5) {
+    hasFlipped = true;
+    flashFrame = frame;
+    phaseEl.textContent = 'kipppunkt überschritten';
+    phaseEl.style.color = 'rgba(220,140,60,0.9)';
+  }
+  if (frac > 0.95) {
+    phaseEl.textContent = 'neuer zustand · stabil';
+    phaseEl.style.color = 'rgba(220,140,60,0.7)';
+  }
 
-    for (let i = 1; i < p.trail.length; i++) {
-      const age = i / p.trail.length;
-      ctx.strokeStyle = `rgba(232,224,208,${age * age * p.alpha})`;
-      ctx.lineWidth   = age * 0.7;
-      ctx.beginPath();
-      ctx.moveTo(p.trail[i-1].x, p.trail[i-1].y);
-      ctx.lineTo(p.trail[i].x,   p.trail[i].y);
-      ctx.stroke();
+  // Flash beim Kippen
+  const flashAge = frame - flashFrame;
+  const flash = hasFlipped && flashAge < 30
+    ? Math.max(0, 1 - flashAge / 30) * 0.12
+    : 0;
+
+  ctx.fillStyle = `rgba(${flash > 0 ? '60,30,0' : '0,0,0'},${0.85 + flash})`;
+  ctx.fillRect(0, 0, simW, simH);
+
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const v = cells[idx(c, r)];
+      const x = c * cellW + 1;
+      const y = r * cellH + 1;
+      const w = cellW - 2;
+      const h = cellH - 2;
+
+      if (v === 0) {
+        // ruhig: sehr dezente Zelle
+        ctx.fillStyle = 'rgba(60,80,180,0.18)';
+      } else {
+        // gekippt: cremeweiß-amber
+        const age = Math.min(1, (frame - flashFrame + 1) / 40);
+        const r2 = Math.round(180 + 40 * age);
+        const g2 = Math.round(120 + 60 * age);
+        const b2 = Math.round(40 + 80 * (1 - age));
+        ctx.fillStyle = `rgba(${r2},${g2},${b2},0.82)`;
+      }
+      ctx.fillRect(x, y, w, h);
     }
   }
 
+  // Fortschrittsbalken
+  ctx.fillStyle = 'rgba(232,224,208,0.06)';
+  ctx.fillRect(0, simH - 2, simW, 2);
+  ctx.fillStyle = hasFlipped
+    ? 'rgba(220,140,60,0.5)'
+    : 'rgba(232,224,208,0.25)';
+  ctx.fillRect(0, simH - 2, simW * frac, 2);
+
+  frame++;
   requestAnimationFrame(draw);
 }
 
-resize();
-window.addEventListener('resize', resize);
+// Controls
+sliderP.addEventListener('input', () => {
+  pressure = sliderP.value / 100;
+  valPres.textContent  = pressure.toFixed(2);
+  dispPres.textContent = sliderP.value;
+});
+sliderC.addEventListener('input', () => {
+  connectR = parseInt(sliderC.value);
+  dispConn.textContent = connectR;
+});
+btnReset.addEventListener('click', () => {
+  sliderP.value = 0;
+  pressure = 0;
+  valPres.textContent  = '0.00';
+  dispPres.textContent = '0';
+  initCells();
+});
+
 draw();
 </script>
 </body>
