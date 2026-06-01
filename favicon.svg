@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" fill="#000"/>
+
+  <!-- Hintergrund-Zellen: 4 Spalten × 4 Zeilen, Zellgröße 6px, Abstand 2px -->
+  <!-- Spalten: x = 2, 10, 18, 26 -->
+  <!-- Zeilen:  y = 2, 10, 18, 26 -->
+
+  <!-- Zeile 1 -->
+  <rect x="2"  y="2"  width="6" height="6" rx="1" fill="rgba(60,80,180,0.45)"/>
+  <rect x="10" y="2"  width="6" height="6" rx="1" fill="rgba(232,220,195,0.95)"/>
+  <rect x="18" y="2"  width="6" height="6" rx="1" fill="rgba(20,140,120,0.35)"/>
+  <rect x="26" y="2"  width="6" height="6" rx="1" fill="rgba(180,90,20,0.35)"/>
+
+  <!-- Zeile 2 -->
+  <rect x="2"  y="10" width="6" height="6" rx="1" fill="rgba(60,80,180,0.35)"/>
+  <rect x="10" y="10" width="6" height="6" rx="1" fill="rgba(232,220,195,0.95)"/>
+  <rect x="18" y="10" width="6" height="6" rx="1" fill="rgba(20,140,120,0.45)"/>
+  <rect x="26" y="10" width="6" height="6" rx="1" fill="rgba(60,80,180,0.25)"/>
+
+  <!-- Zeile 3 -->
+  <rect x="2"  y="18" width="6" height="6" rx="1" fill="rgba(180,90,20,0.35)"/>
+  <rect x="10" y="18" width="6" height="6" rx="1" fill="rgba(232,220,195,0.95)"/>
+  <rect x="18" y="18" width="6" height="6" rx="1" fill="rgba(20,140,120,0.3)"/>
+  <rect x="26" y="18" width="6" height="6" rx="1" fill="rgba(60,80,180,0.4)"/>
+
+  <!-- Zeile 4 -->
+  <rect x="2"  y="26" width="6" height="6" rx="1" fill="rgba(20,140,120,0.3)"/>
+  <rect x="10" y="26" width="6" height="6" rx="1" fill="rgba(232,220,195,0.95)"/>
+  <rect x="18" y="26" width="6" height="6" rx="1" fill="rgba(180,90,20,0.4)"/>
+  <rect x="26" y="26" width="6" height="6" rx="1" fill="rgba(60,80,180,0.25)"/>
+</svg>
