@@ -1,1 +1,403 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mathematik — Emergenz</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.85rem,1.4vw,1.1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.65); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 30;
+    }
+    #back:hover { color: rgba(232,224,208,1); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p.punch {
+      margin-top: 1.2em;
+      font-style: italic;
+      color: rgba(232,224,208,0.92);
+    }
+
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.3s; }
+    .block:nth-of-type(2) { animation-delay: 0.45s; }
+    .block:nth-of-type(3) { animation-delay: 0.6s; }
+    .block:nth-of-type(4) { animation-delay: 0.75s; }
+    .block:nth-of-type(5) { animation-delay: 0.9s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.35rem,2.4vw,1.85rem);
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.92);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+
+    .block.coda p { color: rgba(232,224,208,0.82); }
+
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+      opacity: 0;
+      animation: rise 0.9s ease 1.05s forwards;
+    }
+
+    /* Art-Hinweis */
+    .art-hint {
+      opacity: 0;
+      animation: rise 0.9s ease 1.1s forwards;
+      margin-bottom: clamp(2rem,4vh,3rem);
+      padding: clamp(1rem,2vh,1.5rem) clamp(1.2rem,2.5vw,2rem);
+      border: 0.5px solid rgba(232,224,208,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .art-hint p {
+      font-size: clamp(0.88rem,1.4vw,1.05rem);
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.5);
+      font-style: italic;
+    }
+
+    .art-hint a {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(0.82rem,1.2vw,0.95rem);
+      letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.45);
+      text-transform: lowercase;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .art-hint a:hover { color: rgba(232,224,208,0.9); }
+    .art-hint a::after { content: ' →'; }
+
+    /* Mandelbrot */
+    .mandelbrot-wrap {
+      opacity: 0;
+      animation: rise 0.9s ease 1.2s forwards;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 0.75;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #mandelbrot {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+    }
+
+    .mandelbrot-caption {
+      opacity: 0;
+      animation: rise 0.9s ease 1.3s forwards;
+      margin-top: 1rem;
+      font-size: clamp(0.72rem,1vw,0.85rem);
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.3);
+      font-style: italic;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/fachrichtungen/">fachrichtungen</a>
+  <div id="page-name">mathematik</div>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · fachrichtungen · 03 · mathematik</div>
+
+    <div class="intro">
+      <p>Mathematik hat ein Glaubwürdigkeitsproblem mit Emergenz. Wie soll in einem System, das vollständig aus Axiomen und Ableitungsregeln besteht, etwas entstehen, das nicht bereits implizit enthalten war? Wenn die Regeln bekannt sind, müsste doch das Ergebnis berechenbar sein.</p>
+      <p class="punch">Es ist nicht berechenbar. Und das lässt sich beweisen.</p>
+    </div>
+
+    <div class="block">
+      <h2>zelluläre automaten</h2>
+      <p>1970 veröffentlichte John Conway ein Spiel ohne Spieler. Das Game of Life besteht aus einem Gitter von Zellen, die entweder lebendig oder tot sind, und drei Regeln: eine lebendige Zelle mit zwei oder drei lebendigen Nachbarn überlebt, eine tote Zelle mit genau drei lebendigen Nachbarn wird lebendig, alle anderen sterben oder bleiben tot. Das ist das vollständige Regelwerk.</p>
+      <p>Aus diesen drei Regeln emergieren Objekte, die sich bewegen, replizieren, miteinander kommunizieren und schließlich universelle Rechenmaschinen bilden. Conway selbst hat bewiesen dass sein Spiel Turing-vollständig ist: man kann darin jeden berechenbaren Prozess simulieren. Die drei Regeln enthalten diese Möglichkeit nicht explizit. Sie emergiert.</p>
+      <p>Das ist keine Metapher. Es ist ein mathematischer Beweis dafür dass lokale Regeln globale Eigenschaften erzeugen können, die in den Regeln selbst nicht sichtbar sind und aus ihnen nicht vorhergesagt werden können.</p>
+    </div>
+
+    <div class="block">
+      <h2>fraktale</h2>
+      <p>Die Mandelbrot-Menge entsteht aus einer einzigen Formel: z → z² + c. Man beginnt mit einer komplexen Zahl c, berechnet z, setzt das Ergebnis wieder ein, und fragt: bleibt die Folge beschränkt oder wächst sie ins Unendliche? Die Grenze zwischen diesen beiden Bereichen ist die Mandelbrot-Menge.</p>
+      <p>Diese Grenze hat unendliche Komplexität. Jede Zoomstufe enthüllt neue Strukturen, neue Wirbel, neue Miniatur-Mandelbrot-Mengen, die sich in Details unterscheiden und doch dem Ganzen ähneln. Diese Komplexität steckt nicht in der Formel. Sie emergiert aus der Iteration.</p>
+      <p>Das Bemerkenswerte: die Mandelbrot-Menge ist vollständig deterministisch. Kein Zufall, keine Annäherung, kein Rauschen. Und trotzdem ist sie in ihrer Gesamtheit unvorhersehbar. Um zu wissen was an einer bestimmten Stelle der Grenze passiert, muss man es berechnen. Es gibt keinen kürzeren Weg.</p>
+    </div>
+
+    <div class="block">
+      <h2>perkolation</h2>
+      <p>Man stelle sich ein quadratisches Gitter vor. Jede Zelle wird zufällig mit einer Wahrscheinlichkeit p gefüllt. Bei niedrigem p entstehen isolierte Inseln. Bei hohem p ein zusammenhängendes Feld. Irgendwo dazwischen liegt ein kritischer Schwellenwert, bei dem zum ersten Mal ein zusammenhängendes Cluster die gesamte Ausdehnung des Gitters überspannt.</p>
+      <p>Dieser Übergang ist nicht graduell. Er ist ein Phasenübergang, mathematisch präzise beschreibbar, und trotzdem qualitativ neu. Unterhalb des Schwellenwerts gibt es kein Durchkommen. Oberhalb gibt es einen Weg. Die Eigenschaft existiert nicht in einzelnen Zellen. Sie emergiert aus ihrer Gesamtheit.</p>
+      <p>Perkolationstheorie beschreibt Waldbrände, Epidemien, das Internet, geologische Strömungen. Das Modell ist abstraktes Gitter. Das Phänomen ist universell.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>was mathematik zeigt</h2>
+      <p>Mathematik ist das einzige Fachgebiet, in dem Emergenz beweisbar ist. In der Biologie kann man zeigen dass das Gehirn aus Neuronen besteht und trotzdem denkt. Aber man kann nicht beweisen dass Bewusstsein aus Neuronen nicht ableitbar ist. In der Mathematik kann man das. Gödel hat gezeigt dass in jedem hinreichend mächtigen formalen System wahre Aussagen existieren, die im System nicht beweisbar sind. Turing hat gezeigt dass es keine allgemeine Methode gibt, das Verhalten von Programmen vorherzusagen, ohne sie zu laufen.</p>
+      <p>Emergenz ist nicht nur ein empirisches Phänomen das wir beobachten. Sie ist eine mathematische Tatsache über die Grenzen von Vorhersagbarkeit und Ableitbarkeit. Das gibt ihr eine Härte, die philosophische Argumente allein nicht erreichen.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="art-hint">
+      <p>Game of Life, Lorenz-Attraktor, Chladni-Figuren und weitere Simulationen sind im künstlerischen Teil der Site erfahrbar.</p>
+      <a href="/art/">art erkunden</a>
+    </div>
+
+    <div class="mandelbrot-wrap">
+      <canvas id="mandelbrot"></canvas>
+    </div>
+    <p class="mandelbrot-caption">z → z² + c · klicken zum hineinzoomen, rechtsklick zum herauszoomen</p>
+
+  </div>
+
+<script>
+// ── Hintergrund Boids ─────────────────────────────
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = bgCanvas.width  = window.innerWidth;
+  H = bgCanvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const N = 120;
+const boids = [];
+for (let i = 0; i < N; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const speed = 0.6 + Math.random() * 0.5;
+  boids.push({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: Math.cos(angle) * speed,
+    vy: Math.sin(angle) * speed,
+  });
+}
+
+const PERC = 80, SEP = 22, SPEED = 1.0;
+
+function stepBoids() {
+  for (const b of boids) {
+    let ax=0,ay=0,cx=0,cy=0,cn=0,mx=0,my=0,mn=0,sx=0,sy=0;
+    for (const o of boids) {
+      if (o===b) continue;
+      const dx=o.x-b.x, dy=o.y-b.y, d=Math.sqrt(dx*dx+dy*dy);
+      if (d>PERC) continue;
+      cx+=o.x; cy+=o.y; cn++;
+      mx+=o.vx; my+=o.vy; mn++;
+      if (d<SEP) { sx-=dx/d; sy-=dy/d; }
+    }
+    if (cn>0) { ax+=(cx/cn-b.x)*0.0005; ay+=(cy/cn-b.y)*0.0005; }
+    if (mn>0) { ax+=(mx/mn-b.vx)*0.03;  ay+=(my/mn-b.vy)*0.03; }
+    ax+=sx*0.04; ay+=sy*0.04;
+    b.vx+=ax; b.vy+=ay;
+    const spd=Math.sqrt(b.vx*b.vx+b.vy*b.vy);
+    if (spd>SPEED) { b.vx=b.vx/spd*SPEED; b.vy=b.vy/spd*SPEED; }
+    if (spd<0.3)   { b.vx*=1.05; b.vy*=1.05; }
+    b.x+=b.vx; b.y+=b.vy;
+    if (b.x<0) b.x+=W; if (b.x>W) b.x-=W;
+    if (b.y<0) b.y+=H; if (b.y>H) b.y-=H;
+  }
+}
+
+function drawBg() {
+  bgCtx.fillStyle='rgba(0,0,0,0.18)';
+  bgCtx.fillRect(0,0,W,H);
+  stepBoids();
+  for (const b of boids) {
+    const angle=Math.atan2(b.vy,b.vx);
+    bgCtx.save();
+    bgCtx.translate(b.x,b.y);
+    bgCtx.rotate(angle);
+    bgCtx.beginPath();
+    bgCtx.moveTo(4,0); bgCtx.lineTo(-3,1.8); bgCtx.lineTo(-3,-1.8);
+    bgCtx.closePath();
+    bgCtx.fillStyle='rgba(232,224,208,0.12)';
+    bgCtx.fill();
+    bgCtx.restore();
+  }
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+// ── Mandelbrot Explorer ───────────────────────────
+const mc = document.getElementById('mandelbrot');
+const mctx = mc.getContext('2d');
+
+let mW, mH;
+let centerX = -0.5, centerY = 0.0, scale = 3.5;
+let rendering = false;
+
+function resizeMandelbrot() {
+  const wrap = mc.parentElement;
+  mW = mc.width  = wrap.clientWidth;
+  mH = mc.height = wrap.clientHeight;
+  renderMandelbrot();
+}
+
+function renderMandelbrot() {
+  if (rendering) return;
+  rendering = true;
+  requestAnimationFrame(() => {
+    const imageData = mctx.createImageData(mW, mH);
+    const data = imageData.data;
+    const maxIter = 180;
+
+    for (let py = 0; py < mH; py++) {
+      for (let px = 0; px < mW; px++) {
+        const x0 = centerX + (px / mW - 0.5) * scale * (mW / mH);
+        const y0 = centerY + (py / mH - 0.5) * scale;
+        let x = 0, y = 0, iter = 0;
+        while (x*x + y*y <= 4 && iter < maxIter) {
+          const xTemp = x*x - y*y + x0;
+          y = 2*x*y + y0;
+          x = xTemp;
+          iter++;
+        }
+        const idx = (py * mW + px) * 4;
+        if (iter === maxIter) {
+          data[idx] = data[idx+1] = data[idx+2] = 0;
+        } else {
+          const t = iter / maxIter;
+          const smooth = iter + 1 - Math.log(Math.log(Math.sqrt(x*x+y*y))) / Math.log(2);
+          const ts = smooth / maxIter;
+          // cremeweiß auf schwarz — passend zum Design
+          const v = Math.pow(ts, 0.45);
+          data[idx]   = Math.floor(232 * v);
+          data[idx+1] = Math.floor(224 * v);
+          data[idx+2] = Math.floor(208 * v);
+        }
+        data[idx+3] = 255;
+      }
+    }
+    mctx.putImageData(imageData, 0, 0);
+    rendering = false;
+  });
+}
+
+mc.addEventListener('click', (e) => {
+  const rect = mc.getBoundingClientRect();
+  const px = e.clientX - rect.left;
+  const py = e.clientY - rect.top;
+  centerX += (px / mW - 0.5) * scale * (mW / mH);
+  centerY += (py / mH - 0.5) * scale;
+  scale *= 0.35;
+  renderMandelbrot();
+});
+
+mc.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  scale *= 2.8;
+  renderMandelbrot();
+});
+
+window.addEventListener('resize', resizeMandelbrot);
+
+// Starte nach kurzem Delay damit Layout fertig ist
+setTimeout(resizeMandelbrot, 100);
+</script>
+</body>
+</html>
