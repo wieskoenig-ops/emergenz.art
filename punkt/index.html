@@ -1,1 +1,357 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Punkt — Emergenz</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.85rem,1.4vw,1.1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.65); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 30;
+    }
+    #back:hover { color: rgba(232,224,208,1); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .statement {
+      opacity: 0;
+      animation: rise 1s ease 0.3s forwards;
+      margin-bottom: clamp(3rem,6vh,5rem);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.22);
+    }
+
+    .statement p {
+      font-size: clamp(1.3rem,2.4vw,1.85rem);
+      line-height: 1.75;
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.92);
+      font-style: italic;
+    }
+
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.5s; }
+    .block:nth-of-type(2) { animation-delay: 0.65s; }
+    .block:nth-of-type(3) { animation-delay: 0.8s; }
+    .block:nth-of-type(4) { animation-delay: 0.95s; }
+    .block:nth-of-type(5) { animation-delay: 1.1s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.35rem,2.4vw,1.85rem);
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.92);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+
+    .block.coda p { color: rgba(232,224,208,0.82); }
+
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+    }
+
+    .nav-grid {
+      opacity: 0;
+      animation: rise 0.9s ease 1.25s forwards;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: clamp(0.8rem,2vw,1.4rem);
+    }
+
+    .nav-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding: clamp(1rem,2vh,1.5rem) clamp(1rem,2vw,1.5rem);
+      border: 0.5px solid rgba(232,224,208,0.1);
+      text-decoration: none;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .nav-card:hover {
+      border-color: rgba(232,224,208,0.3);
+      background: rgba(232,224,208,0.03);
+    }
+
+    .nav-card-num {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.62rem,0.9vw,0.75rem);
+      letter-spacing: 0.3em;
+      color: rgba(232,224,208,0.25);
+    }
+
+    .nav-card-title {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(1rem,1.7vw,1.3rem);
+      letter-spacing: 0.18em;
+      color: rgba(176,88,48,0.85);
+      text-transform: lowercase;
+      transition: color 0.3s ease;
+    }
+    .nav-card:hover .nav-card-title { color: rgba(176,88,48,1); }
+
+    .nav-card-sub {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.1em;
+      color: rgba(232,224,208,0.28);
+      font-style: italic;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/">emergenz.art</a>
+  <div id="page-name">punkt</div>
+
+  <div id="content">
+
+    <div class="section-label">punkt</div>
+
+    <div class="intro">
+      <p>Es gibt einen Moment, in dem ein System nicht mehr dasselbe ist. Nicht weil jemand entschieden hat, es zu verändern. Nicht weil eine Schwelle überschritten wurde, die jemand gezogen hatte. Sondern weil die innere Dynamik des Systems selbst einen Zustand erreicht hat, aus dem es nicht mehr zurückkehrt.</p>
+    </div>
+
+    <div class="statement">
+      <p>Ein Kipppunkt ist kein Warnsignal. Er ist die Meldung, dass das Warnsignal zu spät kam.</p>
+    </div>
+
+    <div class="block">
+      <h2>das problem mit der rückkehr</h2>
+      <p>Wer denkt, man müsse ein System nur weit genug zurückdrehen um in den alten Zustand zurückzukehren, denkt linear. Die meisten komplexen Systeme sind es nicht. Sie zeigen Hysterese: den Weg zurück gibt es nicht, zumindest nicht auf demselben Pfad. Um einen Gletscher zurückzubringen reicht es nicht, die Temperatur auf den alten Wert zu senken. Das Eis fehlt, die Albedo hat sich verändert, die Rückkopplungsschleifen laufen in die andere Richtung. Das System befindet sich in einem neuen Attraktor.</p>
+      <p>Das ist keine Metapher. Es ist Systemdynamik.</p>
+    </div>
+
+    <div class="block">
+      <h2>amoc und das klima</h2>
+      <p>Die Atlantische Umwälzzirkulation, kurz AMOC, transportiert warmes Oberflächenwasser aus den Tropen nach Norden und kaltes Tiefenwasser zurück. Sie ist der Grund warum Europa ein gemäßigtes Klima hat. Neue Forschung, darunter die Arbeit von Stefan Rahmstorf und Kollegen, zeigt: die AMOC hat sich seit dem frühen 20. Jahrhundert signifikant abgeschwächt. Messdaten deuten darauf hin, dass das System Anzeichen einer Annäherung an einen Kipppunkt zeigt.</p>
+      <p>Was das bedeutet ist nicht ein bisschen weniger Wärme im Nordatlantik. Was das bedeutet ist ein fundamentaler Umbau des europäischen Klimas innerhalb von Jahrzehnten. Abkühlende Winter in Nordwesteuropa, veränderte Niederschlagsmuster, gestörte Monsune in Afrika und Asien. Ein Dominostein, der andere Dominosteine trifft.</p>
+      <p>Und der entscheidende Punkt: wenn der Kipppunkt überschritten ist, hilft kein Zurückdrehen der CO2-Emissionen auf den alten Wert. Das System befindet sich dann in einem anderen Zustand. Hysterese.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>warum politik versagt</h2>
+      <p>Emergente Kipppunkte und Politik passen strukturell nicht zusammen. Politik denkt in Legislaturperioden, in Verursachern, in umkehrbaren Maßnahmen. Kipppunkte sind das Gegenteil: sie liegen oft jahrzehntelang jenseits des politischen Horizonts, sie haben keine einzelnen Verursacher, und sie sind nach dem Überschreiten nicht umkehrbar.</p>
+      <p>Dazu kommt Sprache. Wer von Kipppunkten redet, benutzt meist das Wort als Metapher für „es wird schlimmer". Die physikalische Bedeutung, der irreversible Phasenübergang eines komplexen Systems, geht verloren. Und mit ihr das Verständnis der eigentlichen Gefahr.</p>
+      <p>Das ist kein Versagen von Politikern. Es ist ein strukturelles Versagen der Kategorien, mit denen wir über Krisen nachdenken. Emergenz hat keine Schuldigen. Aber sie hat Konsequenzen.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="nav-grid">
+      <a class="nav-card" href="/emergenz/kippunkte/">
+        <span class="nav-card-num">01</span>
+        <span class="nav-card-title">kipppunkte</span>
+        <span class="nav-card-sub">schwellen · nichtlinearität · kollaps</span>
+      </a>
+      <a class="nav-card" href="/punkt/amoc/">
+        <span class="nav-card-num">02</span>
+        <span class="nav-card-title">amoc</span>
+        <span class="nav-card-sub">atlantik · rahmstorf · klimakipper</span>
+      </a>
+      <a class="nav-card" href="/punkt/hysterese/">
+        <span class="nav-card-num">03</span>
+        <span class="nav-card-title">hysterese</span>
+        <span class="nav-card-sub">irreversibilität · attraktoren · gedächtnis</span>
+      </a>
+      <a class="nav-card" href="/punkt/politik/">
+        <span class="nav-card-num">04</span>
+        <span class="nav-card-title">politik</span>
+        <span class="nav-card-sub">kategorienversagen · legislaturperioden · verantwortung</span>
+      </a>
+    </div>
+
+  </div>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const N_NODES = 55;
+const nodes = [];
+const MAX_DIST = 160;
+const TENSION_CYCLE = 480;
+let frame = 0;
+
+for (let i = 0; i < N_NODES; i++) {
+  nodes.push({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.25,
+    vy: (Math.random() - 0.5) * 0.25,
+    r: 1.5 + Math.random() * 1.5,
+  });
+}
+
+const edges = [];
+
+function buildEdges(threshold) {
+  edges.length = 0;
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < threshold) edges.push({ a: i, b: j, d });
+    }
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  frame++;
+
+  const t = (frame % TENSION_CYCLE) / TENSION_CYCLE;
+  let threshold, globalAlpha;
+
+  if (t < 0.45) {
+    threshold = MAX_DIST * (0.3 + t / 0.45 * 0.7);
+    globalAlpha = 1;
+  } else if (t < 0.55) {
+    threshold = MAX_DIST;
+    globalAlpha = 1;
+  } else if (t < 0.7) {
+    const p = (t - 0.55) / 0.15;
+    threshold = MAX_DIST * (1 - p * 0.9);
+    globalAlpha = 1 - p * 0.6;
+  } else {
+    threshold = MAX_DIST * 0.1;
+    globalAlpha = 0.4;
+  }
+
+  buildEdges(threshold);
+
+  for (const n of nodes) {
+    n.x += n.vx;
+    n.y += n.vy;
+    if (n.x < 0 || n.x > W) n.vx *= -1;
+    if (n.y < 0 || n.y > H) n.vy *= -1;
+    n.x = Math.max(0, Math.min(W, n.x));
+    n.y = Math.max(0, Math.min(H, n.y));
+  }
+
+  for (const e of edges) {
+    const a = nodes[e.a], b = nodes[e.b];
+    const proximity = 1 - e.d / threshold;
+    const alpha = globalAlpha * proximity * 0.18;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = `rgba(232,224,208,${alpha})`;
+    ctx.lineWidth = 0.6;
+    ctx.stroke();
+  }
+
+  for (let i = 0; i < nodes.length; i++) {
+    const n = nodes[i];
+    let degree = 0;
+    for (const e of edges) { if (e.a === i || e.b === i) degree++; }
+    const brightness = Math.min(0.08 + degree * 0.025, 0.45) * globalAlpha;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(232,224,208,${brightness})`;
+    ctx.fill();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>
