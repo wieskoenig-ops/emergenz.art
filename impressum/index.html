@@ -1,1 +1,230 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impressum — emergenz.art</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
 
+    #back {
+      position: fixed;
+      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.85rem,1.4vw,1.1rem); letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.65); text-transform: lowercase;
+      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+    }
+    #back:hover { color: rgba(232,224,208,1); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #7a3a20; text-transform: lowercase;
+      pointer-events: none; z-index: 20;
+    }
+
+    #canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 1; opacity: 0;
+      transition: opacity 3s ease;
+    }
+    #canvas.visible { opacity: 1; }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10; pointer-events: none;
+      padding: clamp(60px,10vh,120px) clamp(40px,8vw,120px);
+    }
+
+    #text-block {
+      max-width: 620px;
+      width: 100%;
+      opacity: 0;
+      animation: fadein 2s ease 0.8s forwards;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: clamp(1.5rem,3vh,3rem) clamp(1.5rem,3vw,3rem);
+      border-left: 0.5px solid rgba(232,224,208,0.1);
+      pointer-events: auto;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .label {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.6rem,1vw,0.82rem); letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.3); text-transform: lowercase;
+      margin-bottom: clamp(1.5rem,3vh,2.5rem);
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.2rem,2vw,1.6rem); letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.88); text-transform: lowercase;
+      margin-bottom: clamp(1.5rem,3vh,2.5rem);
+    }
+
+    p {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.62); line-height: 2;
+      margin-bottom: clamp(0.8rem,1.5vh,1.2rem);
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    .field-label {
+      font-size: clamp(0.62rem,0.9vw,0.78rem);
+      letter-spacing: 0.3em;
+      color: rgba(232,224,208,0.28);
+      text-transform: lowercase;
+      display: block;
+      margin-bottom: 0.2em;
+    }
+
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(1.2rem,2.5vh,2rem) 0;
+    }
+
+    a {
+      color: rgba(232,224,208,0.45);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    a:hover { color: rgba(232,224,208,0.9); }
+
+    .hinweis {
+      font-size: clamp(0.78rem,1.1vw,0.92rem) !important;
+      color: rgba(232,224,208,0.3) !important;
+      font-style: italic;
+      line-height: 1.8 !important;
+    }
+  </style>
+</head>
+<body>
+
+  <a id="back" href="/ueber/">über</a>
+  <div id="page-name">impressum</div>
+  <canvas id="canvas"></canvas>
+
+  <div id="panel">
+    <div id="text-block">
+      <div class="label">emergenz.art</div>
+      <h1>impressum</h1>
+
+      <p>
+        <span class="field-label">angaben gemäß § 5 tmg</span>
+        [Michael Koenighaus]<br>
+        [Freesienweg 21]<br>
+        [65201 Wiesbaden]
+      </p>
+
+      <hr class="rule">
+
+      <p>
+        <span class="field-label">kontakt</span>
+        <a href="mailto:mail.emergenz@wrb.de">mail.emergenz@web.de</a>
+      </p>
+
+      <hr class="rule">
+
+      <p class="hinweis">Diese Website dient ausschließlich privaten und künstlerisch-wissenschaftlichen Zwecken. Es werden keine kommerziellen Interessen verfolgt.</p>
+    </div>
+  </div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+const NUM_PARTICLES = 120;
+const TRAIL_LEN     = 180;
+const SPEED         = 0.6;
+let particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  initParticles();
+}
+
+function initParticles() {
+  particles = [];
+  for (let i = 0; i < NUM_PARTICLES; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      trail: [],
+      speed: SPEED * (0.4 + Math.random() * 0.8),
+      angle: Math.random() * Math.PI * 2,
+      turnSpeed: (Math.random() - 0.5) * 0.08,
+    });
+  }
+}
+
+function stepParticles() {
+  for (const p of particles) {
+    p.angle += p.turnSpeed + (Math.random() - 0.5) * 0.15;
+    p.turnSpeed *= 0.98;
+    p.turnSpeed += (Math.random() - 0.5) * 0.02;
+    p.x += Math.cos(p.angle) * p.speed;
+    p.y += Math.sin(p.angle) * p.speed;
+    const margin = 40;
+    if (p.x < margin)   p.angle += 0.12;
+    if (p.x > W-margin) p.angle -= 0.12;
+    if (p.y < margin)   p.angle += 0.12;
+    if (p.y > H-margin) p.angle -= 0.12;
+    p.trail.push({ x: p.x, y: p.y });
+    if (p.trail.length > TRAIL_LEN) p.trail.shift();
+  }
+}
+
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.04)';
+  ctx.fillRect(0, 0, W, H);
+  stepParticles();
+  for (const p of particles) {
+    if (p.trail.length < 2) continue;
+    for (let i = 1; i < p.trail.length; i++) {
+      const age   = i / p.trail.length;
+      const alpha = Math.pow(age, 2) * 0.18;
+      ctx.strokeStyle = `rgba(232,224,208,${alpha})`;
+      ctx.lineWidth   = age * 0.8;
+      ctx.beginPath();
+      ctx.moveTo(p.trail[i-1].x, p.trail[i-1].y);
+      ctx.lineTo(p.trail[i].x,   p.trail[i].y);
+      ctx.stroke();
+    }
+    const last = p.trail[p.trail.length-1];
+    ctx.beginPath();
+    ctx.arc(last.x, last.y, 0.8, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(232,224,208,0.25)';
+    ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+
+resize();
+window.addEventListener('resize', resize);
+setTimeout(() => { canvas.classList.add('visible'); }, 600);
+draw();
+</script>
+</body>
+</html>
