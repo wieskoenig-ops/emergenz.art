@@ -17,8 +17,35 @@
       font-family: 'Cormorant Garamond', serif;
     }
 
+    /* ── Obere Leiste ── */
+    #top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: clamp(28px, 4vh, 42px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 0.5px solid rgba(232,224,208,0.08);
+    }
+
+    #top-bar a {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(0.62rem, 1vw, 0.82rem);
+      letter-spacing: 0.38em;
+      color: rgba(232,224,208,0.35);
+      text-transform: lowercase;
+      text-decoration: none;
+      transition: color 0.4s ease;
+    }
+    #top-bar a:hover { color: rgba(232,224,208,0.85); }
+
+    /* ── Layout ── */
     #layout {
-      position: fixed; inset: 0;
+      position: fixed;
+      top: clamp(28px, 4vh, 42px);
+      left: 0; right: 0; bottom: 0;
       display: grid;
       grid-template-rows: 1fr 2fr 1fr;
     }
@@ -47,7 +74,7 @@
     }
     .cell:hover::after { border-color: rgba(232,224,208,0.25); }
 
-    /* Labels — immer schwach sichtbar, bei Hover deutlich */
+    /* Labels obere Blöcke — größer */
     .cell-label {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
@@ -55,22 +82,22 @@
       font-weight: 300;
       font-size: clamp(0.85rem, 1.6vw, 1.3rem);
       letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.12);
+      color: rgba(232,224,208,0.65);
       text-transform: lowercase;
       transition: color 0.5s ease;
       pointer-events: none;
       user-select: none;
       text-align: center;
     }
-    .cell-label { color: rgba(232,224,208,0.65); }
     .cell:hover .cell-label { color: rgba(232,224,208,1); }
 
-    /* Block 2 Start — minimal heller zum Hervorheben */
-    #c1 .cell-label {
-      color: rgba(232,224,208,0.75) !important;
-      font-size: clamp(1rem, 1.8vw, 1.5rem);
+    /* Obere drei Blöcke — deutlich größere Schrift */
+    #band-top .cell-label {
+      font-size: clamp(1.4rem, 3.2vw, 3rem);
+      letter-spacing: 0.32em;
+      color: rgba(232,224,208,0.72);
     }
-    #c1:hover .cell-label { color: rgba(232,224,208,1) !important; }
+    #band-top .cell:hover .cell-label { color: rgba(232,224,208,1); }
 
     /* Mitte EMERGENZ */
     #middle {
@@ -125,15 +152,19 @@
 </head>
 <body>
 
+  <div id="top-bar">
+    <a href="/ueber/">über emergenz.art</a>
+  </div>
+
   <div id="label-name">mkoenighaus</div>
   <canvas id="sparks"></canvas>
   <canvas id="canvas"></canvas>
 
   <div id="layout">
     <div class="band" id="band-top">
-      <a class="cell" id="c0" href="/ueber/"><span class="cell-label">über emergenz.art</span></a>
-      <a class="cell" id="c1" href="/start/"><span class="cell-label">start</span></a>
-      <a class="cell" id="c2" href="/mathematik/"><span class="cell-label">mathematik</span></a>
+      <a class="cell" id="c0" href="/emergenz/"><span class="cell-label">emergenz</span></a>
+      <a class="cell" id="c1" href="/punkt/"><span class="cell-label">punkt</span></a>
+      <a class="cell" id="c2" href="/art/"><span class="cell-label">art</span></a>
     </div>
 
     <div id="middle">
@@ -142,7 +173,7 @@
 
     <div class="band" id="band-bot">
       <a class="cell" id="c3" href="/literatur/"><span class="cell-label">literatur</span></a>
-      <a class="cell" id="c4" href="/kippunkte/"><span class="cell-label">kippunkte</span></a>
+      <a class="cell" id="c4" href="/links/"><span class="cell-label">links</span></a>
       <a class="cell" id="c5" href="mailto:mail.emergenz@wrb.de"><span class="cell-label">kontakt</span></a>
     </div>
   </div>
@@ -155,14 +186,13 @@ const sparkCanvas = document.getElementById('sparks');
 const sc = sparkCanvas.getContext('2d');
 let sparks = [];
 
-// Perkolations-Farbtöne + Weiß
 const SPARK_COLORS = [
-  [255,255,255],   // weiß
-  [255,255,255],   // weiß (häufiger)
-  [255,255,255],   // weiß
-  [100,160,230],   // Indigo-Blau
-  [20,180,160],    // Teal
-  [220,140,40],    // Amber
+  [255,255,255],
+  [255,255,255],
+  [255,255,255],
+  [100,160,230],
+  [20,180,160],
+  [220,140,40],
 ];
 
 function spawnBorderSparks(pos, axis, bandRect, intense) {
@@ -266,15 +296,12 @@ cells.forEach(cell => {
   });
 
   cell.addEventListener('click', e => {
-    // Intensive Funken an allen Nachbargrenzen beim Klick
     const r = cell.getBoundingClientRect();
     const borders = cellNeighborBorders[id] || [];
     borders.forEach(side => {
       spawnBorderSparks(side === 'left' ? r.left : r.right, 'v', r, true);
     });
     cell.classList.add('clicked');
-    // Für mailto: kein preventDefault nötig
-    // Für interne Links: kurze Verzögerung damit Funken sichtbar sind
     const href = cell.getAttribute('href');
     if (href && !href.startsWith('mailto:')) {
       e.preventDefault();
