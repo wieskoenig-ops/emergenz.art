@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dissipation — Emergenz</title>
+  <meta name="description" content="Dissipation als Bedingung der Emergenz – Energie fließt hindurch und Ordnung entsteht fern vom Gleichgewicht.">
+  <link rel="canonical" href="https://emergenz.art/start/dissipation/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Dissipation — Emergenz">
+  <meta property="og:description" content="Dissipation als Bedingung der Emergenz – Energie fließt hindurch und Ordnung entsteht fern vom Gleichgewicht.">
+  <meta property="og:url" content="https://emergenz.art/start/dissipation/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
@@ -13,13 +21,18 @@
 
     #back {
       position: fixed;
-      top: clamp(8px,2vh,20px); left: clamp(12px,2.5vw,32px);
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
       font-family: 'Cormorant Garamond', serif; font-weight: 400;
-      font-size: clamp(0.75rem,1.3vw,1rem); letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.5); text-transform: lowercase;
-      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
     }
-    #back:hover { color: rgba(232,224,208,0.95); }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
     #back::before { content: '← '; letter-spacing: 0; }
 
     #page-name {

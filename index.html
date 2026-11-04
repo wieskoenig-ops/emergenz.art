@@ -4,7 +4,15 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Emergenz</title>
+  <title>emergenz.art — Emergenz. Punkt. Art.</title>
+  <meta name="description" content="Emergenz, Kipppunkte und generative Kunst: Wie aus einfachen lokalen Regeln Muster, Ordnung und neue Ebenen der Wirklichkeit entstehen.">
+  <link rel="canonical" href="https://emergenz.art/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="emergenz.art — Emergenz. Punkt. Art.">
+  <meta property="og:description" content="Emergenz, Kipppunkte und generative Kunst: Wie aus einfachen lokalen Regeln Muster, Ordnung und neue Ebenen der Wirklichkeit entstehen.">
+  <meta property="og:url" content="https://emergenz.art/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
@@ -34,7 +42,7 @@
       font-weight: 300;
       font-size: clamp(0.62rem, 1vw, 0.82rem);
       letter-spacing: 0.38em;
-      color: rgba(232,224,208,0.35);
+      color: rgba(232,224,208,0.6);
       text-transform: lowercase;
       text-decoration: none;
       transition: color 0.4s ease;
@@ -121,6 +129,13 @@
     }
     #word.hidden { opacity: 0; pointer-events: none; }
 
+    /* Handy: Schrift so verkleinern, dass nichts an den Rand stößt */
+    @media (max-width: 600px) {
+      #band-top .cell-label { font-size: 1.05rem; letter-spacing: 0.18em; }
+      .cell-label { font-size: 0.85rem; letter-spacing: 0.18em; }
+      #word { font-size: 9vw; letter-spacing: 0.25em; margin-right: -0.25em; }
+    }
+
     @keyframes breathe {
       0%   { opacity: 0.1; }
       50%  { opacity: 1; }
@@ -174,7 +189,7 @@
     <div class="band" id="band-bot">
       <a class="cell" id="c3" href="/literatur/"><span class="cell-label">literatur</span></a>
       <a class="cell" id="c4" href="/planetare-kognition/"><span class="cell-label">planetare kognition</span></a>
-      <a class="cell" id="c5" href="mailto:mail.emergenz@wrb.de"><span class="cell-label">kontakt</span></a>
+      <a class="cell" id="c5" href="mailto:mail.emergenz@web.de"><span class="cell-label">kontakt</span></a>
     </div>
   </div>
 

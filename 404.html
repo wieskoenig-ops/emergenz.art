@@ -13,13 +13,18 @@
 
     #back {
       position: fixed;
-      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
       font-family: 'Cormorant Garamond', serif; font-weight: 400;
-      font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.7); text-transform: lowercase;
-      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
     }
-    #back:hover { color: rgba(232,224,208,1); }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
     #back::before { content: '← '; letter-spacing: 0; }
 
     #page-name {
@@ -96,7 +101,7 @@
   </style>
 </head>
 <body>
-  <a id="back" href="/">← emergenz</a>
+  <a id="back" href="/">emergenz.art</a>
   <div id="page-name">noch nicht da</div>
   <canvas id="canvas"></canvas>
 

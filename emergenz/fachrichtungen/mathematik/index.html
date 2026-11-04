@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mathematik — Emergenz</title>
+  <meta name="description" content="Emergenz in der Mathematik: zelluläre Automaten und die beweisbare Unberechenbarkeit von Systemen mit bekannten Regeln.">
+  <link rel="canonical" href="https://emergenz.art/emergenz/fachrichtungen/mathematik/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Mathematik — Emergenz">
+  <meta property="og:description" content="Emergenz in der Mathematik: zelluläre Automaten und die beweisbare Unberechenbarkeit von Systemen mit bekannten Regeln.">
+  <meta property="og:url" content="https://emergenz.art/emergenz/fachrichtungen/mathematik/">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,13 +38,18 @@
 
     #back {
       position: fixed;
-      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
       font-family: 'Cormorant Garamond', serif; font-weight: 400;
-      font-size: clamp(0.85rem,1.4vw,1.1rem); letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.65); text-transform: lowercase;
-      text-decoration: none; transition: color 0.4s ease; z-index: 30;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
     }
-    #back:hover { color: rgba(232,224,208,1); }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
     #back::before { content: '← '; letter-spacing: 0; }
 
     #page-name {

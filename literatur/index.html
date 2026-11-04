@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Literatur — Emergenz</title>
+  <meta name="description" content="Ausgewählte Literatur zu Emergenz, Selbstorganisation, Chaos, Kipppunkten und planetarer Kognition – von Anderson und Prigogine bis Hofstadter und Scheffer.">
+  <link rel="canonical" href="https://emergenz.art/literatur/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Literatur — Emergenz">
+  <meta property="og:description" content="Ausgewählte Literatur zu Emergenz, Selbstorganisation, Chaos, Kipppunkten und planetarer Kognition – von Anderson und Prigogine bis Hofstadter und Scheffer.">
+  <meta property="og:url" content="https://emergenz.art/literatur/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
@@ -13,13 +21,18 @@
 
     #back {
       position: fixed;
-      top: clamp(10px,2vh,22px); left: clamp(14px,2.5vw,36px);
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
       font-family: 'Cormorant Garamond', serif; font-weight: 400;
-      font-size: clamp(1rem,1.8vw,1.4rem); letter-spacing: 0.28em;
-      color: rgba(232,224,208,0.7); text-transform: lowercase;
-      text-decoration: none; transition: color 0.4s ease; z-index: 20;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
     }
-    #back:hover { color: rgba(232,224,208,1); }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
     #back::before { content: '← '; letter-spacing: 0; }
 
     #page-name {
@@ -36,9 +49,10 @@
     #panel {
       position: fixed; inset: 0;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 10; pointer-events: none;
-      padding: clamp(80px,12vh,140px) clamp(40px,8vw,120px);
+      align-items: center;
+      z-index: 10;
+      overflow-y: auto;
+      padding: clamp(80px,12vh,140px) clamp(16px,8vw,120px) clamp(60px,10vh,120px);
       gap: clamp(2rem,4vh,4rem);
     }
 
@@ -78,10 +92,57 @@
       animation: fadein 1.5s ease 1.4s forwards;
       font-family: 'Cormorant Garamond', serif;
       font-weight: 300; font-style: italic;
-      font-size: clamp(0.75rem,1.2vw,1rem);
+      font-size: clamp(0.85rem,1.2vw,1rem);
       letter-spacing: 0.12em; line-height: 1.8;
-      color: rgba(232,224,208,0.25);
+      color: rgba(232,224,208,0.5);
       text-align: center;
+    }
+
+    /* ── Literaturliste ── */
+    #biblio {
+      width: 100%; max-width: 680px;
+      opacity: 0;
+      animation: fadein 1.5s ease 1.8s forwards;
+      display: flex; flex-direction: column;
+      gap: clamp(1.5rem,3vh,2.5rem);
+    }
+
+    .group {
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: clamp(1.2rem,2.5vh,2rem) clamp(1.2rem,3vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+    }
+
+    .group h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(0.85rem,1.3vw,1rem);
+      letter-spacing: 0.28em;
+      color: #b0603a;
+      text-transform: lowercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .group ul { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+
+    .group li {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(1rem,1.5vw,1.15rem);
+      line-height: 1.55;
+      color: rgba(232,214,186,0.85);
+    }
+
+    .group .author { letter-spacing: 0.04em; }
+    .group .title  { font-style: italic; color: rgba(240,224,196,1); }
+    .group .meta   { color: rgba(232,214,186,0.55); }
+    .group .why {
+      display: block;
+      font-size: 0.88em;
+      color: rgba(232,214,186,0.55);
+      margin-top: 0.15rem;
     }
 
     @keyframes fadein {
@@ -91,7 +152,7 @@
   </style>
 </head>
 <body>
-  <a id="back" href="/">← emergenz</a>
+  <a id="back" href="/">emergenz.art</a>
   <div id="page-name">literatur</div>
   <canvas id="canvas"></canvas>
 
@@ -100,7 +161,120 @@
       <p>„Auf jeder Stufe zunehmender Komplexität treten völlig neue Eigenschaften hervor."</p>
       <cite>Philip W. Anderson — More Is Different, 1972</cite>
     </blockquote>
-    <div class="note">Diese Seite entsteht noch.<br>Literaturempfehlungen zum Thema Emergenz folgen.</div>
+
+    <div id="biblio">
+
+      <section class="group">
+        <h2>einstieg</h2>
+        <ul>
+          <li><span class="author">Philip W. Anderson</span> — <span class="title">More Is Different</span> <span class="meta">· Science 177, 1972</span>
+            <span class="why">Vier Seiten, die die Physik veränderten: Das Ganze ist nicht aus seinen Teilen ableitbar.</span></li>
+          <li><span class="author">Steven Johnson</span> — <span class="title">Emergence. The Connected Lives of Ants, Brains, Cities, and Software</span> <span class="meta">· 2001</span>
+            <span class="why">Erzählender Einstieg: Ameisenkolonien, Städte und Software als selbstorganisierende Systeme.</span></li>
+          <li><span class="author">Melanie Mitchell</span> — <span class="title">Complexity. A Guided Tour</span> <span class="meta">· 2009</span>
+            <span class="why">Klare Führung durch Komplexitätsforschung, zelluläre Automaten und Netzwerke.</span></li>
+          <li><span class="author">John H. Holland</span> — <span class="title">Emergence. From Chaos to Order</span> <span class="meta">· 1998</span>
+            <span class="why">Wie einfache Regelsysteme Neues hervorbringen – vom Brettspiel bis zum Organismus.</span></li>
+        </ul>
+      </section>
+
+      <section class="group">
+        <h2>bedingungen · komplexität, selbstorganisation, chaos</h2>
+        <ul>
+          <li><span class="author">Alan M. Turing</span> — <span class="title">The Chemical Basis of Morphogenesis</span> <span class="meta">· Phil. Trans. R. Soc. B 237, 1952</span>
+            <span class="why">Reaktion und Diffusion erzeugen Muster – Grundlage der Seite Komplexität.</span></li>
+          <li><span class="author">Erwin Schrödinger</span> — <span class="title">Was ist Leben?</span> <span class="meta">· 1944</span>
+            <span class="why">Leben als Ordnung, die sich von negativer Entropie ernährt.</span></li>
+          <li><span class="author">Ilya Prigogine, Isabelle Stengers</span> — <span class="title">Dialog mit der Natur</span> <span class="meta">· 1980</span>
+            <span class="why">Dissipative Strukturen: Ordnung fern vom Gleichgewicht.</span></li>
+          <li><span class="author">Hermann Haken</span> — <span class="title">Erfolgsgeheimnisse der Natur. Synergetik</span> <span class="meta">· 1981</span>
+            <span class="why">Die Lehre vom Zusammenwirken – wie Ordnungsparameter die Teile versklaven.</span></li>
+          <li><span class="author">Edward N. Lorenz</span> — <span class="title">Deterministic Nonperiodic Flow</span> <span class="meta">· Journal of the Atmospheric Sciences 20, 1963</span>
+            <span class="why">Die Geburtsurkunde des deterministischen Chaos.</span></li>
+          <li><span class="author">James Gleick</span> — <span class="title">Chaos. Die Ordnung des Universums</span> <span class="meta">· 1987</span>
+            <span class="why">Die Geschichte der Chaosforschung, lebendig erzählt.</span></li>
+          <li><span class="author">Stuart Kauffman</span> — <span class="title">At Home in the Universe</span> <span class="meta">· 1995</span>
+            <span class="why">Ordnung umsonst: Selbstorganisation als Normalfall, nicht als Ausnahme.</span></li>
+          <li><span class="author">Per Bak</span> — <span class="title">How Nature Works</span> <span class="meta">· 1996</span>
+            <span class="why">Selbstorganisierte Kritikalität – der Sandhaufen am Rand der Lawine.</span></li>
+        </ul>
+      </section>
+
+      <section class="group">
+        <h2>mathematik · regeln und unberechenbarkeit</h2>
+        <ul>
+          <li><span class="author">Douglas R. Hofstadter</span> — <span class="title">Gödel, Escher, Bach</span> <span class="meta">· 1979</span>
+            <span class="why">Selbstbezug, formale Systeme und die Frage, wie aus Symbolen Bedeutung entsteht.</span></li>
+          <li><span class="author">Stephen Wolfram</span> — <span class="title">A New Kind of Science</span> <span class="meta">· 2002</span>
+            <span class="why">Zelluläre Automaten und computationale Irreduzibilität.</span></li>
+          <li><span class="author">David Deutsch</span> — <span class="title">The Beginning of Infinity</span> <span class="meta">· 2011</span>
+            <span class="why">Erklärungen, Emergenz und warum höhere Ebenen real sind.</span></li>
+        </ul>
+      </section>
+
+      <section class="group">
+        <h2>leben und gesellschaft</h2>
+        <ul>
+          <li><span class="author">Craig W. Reynolds</span> — <span class="title">Flocks, Herds, and Schools. A Distributed Behavioral Model</span> <span class="meta">· SIGGRAPH, 1987</span>
+            <span class="why">Die drei Schwarmregeln hinter dem Vogelschwarm auf der Seite Das Phänomen.</span></li>
+          <li><span class="author">Humberto R. Maturana, Francisco J. Varela</span> — <span class="title">Der Baum der Erkenntnis</span> <span class="meta">· 1987</span>
+            <span class="why">Autopoiesis: Leben als sich selbst erzeugendes System.</span></li>
+          <li><span class="author">Deborah M. Gordon</span> — <span class="title">Ant Encounters. Interaction Networks and Colony Behavior</span> <span class="meta">· 2010</span>
+            <span class="why">Wie Ameisenkolonien ohne Zentrale entscheiden.</span></li>
+          <li><span class="author">Thomas C. Schelling</span> — <span class="title">Micromotives and Macrobehavior</span> <span class="meta">· 1978</span>
+            <span class="why">Kleine individuelle Vorlieben, große gesellschaftliche Muster.</span></li>
+          <li><span class="author">Niklas Luhmann</span> — <span class="title">Soziale Systeme</span> <span class="meta">· 1984</span>
+            <span class="why">Gesellschaft als emergentes Kommunikationssystem.</span></li>
+        </ul>
+      </section>
+
+      <section class="group">
+        <h2>kipppunkte · punkt</h2>
+        <ul>
+          <li><span class="author">Marten Scheffer</span> — <span class="title">Critical Transitions in Nature and Society</span> <span class="meta">· 2009</span>
+            <span class="why">Schwellen, Hysterese und Frühwarnsignale in Ökosystemen und Gesellschaften.</span></li>
+          <li><span class="author">Timothy M. Lenton u. a.</span> — <span class="title">Tipping Elements in the Earth’s Climate System</span> <span class="meta">· PNAS 105, 2008</span>
+            <span class="why">Die grundlegende Kartierung der Kippelemente im Klimasystem.</span></li>
+          <li><span class="author">René M. van Westen, Michael Kliphuis, Henk A. Dijkstra</span> — <span class="title">Physics-Based Early Warning Signal Shows That AMOC Is on Tipping Course</span> <span class="meta">· Science Advances 10, 2024</span>
+            <span class="why">Zum Essay über die AMOC: Das Förderband nähert sich seiner Schwelle.</span></li>
+          <li><span class="author">Stefan Rahmstorf, Hans Joachim Schellnhuber</span> — <span class="title">Der Klimawandel</span> <span class="meta">· C. H. Beck, 2006</span>
+            <span class="why">Kompakte deutschsprachige Einführung, auch zur Ozeanzirkulation.</span></li>
+          <li><span class="author">Malcolm Gladwell</span> — <span class="title">The Tipping Point</span> <span class="meta">· 2000</span>
+            <span class="why">Kipppunkte im Sozialen: wie kleine Dinge große Wirkung entfalten.</span></li>
+        </ul>
+      </section>
+
+      <section class="group">
+        <h2>geist, maschine, planet</h2>
+        <ul>
+          <li><span class="author">Douglas R. Hofstadter</span> — <span class="title">Ich bin eine seltsame Schleife</span> <span class="meta">· 2008 (engl. 2007)</span>
+            <span class="why">Das Ich als emergentes, selbstbezügliches Muster.</span></li>
+          <li><span class="author">Terrence W. Deacon</span> — <span class="title">Incomplete Nature. How Mind Emerged from Matter</span> <span class="meta">· 2011</span>
+            <span class="why">Wie Bedeutung und Absicht aus physikalischen Prozessen hervorgehen.</span></li>
+          <li><span class="author">Jason Wei u. a.</span> — <span class="title">Emergent Abilities of Large Language Models</span> <span class="meta">· TMLR, 2022</span>
+            <span class="why">Fähigkeiten, die ab einer bestimmten Modellgröße sprunghaft auftauchen.</span></li>
+          <li><span class="author">Rylan Schaeffer, Brando Miranda, Sanmi Koyejo</span> — <span class="title">Are Emergent Abilities of Large Language Models a Mirage?</span> <span class="meta">· NeurIPS, 2023</span>
+            <span class="why">Die Gegenposition: scheinbare Emergenz als Effekt der Messung.</span></li>
+          <li><span class="author">Adam Frank, David Grinspoon, Sara Walker</span> — <span class="title">Intelligence as a Planetary Scale Process</span> <span class="meta">· International Journal of Astrobiology 21, 2022</span>
+            <span class="why">Planetare Intelligenz als nächste Stufe der Erdgeschichte.</span></li>
+        </ul>
+      </section>
+
+      <section class="group">
+        <h2>philosophie der emergenz</h2>
+        <ul>
+          <li><span class="author">C. D. Broad</span> — <span class="title">The Mind and Its Place in Nature</span> <span class="meta">· 1925</span>
+            <span class="why">Klassiker des britischen Emergentismus.</span></li>
+          <li><span class="author">Achim Stephan</span> — <span class="title">Emergenz. Von der Unvorhersagbarkeit zur Selbstorganisation</span> <span class="meta">· 1999</span>
+            <span class="why">Das deutschsprachige Standardwerk zu den Spielarten des Emergenzbegriffs.</span></li>
+          <li><span class="author">Mark A. Bedau, Paul Humphreys (Hg.)</span> — <span class="title">Emergence. Contemporary Readings in Philosophy and Science</span> <span class="meta">· 2008</span>
+            <span class="why">Die wichtigsten Texte der Debatte in einem Band.</span></li>
+        </ul>
+      </section>
+
+    </div>
+
+    <div class="note">Eine Auswahl, die weiter wächst.</div>
   </div>
 
 <script>
