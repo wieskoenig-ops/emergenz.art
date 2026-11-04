@@ -12,6 +12,10 @@
   <meta property="og:title" content="Art — emergenz.art">
   <meta property="og:description" content="Generative Kunst zu den Bedingungen der Emergenz: Komplexität, Dissipation, Notwendigkeit, Selbstorganisation, Symmetriebrechung und deterministisches Chaos.">
   <meta property="og:url" content="https://emergenz.art/start/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
@@ -74,9 +78,11 @@
       text-decoration: none; cursor: pointer;
     }
     .intersection-label:hover { filter: brightness(1.5); }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   </style>
 </head>
 <body>
+  <h1 class="sr-only">Art – Bedingungen der Emergenz</h1>
   <a id="back" href="/">emergenz.art</a>
   <div id="hint-begriffe">die begriffe werden auf den folgenden seiten erläutert</div>
   <canvas id="canvas"></canvas>
@@ -439,5 +445,7 @@ function draw(){
 
 draw();
 </script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
