@@ -34,7 +34,7 @@
     #top-bar {
       position: fixed;
       top: 0; left: 0; right: 0;
-      height: clamp(28px, 4vh, 42px);
+      height: clamp(44px, 6vh, 60px);
       z-index: 50;
       display: flex;
       align-items: center;
@@ -45,19 +45,19 @@
     #top-bar a {
       font-family: 'Cormorant Garamond', serif;
       font-weight: 300;
-      font-size: clamp(0.62rem, 1vw, 0.82rem);
+      font-size: clamp(1rem, 1.6vw, 1.3rem);
       letter-spacing: 0.38em;
-      color: rgba(232,224,208,0.6);
+      color: rgba(232,224,208,0.82);
       text-transform: lowercase;
       text-decoration: none;
       transition: color 0.4s ease;
     }
-    #top-bar a:hover { color: rgba(232,224,208,0.85); }
+    #top-bar a:hover, #top-bar a:focus-visible { color: rgba(232,224,208,1); }
 
     /* ── Layout ── */
     #layout {
       position: fixed;
-      top: clamp(28px, 4vh, 42px);
+      top: clamp(44px, 6vh, 60px);
       left: 0; right: 0; bottom: 0;
       display: grid;
       grid-template-rows: 1fr 2fr 1fr;
@@ -112,6 +112,13 @@
     }
     #band-top .cell:hover .cell-label { color: rgba(232,224,208,1); }
 
+    /* Kontakt und Impressum teilen sich das rechte untere Feld */
+    .cell-stack { display: grid; grid-template-rows: 1fr 1fr; }
+    .cell-stack .cell-label { font-size: clamp(0.75rem, 1.25vw, 1rem); }
+    #c5 .cell-label { align-items: flex-end; padding-bottom: 0.55em; }
+    #c6 .cell-label { align-items: flex-start; padding-top: 0.55em; color: rgba(232,224,208,0.45); }
+    #c6:hover .cell-label { color: rgba(232,224,208,0.9); }
+
     /* Mitte EMERGENZ */
     #middle {
       position: relative;
@@ -138,6 +145,8 @@
     @media (max-width: 600px) {
       #band-top .cell-label { font-size: 1.05rem; letter-spacing: 0.18em; }
       .cell-label { font-size: 0.85rem; letter-spacing: 0.18em; }
+      .cell-stack .cell-label { font-size: 0.75rem; }
+      #top-bar a { font-size: 0.95rem; letter-spacing: 0.25em; }
       #word { font-size: 9vw; letter-spacing: 0.25em; margin-right: -0.25em; }
     }
 
@@ -194,7 +203,10 @@
     <div class="band" id="band-bot">
       <a class="cell" id="c3" href="/literatur/"><span class="cell-label">literatur</span></a>
       <a class="cell" id="c4" href="/planetare-kognition/"><span class="cell-label">planetare kognition</span></a>
-      <a class="cell" id="c5" href="mailto:mail.emergenz@web.de"><span class="cell-label">kontakt</span></a>
+      <div class="cell-stack">
+        <a class="cell" id="c5" href="mailto:mail.emergenz@web.de"><span class="cell-label">kontakt</span></a>
+        <a class="cell" id="c6" href="/impressum/"><span class="cell-label">impressum</span></a>
+      </div>
     </div>
   </div>
 
@@ -291,6 +303,7 @@ const cellNeighborBorders = {
   'c3': ['right'],
   'c4': ['left', 'right'],
   'c5': ['left'],
+  'c6': ['left'],
 };
 
 const cells = document.querySelectorAll('.cell');

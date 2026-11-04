@@ -110,6 +110,40 @@
       color: rgba(232,224,208,0.5) !important;
       font-size: clamp(0.95rem,1.5vw,1.15rem) !important;
     }
+    /* ── Übersicht aller Seiten ── */
+    .sitemap {
+      margin-top: clamp(1.8rem,4vh,3rem);
+      padding-top: clamp(1.2rem,2.5vh,2rem);
+      border-top: 0.5px solid rgba(232,224,208,0.12);
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .sitemap-title {
+      font-weight: 400;
+      font-size: clamp(0.8rem,1.2vw,0.95rem); letter-spacing: 0.35em;
+      color: #b0603a; text-transform: lowercase;
+      margin-bottom: 1.1rem;
+    }
+    .sitemap-cols {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.2rem 1.5rem;
+    }
+    .sitemap ul { list-style: none; }
+    .sitemap li { line-height: 1.9; }
+    .sitemap li.sub { padding-left: 1em; }
+    .sitemap li.gap { margin-top: 0.9rem; }
+    .sitemap a {
+      font-weight: 300;
+      font-size: clamp(0.95rem,1.4vw,1.08rem); letter-spacing: 0.08em;
+      color: rgba(232,214,186,0.62);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .sitemap a.top {
+      font-weight: 400; letter-spacing: 0.2em;
+      color: rgba(232,214,186,0.9);
+    }
+    .sitemap a:hover, .sitemap a:focus-visible { color: rgba(240,224,196,1); }
   </style>
 </head>
 <body>
@@ -132,7 +166,35 @@
 
       <p class="coda">Ein künstlerisch-wissenschaftlicher Versuch, Emergenz nicht nur zu erklären, sondern erfahrbar zu machen.</p>
 
-      <p class="coda" style="margin-top:1.5rem;font-size:clamp(0.72rem,1vw,0.85rem);"><a href="/impressum/" style="color:rgba(232,224,208,0.22);text-decoration:none;letter-spacing:0.2em;transition:color 0.3s ease;" onmouseover="this.style.color='rgba(232,224,208,0.6)'" onmouseout="this.style.color='rgba(232,224,208,0.22)'">impressum</a></p>
+      <nav class="sitemap" aria-label="Übersicht aller Seiten">
+        <div class="sitemap-title">übersicht</div>
+        <div class="sitemap-cols">
+          <ul>
+            <li><a class="top" href="/emergenz/">emergenz</a></li>
+            <li><a href="/emergenz/das-phaenomen/">das phänomen</a></li>
+            <li><a href="/emergenz/kippunkte/">kippunkte</a></li>
+            <li><a href="/emergenz/fachrichtungen/">fachrichtungen</a></li>
+            <li class="sub"><a href="/emergenz/fachrichtungen/biologie/">biologie</a></li>
+            <li class="sub"><a href="/emergenz/fachrichtungen/mathematik/">mathematik</a></li>
+            <li class="sub"><a href="/emergenz/fachrichtungen/soziologie/">soziologie</a></li>
+          </ul>
+          <ul>
+            <li><a class="top" href="/punkt/">punkt</a></li>
+            <li><a href="/punkt/amoc/">amoc</a></li>
+            <li class="gap"><a class="top" href="/planetare-kognition/">planetare kognition</a></li>
+            <li class="gap"><a class="top" href="/literatur/">literatur</a></li>
+          </ul>
+          <ul>
+            <li><a class="top" href="/start/">art</a></li>
+            <li><a href="/start/komplexitaet/">komplexität</a></li>
+            <li><a href="/start/dissipation/">dissipation</a></li>
+            <li><a href="/start/notwendigkeit/">notwendigkeit</a></li>
+            <li><a href="/start/selbstorganisation/">selbstorganisation</a></li>
+            <li><a href="/start/symmetriebrechung/">symmetriebrechung</a></li>
+            <li><a href="/start/deterministisches-chaos/">deterministisches chaos</a></li>
+          </ul>
+        </div>
+      </nav>
     </div>
   </div>
 
