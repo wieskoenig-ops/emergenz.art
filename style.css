@@ -30,3 +30,35 @@ main p,
 /* Hervorhebungen: Literata hat 300 und 400, also 400 für fett */
 .intro p strong, .block p strong, .definition strong, .lede strong,
 main p strong, #text-block > p strong, .group li strong { font-weight: 400; }
+
+/* ── Kupfer ──
+   Ein einziger Kupferton für Text (Seitennamen, Signatur, Hinweise). */
+:root { --kupfer: #b0603a; }
+
+/* ── Kleine Beschriftungen ──
+   Mindestgröße und genug Kontrast, damit sie auf Schwarz lesbar bleiben. */
+#page-name {
+  font-size: clamp(0.78rem, 1.1vw, 0.95rem);
+  color: var(--kupfer);
+}
+
+/* Bildunterschriften zu den Animationen (unten links) */
+#lorenz-note, #benard-note, #turing-note, #ulam-note, #gol-note, #chladni-note, #perc-note {
+  font-size: clamp(0.72rem, 0.9vw, 0.82rem);
+  color: rgba(232,214,186,0.68);
+}
+
+/* Kleine Rubriken und Kopfzeilen */
+.site-name, .label, .section-label, .roman, .nav-card-num, .field-label, .quellen h3 {
+  font-size: clamp(0.72rem, 1vw, 0.85rem);
+  color: rgba(232,214,186,0.55);
+}
+
+/* Nebentexte, Quellen, Zitatangaben */
+.nav-card-sub, .thinkers, .mandelbrot-caption, .essay-title .subtitle, .hinweis, .note, blockquote cite {
+  font-size: clamp(0.78rem, 1.1vw, 0.92rem);
+  color: rgba(232,214,186,0.6);
+}
+.quellen li, .quellen li a { color: rgba(232,214,186,0.6); }
+#btn-reset { color: rgba(232,214,186,0.55); }
+#hint-begriffe { font-size: clamp(0.72rem, 1vw, 0.85rem); color: var(--kupfer); }
