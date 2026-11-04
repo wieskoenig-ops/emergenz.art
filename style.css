@@ -1,0 +1,32 @@
+/* ══════════════════════════════════════════
+   Gemeinsame Stile für alle Seiten
+   Wird nach dem seiteneigenen <style> geladen und hat deshalb Vorrang.
+   ══════════════════════════════════════════ */
+
+/* ── Lesetext ──
+   Längere Texte in Literata, gut lesbar am Bildschirm.
+   Überschriften, Navigation, Zitate und Beschriftungen bleiben in Cormorant Garamond. */
+.intro p,
+.block p,
+.definition,
+.lede,
+main p,
+#text-block > p:not(.coda):not(.hinweis),
+.group li,
+.quellen li {
+  font-family: 'Literata', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.08rem);
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+}
+
+/* Einleitungen etwas größer als der übrige Text */
+.intro p { font-size: clamp(1rem, 0.95rem + 0.35vw, 1.15rem); }
+
+/* Quellenangaben kleiner */
+.quellen li { font-size: 0.85rem; line-height: 1.7; }
+
+/* Hervorhebungen: Literata hat 300 und 400, also 400 für fett */
+.intro p strong, .block p strong, .definition strong, .lede strong,
+main p strong, #text-block > p strong, .group li strong { font-weight: 400; }
