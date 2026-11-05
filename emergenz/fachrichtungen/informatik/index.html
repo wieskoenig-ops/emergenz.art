@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informatik — Emergenz</title>
+  <meta name="description" content="Emergenz in der Informatik: Schwarmintelligenz, das Internet als gewachsenes Netz und künstliche Intelligenz – programmiert werden die Regeln, nicht das Verhalten.">
+  <link rel="canonical" href="https://emergenz.art/emergenz/fachrichtungen/informatik/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Informatik — Emergenz">
+  <meta property="og:description" content="Emergenz in der Informatik: Schwarmintelligenz, das Internet als gewachsenes Netz und künstliche Intelligenz – programmiert werden die Regeln, nicht das Verhalten.">
+  <meta property="og:url" content="https://emergenz.art/emergenz/fachrichtungen/informatik/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p + p { margin-top: 1.2em; }
+
+    .intro p.punch {
+      margin-top: 1.2em;
+      font-style: italic;
+      color: rgba(232,224,208,0.92);
+    }
+
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.3s; }
+    .block:nth-of-type(2) { animation-delay: 0.45s; }
+    .block:nth-of-type(3) { animation-delay: 0.6s; }
+    .block:nth-of-type(4) { animation-delay: 0.75s; }
+    .block:nth-of-type(5) { animation-delay: 0.9s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.35rem,2.4vw,1.85rem);
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.92);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+
+    .block.coda p { color: rgba(232,224,208,0.82); }
+
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+      opacity: 0;
+      animation: rise 0.9s ease 1.05s forwards;
+    }
+
+    /* Art-Hinweis */
+    .art-hint {
+      opacity: 0;
+      animation: rise 0.9s ease 1.1s forwards;
+      margin-bottom: clamp(2rem,4vh,3rem);
+      padding: clamp(1rem,2vh,1.5rem) clamp(1.2rem,2.5vw,2rem);
+      border: 0.5px solid rgba(232,224,208,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .art-hint p {
+      font-size: clamp(0.88rem,1.4vw,1.05rem);
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.5);
+      font-style: italic;
+    }
+
+    .art-hint a {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(0.82rem,1.2vw,0.95rem);
+      letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.45);
+      text-transform: lowercase;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .art-hint a:hover { color: rgba(232,224,208,0.9); }
+    .art-hint a::after { content: ' →'; }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/fachrichtungen/">fachrichtungen</a>
+  <h1 id="page-name">informatik</h1>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · fachrichtungen · 05 · informatik</div>
+
+    <div class="intro">
+      <p>Die Informatik ist die einzige Wissenschaft, die ihre Gegenstände selbst schreibt. Jedes Programm ist vollständig festgelegt, jeder Schritt von einem Menschen formuliert. Wenn irgendwo nichts Unerwartetes entstehen sollte, dann hier.</p>
+      <p>Und doch ist die Informatik zum Labor der Emergenz geworden. Man schreibt einfache Regeln und erhält ein Verhalten, das niemand geschrieben hat.</p>
+      <p class="punch">Programmiert werden die Regeln, nicht das Verhalten.</p>
+    </div>
+
+    <div class="block">
+      <h2>schwarmintelligenz</h2>
+      <p>1986 wollte der Computergrafiker Craig Reynolds einen Vogelschwarm animieren. Statt jeden Vogel einzeln zu steuern, gab er allen dieselben drei Regeln: halte Abstand zu deinen Nachbarn, fliege in ihre mittlere Richtung, bleib in ihrer Nähe. Das Ergebnis, die <em>Boids</em>, schwärmte wie echte Stare: Der Schwarm teilt sich vor Hindernissen, fließt wieder zusammen, zieht in Wellen über den Himmel. Keiner der Boids kennt den Schwarm. Auf den Seiten Biologie und Mathematik ziehen sie im Hintergrund vorbei.</p>
+      <p>Anfang der 1990er Jahre übertrug Marco Dorigo das Prinzip der Ameisen auf Rechenprobleme. Virtuelle Ameisen laufen durch ein Netz von Wegen und hinterlassen künstliche Pheromone. Kurze Wege werden öfter begangen, ihre Spur wird stärker, und nach einer Weile zeichnet das Kollektiv eine Lösung, die keine einzelne Ameise gesucht hat. Solche Verfahren planen heute Routen, Lieferketten und Datenflüsse.</p>
+      <p>2014 ließ eine Gruppe in Harvard um Radhika Nagpal über tausend kleine Roboter, die Kilobots, sich selbst zu Formen anordnen: zu einem Stern, einem Schraubenschlüssel, einem Buchstaben. Jeder Roboter sah nur seine unmittelbaren Nachbarn. Die Form existierte nirgends als Bauplan in einem einzelnen Roboter. Sie entstand.</p>
+    </div>
+
+    <div class="block">
+      <h2>das internet</h2>
+      <p>Das Internet hat keine Zentrale. Seit dem ARPANET von 1969 werden Daten in kleine Pakete zerlegt, und jeder Knoten entscheidet nur lokal, an welchen Nachbarn er ein Paket weiterreicht. Fällt eine Leitung aus, finden die Pakete einen anderen Weg. Die Zuverlässigkeit des Ganzen steckt in keinem einzelnen Rechner.</p>
+      <p>Niemand hat die Gestalt des Netzes entworfen. Und doch hat sie eine auffällige Ordnung. 1999 zeigten Albert-László Barabási und Réka Albert, dass das World Wide Web ein <em>skalenfreies Netzwerk</em> ist: Die meisten Seiten haben nur wenige Verbindungen, einige wenige Knoten aber gewaltig viele. Diese Struktur entsteht von selbst, aus einer einfachen Regel: Neue Knoten verbinden sich bevorzugt mit denen, die schon gut verbunden sind. Wer hat, dem wird gegeben.</p>
+      <p>Im Hintergrund dieser Seite wächst ein solches Netz. Jeder neue Punkt knüpft zwei Verbindungen, mit größerer Wahrscheinlichkeit zu Punkten, die schon viele haben. Nach einer Weile bilden sich ohne jede Planung Knotenpunkte, um die sich alles ordnet.</p>
+      <p>Diese emergente Struktur hat Folgen. Skalenfreie Netze sind erstaunlich robust gegen zufällige Ausfälle und zugleich verwundbar, wenn man gezielt ihre großen Knoten trifft. Auf dieselbe Weise entstehen die Dynamiken sozialer Medien: Kaskaden, Empörungswellen, Meinungsblasen. Kein Algorithmus enthält sie als Ziel. Sie entstehen aus Millionen lokaler Entscheidungen, wem man folgt und was man teilt.</p>
+    </div>
+
+    <div class="block">
+      <h2>künstliche intelligenz</h2>
+      <p>Ein künstliches Neuron ist ein schlichtes Ding. Es multipliziert seine Eingänge mit Gewichten, addiert sie und gibt das Ergebnis, leicht verbogen, weiter. Mehr nicht. Ein großes Sprachmodell besteht aus Milliarden solcher Gewichte, und es wurde mit einer einzigen Aufgabe trainiert: das nächste Wort eines Textes vorherzusagen.</p>
+      <p>Aus dieser einen Aufgabe sind Fähigkeiten hervorgegangen, die niemand einzeln programmiert hat: übersetzen, zusammenfassen, Programme schreiben, Fragen beantworten, Argumente prüfen. Forscher beobachteten, dass manche dieser Fähigkeiten bei kleinen Modellen fast fehlen und ab einer bestimmten Größe plötzlich auftauchen, und nannten sie 2022 <em>emergente Fähigkeiten</em>. Andere hielten dagegen, dass ein Teil dieser Sprünge an der Art liegt, wie gemessen wird. Die Debatte ist offen, und sie ist selbst lehrreich: Wann etwas als emergent gilt, hängt auch davon ab, wie genau man hinschaut.</p>
+      <p>Unbestritten ist etwas anderes. Man kann jedes einzelne Gewicht eines solchen Modells auslesen und weiß trotzdem nicht, wie es zu einer bestimmten Antwort kommt. Die Forschung, die das herausfinden will, untersucht Modelle so, wie Neurowissenschaftler ein Gehirn untersuchen: von außen, durch Experimente, Schicht für Schicht. Der Ingenieur ist zum Naturforscher seiner eigenen Schöpfung geworden. Wohin das führen kann, fragt die Seite <a href="/planetare-kognition/">planetare kognition</a>.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>was informatik zeigt</h2>
+      <p>Alan Turing hat bewiesen, dass es keine allgemeine Methode gibt, das Verhalten eines Programms vorherzusagen, ohne es laufen zu lassen. Stephen Wolfram nannte diese Eigenschaft später <em>rechnerische Irreduzibilität</em>: Bei vielen Systemen gibt es keine Abkürzung. Um zu wissen, was sie tun, muss man sie tun lassen.</p>
+      <p>Die Informatik zeigt damit etwas, das über sie hinausreicht. Vollständige Kenntnis der Regeln ist nicht dasselbe wie Verständnis des Verhaltens. Selbst dort, wo wir jede Zeile selbst geschrieben haben, bleibt das Ganze eine Entdeckung.</p>
+      <p>Das ist auch eine Frage der Verantwortung. Immer mehr der Systeme, die unseren Alltag ordnen, sind nicht mehr entworfen, sondern gewachsen oder trainiert. Wer sie baut, muss lernen, mit dem Unvorhergesehenen zu rechnen, und sie beobachten wie ein Stück Natur.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="art-hint">
+      <p>Conways Game of Life, die einfachste Maschine, aus der Unvorhersehbares entsteht, ist im künstlerischen Teil der Site erfahrbar.</p>
+      <a href="/start/selbstorganisation/">art erkunden</a>
+    </div>
+
+  </div>
+
+<script>
+// Hintergrund: ein wachsendes skalenfreies Netz (Barabási-Albert).
+// Jeder neue Knoten verbindet sich mit zwei bestehenden, bevorzugt mit gut verbundenen.
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const MAX_NODES = 220;
+const M = 2;              // Verbindungen pro neuem Knoten
+const ADD_EVERY = 22;     // Frames zwischen zwei neuen Knoten
+let nodes, edges, ends, frame, fade;
+
+function reset() {
+  nodes = []; edges = []; ends = [];
+  frame = 0; fade = 0;
+  for (let i = 0; i < 3; i++) {
+    nodes.push({ x: W / 2 + (Math.random() - 0.5) * 40, y: H / 2 + (Math.random() - 0.5) * 40, vx: 0, vy: 0, deg: 0, born: 0 });
+  }
+  link(0, 1); link(1, 2); link(2, 0);
+}
+
+function link(a, b) {
+  edges.push([a, b]);
+  ends.push(a, b);           // Liste der Kantenenden: Auswahl proportional zum Grad
+  nodes[a].deg++; nodes[b].deg++;
+}
+
+function addNode() {
+  const targets = new Set();
+  while (targets.size < M) targets.add(ends[(Math.random() * ends.length) | 0]);
+  const first = nodes[[...targets][0]];
+  const a = Math.random() * Math.PI * 2;
+  nodes.push({ x: first.x + Math.cos(a) * 30, y: first.y + Math.sin(a) * 30, vx: 0, vy: 0, deg: 0, born: frame });
+  const id = nodes.length - 1;
+  for (const t of targets) link(id, t);
+}
+
+function layout() {
+  const n = nodes.length;
+  const scale = Math.min(W, H);
+  const L = scale * 0.045;
+  for (let i = 0; i < n; i++) {
+    const a = nodes[i];
+    for (let j = i + 1; j < n; j++) {
+      const b = nodes[j];
+      let dx = a.x - b.x, dy = a.y - b.y;
+      let d2 = dx * dx + dy * dy + 0.01;
+      if (d2 > 90000) continue;
+      const f = Math.min(L * L * 0.6 / d2, 2);
+      const d = Math.sqrt(d2);
+      dx /= d; dy /= d;
+      a.vx += dx * f; a.vy += dy * f;
+      b.vx -= dx * f; b.vy -= dy * f;
+    }
+  }
+  for (const [i, j] of edges) {
+    const a = nodes[i], b = nodes[j];
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const d = Math.sqrt(dx * dx + dy * dy) + 0.01;
+    const f = (d - L) * 0.012;
+    a.vx += dx / d * f; a.vy += dy / d * f;
+    b.vx -= dx / d * f; b.vy -= dy / d * f;
+  }
+  for (const p of nodes) {
+    p.vx += (W / 2 - p.x) * 0.0004;
+    p.vy += (H / 2 - p.y) * 0.0004;
+    p.vx *= 0.82; p.vy *= 0.82;
+    p.x += p.vx; p.y += p.vy;
+  }
+}
+
+function draw() {
+  frame++;
+  if (nodes.length < MAX_NODES) {
+    if (frame % ADD_EVERY === 0) addNode();
+  } else {
+    fade++;
+    if (fade > 360) reset();
+  }
+  layout();
+
+  const alpha = fade > 180 ? Math.max(0, 1 - (fade - 180) / 180) : 1;
+  ctx.clearRect(0, 0, W, H);
+  ctx.globalAlpha = alpha;
+
+  ctx.strokeStyle = 'rgba(232,224,208,0.08)';
+  ctx.lineWidth = 0.6;
+  ctx.beginPath();
+  for (const [i, j] of edges) {
+    ctx.moveTo(nodes[i].x, nodes[i].y);
+    ctx.lineTo(nodes[j].x, nodes[j].y);
+  }
+  ctx.stroke();
+
+  for (const p of nodes) {
+    const r = 1 + Math.sqrt(p.deg) * 0.9;
+    const young = Math.max(0, 1 - (frame - p.born) / 90);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = young > 0
+      ? `rgba(176,96,58,${0.25 + young * 0.5})`
+      : `rgba(232,224,208,${Math.min(0.1 + p.deg * 0.012, 0.35)})`;
+    ctx.fill();
+  }
+
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(draw);
+}
+
+reset();
+draw();
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
