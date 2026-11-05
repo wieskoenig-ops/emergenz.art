@@ -125,6 +125,9 @@
     .nav-item:nth-child(5) { animation-delay: 1.0s; }
     .nav-item:nth-child(6) { animation-delay: 1.2s; }
 
+    .nav-item.pending { cursor: default; }
+    .nav-item.pending, .nav-item.pending:hover { color: rgba(160,210,230,0.32); letter-spacing: 0.22em; text-shadow: none; }
+    .nav-item.pending::before { display: none; }
     .nav-number {
       font-size: 0.6em;
       letter-spacing: 0.1em;
@@ -154,8 +157,8 @@
     <a class="nav-item" href="/emergenz/kippunkte/"><span class="nav-number">02</span>kippunkte</a>
     <a class="nav-item" href="/emergenz/fachrichtungen/"><span class="nav-number">03</span>fachrichtungen</a>
     <a class="nav-item" href="/emergenz/scheinbare-emergenz/"><span class="nav-number">04</span>scheinbare emergenz</a>
-    <a class="nav-item" href="/emergenz/selbstbezug/"><span class="nav-number">05</span>selbstbezug · rekursion</a>
-    <a class="nav-item" href="/emergenz/stille-emergenz/"><span class="nav-number">06</span>stille emergenz · agi</a>
+    <span class="nav-item pending" title="in arbeit"><span class="nav-number">05</span>selbstbezug · rekursion</span>
+    <a class="nav-item" href="/punkt/ki/"><span class="nav-number">06</span>stille emergenz · agi</a>
   </div>
 
 <script>

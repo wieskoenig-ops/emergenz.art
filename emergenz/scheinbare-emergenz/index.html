@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scheinbare Emergenz — Emergenz</title>
+  <meta name="description" content="Was Emergenz nicht ist: bloße Summen, versteckte Dirigenten, Muster im Auge des Betrachters, Sprünge in der Messung – und ein Prüfstein für echte Emergenz.">
+  <link rel="canonical" href="https://emergenz.art/emergenz/scheinbare-emergenz/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Scheinbare Emergenz — Emergenz">
+  <meta property="og:description" content="Was Emergenz nicht ist: bloße Summen, versteckte Dirigenten, Muster im Auge des Betrachters, Sprünge in der Messung – und ein Prüfstein für echte Emergenz.">
+  <meta property="og:url" content="https://emergenz.art/emergenz/scheinbare-emergenz/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    /* Einleitung — etwas größer, als Einstieg */
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p em { font-style: italic; color: rgba(232,224,208,0.97); }
+
+    /* Kernaussage — groß, allein */
+    .statement {
+      opacity: 0;
+      animation: rise 1s ease 0.3s forwards;
+      margin-bottom: clamp(3rem,6vh,5rem);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.22);
+    }
+
+    .statement p {
+      font-size: clamp(1.3rem,2.4vw,1.85rem);
+      line-height: 1.75;
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.92);
+      font-style: italic;
+    }
+
+    /* Textblöcke */
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.5s; }
+    .block:nth-of-type(2) { animation-delay: 0.65s; }
+    .block:nth-of-type(3) { animation-delay: 0.8s; }
+    .block:nth-of-type(4) { animation-delay: 0.95s; }
+    .block:nth-of-type(5) { animation-delay: 1.1s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.05rem,1.8vw,1.4rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.72);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .block p strong { font-weight: 400; color: rgba(232,224,208,0.92); }
+
+    /* Anderson-Zitat */
+    .block.quote {
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+    }
+    .block.quote p {
+      color: rgba(232,224,208,0.82);
+    }
+
+    /* Abschlussblock — etwas heller, als Coda */
+    .block.coda h2 { color: rgba(232,224,208,0.82); }
+    .block.coda p  { color: rgba(232,224,208,0.82); }
+
+    /* Trennlinie */
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+    }
+
+    /* Verweis-Links am Ende */
+    .nav-hints {
+      opacity: 0;
+      animation: rise 0.9s ease 1.3s forwards;
+      display: flex;
+      gap: clamp(1.5rem,4vw,3rem);
+      flex-wrap: wrap;
+    }
+
+    .nav-hint {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.78rem,1.2vw,0.95rem);
+      letter-spacing: 0.25em;
+      color: rgba(160,210,230,0.55);
+      text-decoration: none;
+      text-transform: lowercase;
+      transition: color 0.3s ease;
+    }
+    .nav-hint:hover { color: rgba(160,210,230,0.9); }
+    .nav-hint::before { content: '→ '; letter-spacing: 0; }
+    .intro p + p { margin-top: 1.2em; }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/">emergenz</a>
+  <h1 id="page-name">scheinbare emergenz</h1>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · 04 · scheinbare emergenz</div>
+
+    <div class="intro">
+      <p>Emergenz ist ein großes Wort geworden. Man findet es in Managementratgebern, in Werbetexten für Software, in Debatten über künstliche Intelligenz. Ein Team ist emergent, eine Strategie, ein Produkt. Je öfter das Wort fällt, desto weniger scheint es zu bedeuten.</p>
+      <p>Wer den Begriff ernst nimmt, muss deshalb auch sagen können, was er nicht meint. Nicht alles, was überrascht, ist emergent. Nicht jedes Muster ist eines.</p>
+    </div>
+
+    <div class="statement">
+      <p>Ein Begriff, der alles erklärt, erklärt nichts.</p>
+    </div>
+
+    <div class="block">
+      <h2>die bloße summe</h2>
+      <p>Ein Sack Äpfel wiegt so viel wie alle Äpfel zusammen. Zwei Lampen sind doppelt so hell wie eine. Solche Eigenschaften des Ganzen ergeben sich durch einfaches Zusammenzählen. Der englische Philosoph George Henry Lewes nannte sie 1875 <em>resultierend</em> und stellte ihnen die <em>emergenten</em> gegenüber, die sich nicht aus einer Summe ergeben. Das Gewicht des Sacks ist nicht emergent, auch wenn kein einzelner Apfel so schwer ist.</p>
+      <p>Auch Kompliziertheit allein ist keine Emergenz. Ein Uhrwerk hat Hunderte von Teilen, ein Flugzeug Millionen. Aber jedes Teil wurde für seine Aufgabe entworfen, und das Verhalten des Ganzen steht im Bauplan. Wer genug Geduld hat, kann es Schritt für Schritt aus den Teilen erklären. Das ist das Gegenteil dessen, was die Seite <a href="/emergenz/das-phaenomen/">das phänomen</a> beschreibt.</p>
+    </div>
+
+    <div class="block">
+      <h2>der versteckte dirigent</h2>
+      <p>Bei großen Feiern steigen heute Hunderte von Drohnen in den Nachthimmel und formen leuchtende Figuren, die sich drehen, auflösen und neu zusammensetzen. Es sieht aus wie ein Schwarm. Es ist keiner. Jede Drohne fliegt eine Bahn ab, die ein zentraler Rechner vorher für sie berechnet hat. Keine reagiert auf ihre Nachbarn. Die Figur stand vollständig im Programm, bevor die erste Drohne abhob.</p>
+      <p>Wie ein echter Schwarm aussieht, zeigte 2018 eine Gruppe um Gábor Vásárhelyi und Tamás Vicsek in Budapest. Ihre dreißig Drohnen hatten keinen Plan, nur Regeln für den Umgang mit den Nachbarn, wie die Vögel auf der Seite <a href="/emergenz/das-phaenomen/">das phänomen</a>. Sie flogen gemeinsam, wichen Hindernissen aus und fanden wieder zusammen, ohne dass irgendwo festgelegt war, wie. Von außen können sich beide Vorführungen ähneln. Der Unterschied liegt darin, wo die Ordnung herkommt.</p>
+      <p>Dasselbe gibt es in der Gesellschaft. Eine Bewegung, die aussieht, als sei sie aus vielen einzelnen Stimmen entstanden, kann von einer einzigen Stelle aus gesteuert sein, mit bezahlten Schreibern oder Netzwerken von Programmen, die sich als Menschen ausgeben. Im Englischen nennt man das <em>Astroturfing</em>, nach einer Marke für Kunstrasen: Es sieht aus wie Graswurzeln, ist aber ausgelegt. Je wichtiger echte Emergenz in einer Gesellschaft ist, desto lohnender wird es, sie vorzutäuschen.</p>
+    </div>
+
+    <div class="block">
+      <h2>das muster im auge</h2>
+      <p>1976 fotografierte die Sonde Viking 1 auf dem Mars einen Berg, der aussah wie ein menschliches Gesicht. Jahrzehntelang wurde darüber spekuliert. Spätere, schärfere Aufnahmen zeigten einen gewöhnlichen, verwitterten Tafelberg. Das Gesicht hatte nie auf dem Mars gelegen, sondern im Auge der Betrachter. Unser Wahrnehmungsapparat ist darauf gebaut, Muster zu finden, und er findet sie auch dort, wo keine sind: Gesichter in Wolken, Figuren in Sternbildern, Absichten im Zufall.</p>
+      <p>Im Hintergrund dieser Seite liegen Punkte, rein zufällig verstreut. Zu jedem Punkt gehört ein Zwilling, der um einen winzigen Winkel um die Bildmitte gedreht ist. Das Auge sieht Wirbel, Kreise und Strahlen, die sich langsam verwandeln und zwischendurch ganz verschwinden. Der Physiologe Leon Glass hat diesen Effekt 1969 beschrieben. Kein Punkt richtet sich nach einem anderen. Das Muster ist eine einzige Drehung, von außen über alles gelegt, und dazu das, was unser Sehsystem daraus macht.</p>
+      <p>Der Unterschied zum echten Muster lässt sich prüfen. Ein Sternbild tut nichts. Die Sterne des Großen Wagens stehen in ganz verschiedenen Entfernungen und wissen nichts voneinander. Ein Vogelschwarm dagegen weicht als Ganzes dem Falken aus, ein Stau bremst Autos, die noch kilometerweit entfernt sind. Der Philosoph Daniel Dennett hat 1991 vorgeschlagen, ein Muster dann <em>real</em> zu nennen, wenn man mit ihm bessere Vorhersagen machen kann als ohne. Mit dem Schwarm kann man das. Mit dem Gesicht auf dem Mars nicht.</p>
+    </div>
+
+    <div class="block">
+      <h2>der sprung in der messung</h2>
+      <p>Manchmal liegt die Täuschung nicht im Auge, sondern im Messgerät. 2022 berichteten Forscher, große Sprachmodelle entwickelten ab einer bestimmten Größe plötzlich Fähigkeiten, die kleineren fast völlig fehlen. Ein Jahr später zeigten Rylan Schaeffer und Kollegen, dass ein Teil dieser Sprünge an der Art der Bewertung lag. Wer nur vollständig richtige Antworten zählt, sieht lange nichts und dann einen Sprung. Wer auch halb richtige Antworten gelten lässt, sieht oft eine stetige Verbesserung.</p>
+      <p>Das heißt nicht, dass es in diesen Systemen keine echten Schwellen gibt. Es heißt, dass ein plötzlicher Anstieg in einer Kurve noch kein Beleg für Emergenz ist. Man muss fragen, ob das System sich verändert hat oder nur der Maßstab. Wie schwer diese Frage gerade bei künstlicher Intelligenz zu beantworten ist, beschreibt der Essay <a href="/punkt/ki/">die Schwelle, die niemand sieht</a>.</p>
+    </div>
+
+    <div class="block quote">
+      <h2>schwach und stark</h2>
+      <p>Scheinbare Emergenz ist nicht dasselbe wie schwache Emergenz. Der Philosoph Mark Bedau nannte 1997 ein Verhalten <em>schwach emergent</em>, wenn es sich zwar im Prinzip aus den Regeln ergibt, aber nur dadurch, dass man das System Schritt für Schritt ablaufen lässt. Es gibt keine Abkürzung. Die Gleiter in Conways Spiel des Lebens sind so ein Fall, ebenso der Stau auf der Autobahn und die meisten Beispiele auf dieser Website. Sie sind vollständig durch ihre Teile bestimmt und trotzdem echt: Sie haben eigene Ursachen und eigene Wirkungen, und man versteht sie nur auf ihrer eigenen Ebene.</p>
+      <p><em>Stark emergent</em> wäre dagegen etwas, das sich auch im Prinzip nicht aus den Teilen ergibt, nicht einmal für einen unendlich schnellen Rechner. Ob es so etwas gibt, ist umstritten. Der aussichtsreichste Kandidat ist das Bewusstsein, das <a href="/emergenz/fachrichtungen/neurowissenschaft/">schwierige Problem</a>, das bisher keine Theorie gelöst hat. Wer von Emergenz spricht, sollte wissen, welche der beiden er meint.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>ein prüfstein</h2>
+      <p>Drei Fragen helfen, echte von scheinbarer Emergenz zu unterscheiden.</p>
+      <p>Erstens: Ist das Ganze mehr als die Summe? Lässt sich die Eigenschaft durch Zusammenzählen gewinnen, ist sie resultierend, nicht emergent.</p>
+      <p>Zweitens: Woher kommt die Ordnung? Entsteht sie aus dem Zusammenspiel der Teile, oder gibt es einen Bauplan, einen Dirigenten, eine äußere Hand, die sie vorgibt?</p>
+      <p>Drittens: Besteht das Muster auch ohne den Betrachter? Wirkt es, lässt sich mit ihm etwas vorhersagen, oder verschwindet es, wenn man genauer hinsieht oder anders misst?</p>
+      <p>Was alle drei Fragen besteht, verdient das große Wort. Es ist seltener, als die Werbetexte vermuten lassen, und häufiger, als die Physik lange geglaubt hat.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="nav-hints">
+      <a class="nav-hint" href="/emergenz/das-phaenomen/">das phänomen</a>
+      <a class="nav-hint" href="/emergenz/kippunkte/">kippunkte</a>
+    </div>
+
+  </div>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/" aria-current="page">emergenz</a></li>
+      <li><a href="/punkt/">punkt</a></li>
+      <li><a href="/start/">art</a></li>
+      <li><a href="/literatur/">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+<script>
+// Hintergrund: ein Glass-Muster (Leon Glass, 1969).
+// Zufällig verteilte Punkte, jeder mit einem Zwilling, der um einen kleinen Winkel
+// um die Bildmitte gedreht und leicht gestreckt ist. Das Auge sieht Wirbel und Kreise,
+// obwohl kein Punkt mit einem anderen wechselwirkt. Winkel und Streckung ändern sich
+// langsam; wenn beide null sind, verschwindet das Muster ganz.
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H, cx, cy, pts, t0;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  cx = W / 2; cy = H / 2;
+  const n = Math.round(Math.min(2600, W * H / 520));
+  pts = new Float32Array(n * 2);
+  for (let i = 0; i < n; i++) {
+    pts[2 * i]     = Math.random() * W - cx;
+    pts[2 * i + 1] = Math.random() * H - cy;
+  }
+  t0 = performance.now();
+}
+resize();
+window.addEventListener('resize', resize);
+
+function draw(now) {
+  const t = (now - t0) / 1000;
+  const fade = Math.min(1, t / 4);
+  const theta = 0.014 * Math.sin(2 * Math.PI * t / 53);      // Drehung, Periode 53 s
+  const s = 1 + 0.012 * Math.sin(2 * Math.PI * t / 79 + 1);  // Streckung, Periode 79 s
+  const c = Math.cos(theta) * s, sn = Math.sin(theta) * s;
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = `rgba(232,214,186,${0.32 * fade})`;
+  const r = 1.3;
+  for (let i = 0; i < pts.length; i += 2) {
+    const x = pts[i], y = pts[i + 1];
+    ctx.fillRect(cx + x - r / 2, cy + y - r / 2, r, r);
+    ctx.fillRect(cx + c * x - sn * y - r / 2, cy + sn * x + c * y - r / 2, r, r);
+  }
+  requestAnimationFrame(draw);
+}
+
+requestAnimationFrame(draw);
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
