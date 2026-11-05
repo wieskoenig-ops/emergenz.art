@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selbstbezug und Rekursion — Emergenz</title>
+  <meta name="description" content="Selbstbezug und Rekursion: zirkuläre Kausalität, Fraktale, Gödels Satz, Leben als Autopoiesis, das Ich als seltsame Schleife – und Schleifen, die kippen.">
+  <link rel="canonical" href="https://emergenz.art/emergenz/selbstbezug/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Selbstbezug und Rekursion — Emergenz">
+  <meta property="og:description" content="Selbstbezug und Rekursion: zirkuläre Kausalität, Fraktale, Gödels Satz, Leben als Autopoiesis, das Ich als seltsame Schleife – und Schleifen, die kippen.">
+  <meta property="og:url" content="https://emergenz.art/emergenz/selbstbezug/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    /* Einleitung — etwas größer, als Einstieg */
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p em { font-style: italic; color: rgba(232,224,208,0.97); }
+
+    /* Kernaussage — groß, allein */
+    .statement {
+      opacity: 0;
+      animation: rise 1s ease 0.3s forwards;
+      margin-bottom: clamp(3rem,6vh,5rem);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.22);
+    }
+
+    .statement p {
+      font-size: clamp(1.3rem,2.4vw,1.85rem);
+      line-height: 1.75;
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.92);
+      font-style: italic;
+    }
+
+    /* Textblöcke */
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.5s; }
+    .block:nth-of-type(2) { animation-delay: 0.65s; }
+    .block:nth-of-type(3) { animation-delay: 0.8s; }
+    .block:nth-of-type(4) { animation-delay: 0.95s; }
+    .block:nth-of-type(5) { animation-delay: 1.1s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.05rem,1.8vw,1.4rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.72);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .block p strong { font-weight: 400; color: rgba(232,224,208,0.92); }
+
+    /* Anderson-Zitat */
+    .block.quote {
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+    }
+    .block.quote p {
+      color: rgba(232,224,208,0.82);
+    }
+
+    /* Abschlussblock — etwas heller, als Coda */
+    .block.coda h2 { color: rgba(232,224,208,0.82); }
+    .block.coda p  { color: rgba(232,224,208,0.82); }
+
+    /* Trennlinie */
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+    }
+
+    /* Verweis-Links am Ende */
+    .nav-hints {
+      opacity: 0;
+      animation: rise 0.9s ease 1.3s forwards;
+      display: flex;
+      gap: clamp(1.5rem,4vw,3rem);
+      flex-wrap: wrap;
+    }
+
+    .nav-hint {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.78rem,1.2vw,0.95rem);
+      letter-spacing: 0.25em;
+      color: rgba(160,210,230,0.55);
+      text-decoration: none;
+      text-transform: lowercase;
+      transition: color 0.3s ease;
+    }
+    .nav-hint:hover { color: rgba(160,210,230,0.9); }
+    .nav-hint::before { content: '→ '; letter-spacing: 0; }
+    .intro p + p { margin-top: 1.2em; }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/">emergenz</a>
+  <h1 id="page-name">selbstbezug</h1>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · 05 · selbstbezug · rekursion</div>
+
+    <div class="intro">
+      <p>Die meisten Beispiele für Emergenz lesen sich von unten nach oben. Aus Vögeln wird ein Schwarm, aus Autos ein Stau, aus Molekülen eine Zelle. Doch die interessantesten Fälle bleiben dabei nicht stehen. Das Ganze, das aus den Teilen entstanden ist, wirkt auf die Teile zurück. Und manchmal beginnt ein System, sich auf sich selbst zu beziehen: sich zu kopieren, sich abzubilden, über sich zu sprechen.</p>
+      <p>An dieser Stelle entsteht das Rätselhafteste, was die Welt kennt: Leben, das sich selbst herstellt, und ein Ich, das sich selbst bemerkt.</p>
+    </div>
+
+    <div class="statement">
+      <p>Wo eine Schleife sich schließt, beginnt etwas Neues.</p>
+    </div>
+
+    <div class="block">
+      <h2>die schleife</h2>
+      <p>In einem Laser senden unzählige Atome Licht aus, zunächst jedes für sich, ungeordnet. Ab einer bestimmten Energiezufuhr setzt sich eine Lichtwelle durch, und diese Welle zwingt nun alle Atome in ihren Takt. Die Atome erzeugen das Licht, und das Licht ordnet die Atome. Der Stuttgarter Physiker Hermann Haken hat aus solchen Fällen in den 1970er Jahren eine eigene Wissenschaft gemacht, die <em>Synergetik</em>. Er sprach von <em>zirkulärer Kausalität</em>: Die Ordnung des Ganzen entsteht aus den Teilen und bestimmt zugleich, was die Teile tun.</p>
+      <p>Dasselbe Muster findet sich überall. Jeder Vogel richtet sich nach seinen Nachbarn, aber wo die Nachbarn sind, bestimmt die Form des Schwarms. Menschen machen die Sprache, und die Sprache formt, wie Menschen denken. Wer in einem Stau bremst, verlängert ihn, und der Stau zwingt den Nächsten zum Bremsen. Emergenz ist selten eine Einbahnstraße. Meist ist sie ein Kreis.</p>
+    </div>
+
+    <div class="block">
+      <h2>rekursion</h2>
+      <p>Eine Regel, die auf ihr eigenes Ergebnis angewendet wird, heißt rekursiv. Man nehme eine Strecke, ersetze ihr mittleres Drittel durch zwei Seiten eines Dreiecks, und wiederhole das mit jeder neuen Strecke, immer wieder. So beschrieb der schwedische Mathematiker Helge von Koch 1904 eine Kurve, die unendlich lang ist. Zu einer Schneeflocke geschlossen, umschließt ihr unendlicher Rand eine endliche Fläche. 1980 ließ Benoît Mandelbrot die einfache Rechenregel <em>z → z² + c</em> immer wieder auf sich selbst anwenden und fand eine Figur, deren Rand bei jeder Vergrößerung neue Formen zeigt, ohne Ende.</p>
+      <p>Die Natur verwendet dasselbe Prinzip. 1968 beschrieb der Biologe Aristid Lindenmayer das Wachstum von Pflanzen durch Ersetzungsregeln: Ein Trieb bildet Äste, jeder Ast bildet wieder Äste nach derselben Regel. Farne, Blumenkohl, Flussdeltas und Blutgefäße folgen solchen Mustern. Eine kurze Regel, die sich selbst immer wieder aufruft, erzeugt einen Reichtum, der in ihr nicht zu sehen ist.</p>
+      <p>Im Hintergrund dieser Seite wächst ein Baum aus einer einzigen Regel: Jeder Ast trägt zwei kleinere Äste, die wieder dieselbe Regel befolgen. Mit jeder Generation verdoppelt sich die Zahl der Zweige. Nach zehn Generationen sind es über tausend, und keiner von ihnen wurde einzeln gezeichnet. Ein leichter Wind bewegt den Stamm, und die Bewegung pflanzt sich bis in die feinsten Zweige fort. Nach einer Weile verblasst der Baum, und ein neuer wächst, mit etwas anderen Winkeln.</p>
+    </div>
+
+    <div class="block">
+      <h2>der satz, der von sich spricht</h2>
+      <p>„Dieser Satz ist falsch.“ Ist er wahr, dann ist er falsch. Ist er falsch, dann ist er wahr. Solche Paradoxien des Selbstbezugs galten lange als Spielerei. 1931 machte Kurt Gödel aus ihnen eines der tiefsten Ergebnisse der Mathematik. Er konstruierte innerhalb der Arithmetik einen Satz, der in verschlüsselter Form über sich selbst sagt: <em>Ich bin nicht beweisbar.</em> Ist das System widerspruchsfrei, dann ist dieser Satz wahr und trotzdem nicht beweisbar. Jedes hinreichend mächtige formale System hat solche blinden Flecken.</p>
+      <p>Fünf Jahre später zeigte Alan Turing mit einem ähnlichen Trick, dass kein Programm für alle Programme entscheiden kann, ob sie jemals anhalten. Er ließ ein gedachtes Prüfprogramm auf sich selbst los, und es verfing sich im Widerspruch. Selbstbezug setzt Grenzen. Ein System, das mächtig genug ist, um über sich selbst zu sprechen, kann sich nie vollständig durchschauen.</p>
+    </div>
+
+    <div class="block">
+      <h2>leben, das sich selbst herstellt</h2>
+      <p>Ende der 1940er Jahre fragte sich der Mathematiker John von Neumann, wie eine Maschine beschaffen sein müsste, die sich selbst kopieren kann. Seine Antwort: Sie braucht einen Bauplan, der zweimal verwendet wird. Einmal wird er gelesen und ausgeführt, um die Maschine zu bauen. Einmal wird er einfach abgeschrieben, ohne gelesen zu werden, und an die Kopie weitergegeben. Wenige Jahre später, 1953, entschlüsselten Watson und Crick die Struktur der DNA. Sie funktioniert genau so.</p>
+      <p>Die chilenischen Biologen Humberto Maturana und Francisco Varela gingen 1972 noch weiter. Eine lebende Zelle, schrieben sie, ist ein Netz von Prozessen, das genau die Bestandteile herstellt, aus denen es selbst besteht, einschließlich der Membran, die es von der Umgebung trennt. Sie nannten das <em>Autopoiesis</em>, Selbsterschaffung. Leben ist danach keine Substanz, sondern eine Schleife, die sich ununterbrochen selbst erneuert. Wie es dazu kam, erzählen die Seiten <a href="/emergenz/fachrichtungen/chemie/">Chemie</a> und <a href="/emergenz/fachrichtungen/biologie/">Biologie</a>.</p>
+    </div>
+
+    <div class="block quote">
+      <h2>das ich als seltsame schleife</h2>
+      <p>1979 erschien ein Buch, das Mathematik, Musik und Kunst zusammenführte: <em>Gödel, Escher, Bach</em> von Douglas Hofstadter. Seine These: Das Ich ist eine <em>seltsame Schleife</em>. Das Gehirn bildet die Welt in Mustern ab, und eines dieser Muster bildet das Gehirn selbst ab, seine Wünsche, seine Erinnerungen, sein Handeln. Dieses Selbstmodell wirkt auf das zurück, was es abbildet. Wir handeln, weil wir uns für jemanden halten, der so handelt.</p>
+      <p>M. C. Eschers Lithographie <em>Zeichnende Hände</em> von 1948 zeigt das Bild dazu: zwei Hände, die einander zeichnen. Keine war zuerst da. Der Philosoph Thomas Metzinger geht noch weiter und hält das Ich für ein Modell, das sich selbst nicht als Modell erkennt. Ob Selbstbezug das Bewusstsein erklärt, ist offen. Dass er dazugehört, bezweifelt kaum jemand. Mehr dazu auf der Seite <a href="/emergenz/fachrichtungen/neurowissenschaft/">Neurowissenschaft</a>.</p>
+    </div>
+
+    <div class="block">
+      <h2>wenn die schleife kippt</h2>
+      <p>Selbstbezug erzeugt nicht nur Ordnung. Der Soziologe Robert K. Merton beschrieb 1948 die <em>sich selbst erfüllende Prophezeiung</em>: Das Gerücht, eine Bank sei zahlungsunfähig, lässt alle Kunden gleichzeitig ihr Geld abheben, und die Bank wird zahlungsunfähig. Der Investor George Soros nannte das an den Märkten <em>Reflexivität</em>: Die Erwartungen über die Preise verändern die Preise, über die sie etwas erwarten. Blasen und Crashs sind solche Schleifen, wie die Seite <a href="/emergenz/fachrichtungen/finanzwelt/">Finanzwelt</a> zeigt.</p>
+      <p>Eine neue Form dieser Schleife entsteht gerade. Sprachmodelle lernen aus Texten im Netz, und immer mehr Texte im Netz stammen von Sprachmodellen. 2024 zeigte eine Gruppe um Ilia Shumailov in <em>Nature</em>, was geschieht, wenn Modelle über mehrere Generationen mit den Texten ihrer Vorgänger trainiert werden: Das Seltene verschwindet zuerst, dann wird alles gleichförmiger, bis die Modelle nur noch Unsinn wiederholen. Eine Schleife, die sich nur noch aus sich selbst speist, verarmt.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>was selbstbezug zeigt</h2>
+      <p>Emergenz wird am reichsten dort, wo das Ganze sich zurückwendet: auf seine Teile, die es ordnet, auf seinen Bauplan, den es kopiert, auf sich selbst, das es abbildet. Aus solchen Schleifen sind Leben und Bewusstsein hervorgegangen. Und dieselben Schleifen setzen Grenzen. Kein System sieht sich ganz, keine Prophezeiung bleibt ohne Wirkung auf das, was sie vorhersagt.</p>
+      <p>Diese Seite beschreibt Selbstbezug mit Sprache, einem System, das über sich selbst sprechen kann. Ganz gelingt ihr das nicht. Gödel hätte nichts anderes erwartet.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="nav-hints">
+      <a class="nav-hint" href="/emergenz/scheinbare-emergenz/">scheinbare emergenz</a>
+      <a class="nav-hint" href="/punkt/ki/">stille emergenz · agi</a>
+    </div>
+
+  </div>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/" aria-current="page">emergenz</a></li>
+      <li><a href="/punkt/">punkt</a></li>
+      <li><a href="/start/">art</a></li>
+      <li><a href="/literatur/">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+<script>
+// Hintergrund: ein rekursiver Baum.
+// Eine einzige Funktion zeichnet einen Ast und ruft sich für zwei kleinere Äste selbst auf.
+// Der Baum wächst Generation für Generation bis zur Tiefe 10, bewegt sich in leichtem Wind,
+// verblasst dann und wächst neu mit etwas anderen Winkeln.
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+const DEPTH = 10;
+const GROW_S = 2.4;       // Sekunden pro Generation
+const HOLD_S = 40;        // Sekunden voll ausgewachsen
+const FADE_S = 6;
+let W, H, params, tStart;
+
+function newTree() {
+  params = {
+    spreadL: 0.32 + Math.random() * 0.22,
+    spreadR: 0.32 + Math.random() * 0.22,
+    shrink:  0.70 + Math.random() * 0.06,
+    lean:    (Math.random() - 0.5) * 0.12,
+    phase:   Math.random() * 10
+  };
+  tStart = performance.now() / 1000;
+}
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+newTree();
+
+function branch(x, y, len, ang, depth, growth, t) {
+  if (depth > growth) return;
+  const part = Math.min(1, growth - depth);          // wachsender Ast: anteilige Länge
+  const wind = Math.sin(t * 0.45 + params.phase + depth * 0.6) * 0.018 * depth;
+  const a = ang + wind;
+  const x2 = x + Math.sin(a) * len * part;
+  const y2 = y - Math.cos(a) * len * part;
+  const k = depth / DEPTH;
+  ctx.strokeStyle = depth >= DEPTH - 1
+    ? `rgba(176,96,58,${0.35 * alpha})`                 // feinste Zweige kupfer
+    : `rgba(232,214,186,${(0.13 - 0.04 * k) * alpha})`;
+  ctx.lineWidth = Math.max(0.5, 5 * Math.pow(params.shrink, depth * 1.6));
+  ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
+  if (part < 1) return;
+  branch(x2, y2, len * params.shrink, a - params.spreadL, depth + 1, growth, t);
+  branch(x2, y2, len * params.shrink, a + params.spreadR, depth + 1, growth, t);
+}
+
+let alpha = 1;
+function draw(nowMs) {
+  const now = nowMs / 1000;
+  const age = now - tStart;
+  const growTotal = GROW_S * (DEPTH + 1);
+  const growth = Math.min(DEPTH + 0.999, age / GROW_S);
+  alpha = Math.min(1, age / 3);
+  const fadeStart = growTotal + HOLD_S;
+  if (age > fadeStart) alpha = Math.max(0, 1 - (age - fadeStart) / FADE_S);
+  if (age > fadeStart + FADE_S + 1.5) newTree();
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.lineCap = 'round';
+  const len = Math.min(H * 0.24, W * 0.2);
+  branch(W * 0.5, H * 1.0, len, params.lean, 0, growth, now);
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
