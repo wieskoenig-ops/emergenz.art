@@ -169,13 +169,19 @@
       margin: clamp(2rem,4vh,3rem) 0;
     }
 
-    /* Navigations-Grid zu den sechs Fachrichtungen */
+    /* Navigations-Grid zu den neun Fachrichtungen, geordnet nach Ebenen */
     .nav-grid {
       opacity: 0;
       animation: rise 0.9s ease 1.1s forwards;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: clamp(0.8rem,2vw,1.4rem);
+      /* breiter als die Textspalte, damit drei Spalten Platz haben */
+      width: min(920px, 92vw);
+      margin-left: calc((100% - min(920px, 92vw)) / 2);
+    }
+    @media (max-width: 640px) {
+      .nav-grid { grid-template-columns: 1fr; width: 100%; margin-left: 0; }
     }
 
     .nav-card {
@@ -208,6 +214,10 @@
       transition: color 0.3s ease;
     }
     .nav-card:hover .nav-card-title { color: rgba(160,210,230,1); }
+
+    .nav-card.pending { opacity: 0.45; cursor: default; }
+    .nav-card.pending:hover { border-color: rgba(232,224,208,0.1); background: none; }
+    .nav-card.pending:hover .nav-card-title { color: rgba(160,210,230,0.75); }
 
     .nav-card-sub {
       font-family: 'Cormorant Garamond', serif; font-weight: 300;
@@ -251,41 +261,56 @@
 
     <div class="block coda">
       <p>Emergenz zu verstehen bedeutet nicht, Verantwortung aufzulösen. Es bedeutet, sie richtig zu verorten: nicht beim einzelnen Akteur, sondern bei den Regeln des Systems. Wer die Regeln setzt, trägt Verantwortung. Nicht für das, was er wollte, sondern für das, was emergiert.</p>
-      <p>Die folgenden sechs Kapitel zeigen, wie Emergenz in den wichtigsten Wissensgebieten wirkt. Die Beispiele sind verschieden. Das Prinzip ist dasselbe.</p>
+      <p>Die folgenden neun Kapitel zeigen, wie Emergenz in den wichtigsten Wissensgebieten wirkt. Sie folgen den Ebenen der Wirklichkeit, von der Mathematik über Materie und Leben bis zu Gesellschaft und Technik. Jede baut auf der vorigen auf und lässt sich doch nicht aus ihr ableiten. Die Beispiele sind verschieden. Das Prinzip ist dasselbe.</p>
     </div>
 
     <hr class="rule">
 
     <div class="nav-grid">
-      <a class="nav-card" href="/emergenz/fachrichtungen/biologie/">
+      <a class="nav-card" href="/emergenz/fachrichtungen/mathematik/">
         <span class="nav-card-num">01</span>
-        <span class="nav-card-title">biologie</span>
-        <span class="nav-card-sub">ameisenkolonien · gehirn · evolution</span>
+        <span class="nav-card-title">mathematik</span>
+        <span class="nav-card-sub">zelluläre automaten · fraktale · perkolation</span>
       </a>
       <a class="nav-card" href="/emergenz/fachrichtungen/physik/">
         <span class="nav-card-num">02</span>
         <span class="nav-card-title">physik</span>
         <span class="nav-card-sub">phasenübergänge · supraleitung · thermodynamik</span>
       </a>
-      <a class="nav-card" href="/emergenz/fachrichtungen/mathematik/">
+      <a class="nav-card" href="/emergenz/fachrichtungen/chemie/">
         <span class="nav-card-num">03</span>
-        <span class="nav-card-title">mathematik</span>
-        <span class="nav-card-sub">zelluläre automaten · fraktale · perkolation</span>
+        <span class="nav-card-title">chemie</span>
+        <span class="nav-card-sub">oszillierende reaktionen · selbstorganisation · ursprung des lebens</span>
       </a>
-      <a class="nav-card" href="/emergenz/fachrichtungen/soziologie/">
+      <a class="nav-card" href="/emergenz/fachrichtungen/biologie/">
         <span class="nav-card-num">04</span>
+        <span class="nav-card-title">biologie</span>
+        <span class="nav-card-sub">ameisenkolonien · ökosysteme · evolution</span>
+      </a>
+      <div class="nav-card pending">
+        <span class="nav-card-num">05 · in arbeit</span>
+        <span class="nav-card-title">neurowissenschaft</span>
+        <span class="nav-card-sub">neuronen · bewusstsein · vorhersage</span>
+      </div>
+      <a class="nav-card" href="/emergenz/fachrichtungen/soziologie/">
+        <span class="nav-card-num">06</span>
         <span class="nav-card-title">soziologie</span>
         <span class="nav-card-sub">sprache · bewegungen · kollektive intelligenz</span>
       </a>
-      <a class="nav-card" href="/emergenz/fachrichtungen/informatik/">
-        <span class="nav-card-num">05</span>
-        <span class="nav-card-title">informatik</span>
-        <span class="nav-card-sub">internet · ki · schwarmintelligenz</span>
-      </a>
+      <div class="nav-card pending">
+        <span class="nav-card-num">07 · in arbeit</span>
+        <span class="nav-card-title">stadt</span>
+        <span class="nav-card-sub">viertel · verkehr · skalengesetze</span>
+      </div>
       <a class="nav-card" href="/emergenz/fachrichtungen/finanzwelt/">
-        <span class="nav-card-num">06</span>
+        <span class="nav-card-num">08</span>
         <span class="nav-card-title">finanzwelt</span>
         <span class="nav-card-sub">preisbildung · blasen · flash crashes</span>
+      </a>
+      <a class="nav-card" href="/emergenz/fachrichtungen/informatik/">
+        <span class="nav-card-num">09</span>
+        <span class="nav-card-title">informatik</span>
+        <span class="nav-card-sub">internet · ki · schwarmintelligenz</span>
       </a>
     </div>
 

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chemie — Emergenz</title>
+  <meta name="description" content="Emergenz in der Chemie: das Molekül als neues Ganzes, die Belousov-Zhabotinsky-Reaktion, Selbstorganisation und der Übergang von der Chemie zum Leben.">
+  <link rel="canonical" href="https://emergenz.art/emergenz/fachrichtungen/chemie/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Chemie — Emergenz">
+  <meta property="og:description" content="Emergenz in der Chemie: das Molekül als neues Ganzes, die Belousov-Zhabotinsky-Reaktion, Selbstorganisation und der Übergang von der Chemie zum Leben.">
+  <meta property="og:url" content="https://emergenz.art/emergenz/fachrichtungen/chemie/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p + p { margin-top: 1.2em; }
+
+    .intro p.punch {
+      margin-top: 1.2em;
+      font-style: italic;
+      color: rgba(232,224,208,0.92);
+    }
+
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.3s; }
+    .block:nth-of-type(2) { animation-delay: 0.45s; }
+    .block:nth-of-type(3) { animation-delay: 0.6s; }
+    .block:nth-of-type(4) { animation-delay: 0.75s; }
+    .block:nth-of-type(5) { animation-delay: 0.9s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.35rem,2.4vw,1.85rem);
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.92);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+
+    .block.coda p { color: rgba(232,224,208,0.82); }
+
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+      opacity: 0;
+      animation: rise 0.9s ease 1.05s forwards;
+    }
+
+    /* Art-Hinweis */
+    .art-hint {
+      opacity: 0;
+      animation: rise 0.9s ease 1.1s forwards;
+      margin-bottom: clamp(2rem,4vh,3rem);
+      padding: clamp(1rem,2vh,1.5rem) clamp(1.2rem,2.5vw,2rem);
+      border: 0.5px solid rgba(232,224,208,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .art-hint p {
+      font-size: clamp(0.88rem,1.4vw,1.05rem);
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.5);
+      font-style: italic;
+    }
+
+    .art-hint a {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(0.82rem,1.2vw,0.95rem);
+      letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.45);
+      text-transform: lowercase;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .art-hint a:hover { color: rgba(232,224,208,0.9); }
+    .art-hint a::after { content: ' →'; }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/fachrichtungen/">fachrichtungen</a>
+  <h1 id="page-name">chemie</h1>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · fachrichtungen · 03 · chemie</div>
+
+    <div class="intro">
+      <p>Die Chemie ist die Wissenschaft der Verwandlung. Aus zwei Stoffen wird ein dritter, der keinem der beiden gleicht. Sie steht zwischen der Physik, die die Teilchen beschreibt, und der Biologie, die das Leben beschreibt, und an ihr lässt sich der Übergang von der einen zur anderen Ebene am genauesten beobachten.</p>
+      <p>Es ist kein Zufall, dass der Begriff selbst hier geboren wurde.</p>
+      <p class="punch">Das Wort Emergenz wurde an der Chemie erfunden.</p>
+    </div>
+
+    <div class="block">
+      <h2>das molekül</h2>
+      <p>Wasserstoff ist ein Gas, das brennt. Sauerstoff ist ein Gas, das Brände nährt. Zusammen ergeben sie Wasser, eine Flüssigkeit, die Feuer löscht. Keine Eigenschaft des Wassers ist in seinen Bestandteilen zu finden: nicht die Nässe, nicht die Fähigkeit, Salze zu lösen, nicht die seltsame Eigenschaft, als Eis leichter zu sein als flüssig.</p>
+      <p>Genau dieses Beispiel beschäftigte die Philosophen des 19. Jahrhunderts. John Stuart Mill unterschied 1843 zwischen Wirkungen, die sich einfach addieren, wie zwei Kräfte, die an einem Körper ziehen, und solchen, bei denen etwas Neues entsteht, wie bei der chemischen Verbindung. Der englische Philosoph George Henry Lewes gab diesen Wirkungen 1875 einen Namen: Er nannte sie <em>emergent</em>.</p>
+      <p>Heute weiß man, dass die Chemie im Prinzip auf der Quantenphysik beruht. Paul Dirac schrieb 1929, die Gesetze, die man für die gesamte Chemie brauche, seien nun vollständig bekannt. Die Schwierigkeit sei nur, dass ihre Anwendung zu Gleichungen führe, die viel zu kompliziert seien, um sie zu lösen. Die Chemiker arbeiten deshalb bis heute mit eigenen Begriffen, die in keiner Gleichung der Physik vorkommen: die Bindung, die Säure, der aromatische Ring, die Reaktivität. Sie sind keine Notlösungen. Sie beschreiben die Ordnung, die auf dieser Ebene tatsächlich herrscht.</p>
+    </div>
+
+    <div class="block">
+      <h2>die reaktion, die nicht sein durfte</h2>
+      <p>Anfang der 1950er Jahre mischte der sowjetische Biochemiker Boris Belousov eine Lösung aus Zitronensäure, Bromat und einem Cer-Salz. Die Lösung wurde gelb, dann farblos, dann wieder gelb, immer wieder, im Takt von etwa einer Minute. Seine Arbeit wurde von Fachzeitschriften abgelehnt. Eine chemische Reaktion, so die Überzeugung, läuft in eine Richtung, ins Gleichgewicht, und bleibt dort. Was Belousov beschrieb, schien gegen die Thermodynamik zu verstoßen.</p>
+      <p>Es verstieß nicht dagegen. Erst Anatol Zhabotinsky griff die Reaktion in den 1960er Jahren wieder auf und zeigte, dass sie wirklich so abläuft. Sie pendelt nicht um das Gleichgewicht, sondern fern davon, solange ihr Brennstoff nicht verbraucht ist. Ilya Prigogine erhielt 1977 den Nobelpreis für Chemie für die Theorie solcher Systeme, die er <em>dissipative Strukturen</em> nannte: Ordnung, die nur besteht, weil Energie durch sie hindurchfließt.</p>
+      <p>Gießt man die Lösung in eine flache Schale, laufen Wellen über die Oberfläche, Ringe und Spiralen, die sich drehen, aufeinandertreffen und auslöschen. Im Hintergrund dieser Seite läuft ein einfaches Modell davon: Jede Zelle durchläuft einen Kreis von Zuständen und wird von ihren Nachbarn angestoßen. Aus zufälligem Rauschen ordnen sich nach einer Weile Spiralen. Dieselben Spiralen findet man im Herzmuskel, wo sie Kammerflimmern auslösen können, und bei Schleimpilzen, die sich mit chemischen Wellen zu einem Organismus zusammenrufen.</p>
+    </div>
+
+    <div class="block">
+      <h2>selbstorganisation</h2>
+      <p>Seifenmoleküle haben ein Ende, das Wasser liebt, und eines, das Wasser meidet. Gibt man sie ins Wasser, ordnen sie sich von selbst: zu Kügelchen, deren Inneres trocken bleibt, zu doppelten Schichten, die sich zu Blasen schließen. Niemand baut diese Strukturen. Sie entstehen, weil jedes Molekül nur seinen günstigsten Platz sucht. Auf demselben Prinzip beruht die Membran jeder lebenden Zelle.</p>
+      <p>Eine Schneeflocke ist ein anderes Beispiel. Ihre sechszählige Symmetrie folgt aus dem Winkel, in dem sich Wassermoleküle aneinanderlagern. Ihre Gestalt im Einzelnen aber folgt aus ihrem Weg durch die Wolke, aus jeder Änderung von Temperatur und Feuchte, die sie unterwegs erlebt hat. Jede Flocke trägt die Regeln ihrer Moleküle und zugleich ihre eigene Geschichte.</p>
+      <p>Die supramolekulare Chemie, für die Jean-Marie Lehn 1987 den Nobelpreis erhielt, hat daraus ein Programm gemacht: Moleküle so zu entwerfen, dass sie sich selbst zu größeren Gebilden zusammenfügen. Der Chemiker baut nicht mehr das Ganze. Er entwirft die Teile und überlässt den Rest der Emergenz.</p>
+    </div>
+
+    <div class="block">
+      <h2>vom molekül zum leben</h2>
+      <p>Irgendwann vor etwa vier Milliarden Jahren wurde aus Chemie Biologie. Wie das geschah, weiß niemand. Aber die Chemie kennt einen Mechanismus, der den Übergang denkbar macht: die <em>Autokatalyse</em>. Ein Molekül, das die Bildung seiner selbst beschleunigt, vermehrt sich. Mehrere Moleküle, die sich gegenseitig herstellen, bilden einen Kreislauf, der sich selbst erhält.</p>
+      <p>Der Göttinger Chemiker Manfred Eigen beschrieb in den 1970er Jahren mit Peter Schuster solche Kreisläufe als <em>Hyperzyklen</em>, Netze von Molekülen, die sich gegenseitig vervielfältigen und dabei zu konkurrieren und sich zu verbessern beginnen. Darwins Prinzip, bevor es Lebewesen gibt. Stuart Kauffman argumentierte später, dass solche selbsterhaltenden Netze fast zwangsläufig entstehen, sobald eine Mischung genügend verschiedene Moleküle enthält: ein Phasenübergang von der Chemie zum Leben.</p>
+      <p>Ob es so war, ist offen. Sicher ist: Irgendwo auf diesem Weg begann Materie, eine Geschichte zu haben, sich zu kopieren, zu variieren, zu erinnern. Wie es danach weitergeht, erzählt die Seite <a href="/emergenz/fachrichtungen/biologie/">Biologie</a>.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>was chemie zeigt</h2>
+      <p>Die Chemie ist die mittlere Sprosse der Leiter. Alles in ihr ist Physik, und doch braucht sie eigene Begriffe, um zu verstehen, was sie sieht. Das ist kein Mangel an Wissen. Es ist die Art, wie die Welt gebaut ist: Jede Ebene ruht auf der darunter und hat doch ihre eigene Ordnung.</p>
+      <p>Und die Chemie zeigt den vielleicht wichtigsten Übergang überhaupt: den Moment, in dem Materie anfängt, nicht nur zu reagieren, sondern sich zu organisieren, im Takt zu schwingen, Muster zu bilden, sich zu vervielfältigen. Zwischen dem Kristall und der Zelle liegt keine Grenze, die jemand gezogen hat. Es liegt ein Kontinuum von Emergenzen.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="art-hint">
+      <p>Alan Turings Reaktions-Diffusions-Muster, chemische Ordnung aus dem Nichts, sind im künstlerischen Teil der Site erfahrbar.</p>
+      <a href="/start/komplexitaet/">art erkunden</a>
+    </div>
+
+  </div>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/" aria-current="page">emergenz</a></li>
+      <li><a href="/punkt/">punkt</a></li>
+      <li><a href="/start/">art</a></li>
+      <li><a href="/literatur/">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+<script>
+// Hintergrund: ein zyklischer zellulärer Automat als Modell eines erregbaren Mediums.
+// Jede Zelle durchläuft STATES Zustände im Kreis und rückt vor, sobald genug Nachbarn schon
+// im nächsten Zustand sind. Aus Rauschen entstehen nach einer Weile Spiralwellen,
+// wie in der Belousov-Zhabotinsky-Reaktion.
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+const CELL = 6;
+const STATES = 14;
+let W, H, GW, GH, grid, next, off, offCtx, img, steps;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  GW = Math.ceil(W / CELL);
+  GH = Math.ceil(H / CELL);
+  grid = new Uint8Array(GW * GH);
+  next = new Uint8Array(GW * GH);
+  for (let i = 0; i < grid.length; i++) grid[i] = (Math.random() * STATES) | 0;
+  off = document.createElement('canvas');
+  off.width = GW; off.height = GH;
+  offCtx = off.getContext('2d');
+  img = offCtx.createImageData(GW, GH);
+  steps = 0;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Nachbarschaft: ein Kreis mit Radius zwei, damit die Wellen rund laufen
+const NB = [];
+for (let dy = -2; dy <= 2; dy++)
+  for (let dx = -2; dx <= 2; dx++)
+    if ((dx || dy) && dx * dx + dy * dy <= 5) NB.push(dx, dy);
+const THRESHOLD = 2;
+
+function step() {
+  for (let y = 0; y < GH; y++) {
+    for (let x = 0; x < GW; x++) {
+      const i = y * GW + x;
+      const s = grid[i];
+      const t = s + 1 === STATES ? 0 : s + 1;
+      let c = 0;
+      for (let k = 0; k < NB.length; k += 2) {
+        let xx = x + NB[k], yy = y + NB[k + 1];
+        if (xx < 0) xx += GW; else if (xx >= GW) xx -= GW;
+        if (yy < 0) yy += GH; else if (yy >= GH) yy -= GH;
+        if (grid[yy * GW + xx] === t && ++c >= THRESHOLD) break;
+      }
+      next[i] = c >= THRESHOLD ? t : s;
+    }
+  }
+  const tmp = grid; grid = next; next = tmp;
+  steps++;
+}
+
+// Helligkeit je Zustand: eine helle Wellenfront mit abklingendem Schweif
+const ALPHA = Array.from({ length: STATES }, (_, k) => Math.round(Math.pow(1 - k / STATES, 2.2) * 26));
+
+let frame = 0;
+function draw() {
+  frame++;
+  if (frame % 2 === 0) step();           // ruhig: ein Schritt alle zwei Bilder
+  // Das anfängliche Rauschen bleibt fast unsichtbar; das Muster wird sichtbar, während es sich ordnet.
+  const fade = Math.min(1, steps / 450);
+  const d = img.data;
+  for (let i = 0; i < grid.length; i++) {
+    const j = i * 4;
+    d[j] = 232; d[j + 1] = 214; d[j + 2] = 186;
+    d[j + 3] = ALPHA[grid[i]] * fade * fade;
+  }
+  offCtx.putImageData(img, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(off, 0, 0, GW * CELL, GH * CELL);
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
