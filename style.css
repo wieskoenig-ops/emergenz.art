@@ -107,3 +107,29 @@ main p strong, #text-block > p strong, .group li strong { font-weight: 400; }
 }
 .site-footer .meta a { font-size: inherit; letter-spacing: inherit; color: rgba(232,214,186,0.45); }
 #panel .site-footer { padding-bottom: 0; }
+
+/* ── Seitenname auf schmalen Bildschirmen ──
+   Der fixierte Name oben rechts liegt sonst über dem scrollenden Text.
+   Er bekommt dieselbe dunkle Unterlage wie der Zurück-Link. */
+@media (max-width: 760px) {
+  #page-name {
+    padding: 0.35em 0.75em;
+    top: clamp(8px,1.6vh,18px);
+    right: clamp(8px,2vw,30px);
+    background: rgba(0,0,0,0.62);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    text-shadow: 0 0 8px #000;
+    line-height: 1.9;
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+  }
+  /* dunkles Band hinter beiden Beschriftungen, nach unten weich auslaufend */
+  html:has(#page-name)::before {
+    content: '';
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 64px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+    z-index: 19;
+  }
+}

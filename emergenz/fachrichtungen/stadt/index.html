@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stadt — Emergenz</title>
+  <meta name="description" content="Emergenz in der Stadt: lebendige Viertel nach Jane Jacobs, der Stau aus dem Nichts, Trampelpfade und Schleimpilznetze, Skalengesetze der Städte.">
+  <link rel="canonical" href="https://emergenz.art/emergenz/fachrichtungen/stadt/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Stadt — Emergenz">
+  <meta property="og:description" content="Emergenz in der Stadt: lebendige Viertel nach Jane Jacobs, der Stau aus dem Nichts, Trampelpfade und Schleimpilznetze, Skalengesetze der Städte.">
+  <meta property="og:url" content="https://emergenz.art/emergenz/fachrichtungen/stadt/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p + p { margin-top: 1.2em; }
+
+    .intro p.punch {
+      margin-top: 1.2em;
+      font-style: italic;
+      color: rgba(232,224,208,0.92);
+    }
+
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.3s; }
+    .block:nth-of-type(2) { animation-delay: 0.45s; }
+    .block:nth-of-type(3) { animation-delay: 0.6s; }
+    .block:nth-of-type(4) { animation-delay: 0.75s; }
+    .block:nth-of-type(5) { animation-delay: 0.9s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.35rem,2.4vw,1.85rem);
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.92);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+
+    .block.coda p { color: rgba(232,224,208,0.82); }
+
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+      opacity: 0;
+      animation: rise 0.9s ease 1.05s forwards;
+    }
+
+    /* Art-Hinweis */
+    .art-hint {
+      opacity: 0;
+      animation: rise 0.9s ease 1.1s forwards;
+      margin-bottom: clamp(2rem,4vh,3rem);
+      padding: clamp(1rem,2vh,1.5rem) clamp(1.2rem,2.5vw,2rem);
+      border: 0.5px solid rgba(232,224,208,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .art-hint p {
+      font-size: clamp(0.88rem,1.4vw,1.05rem);
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.5);
+      font-style: italic;
+    }
+
+    .art-hint a {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(0.82rem,1.2vw,0.95rem);
+      letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.45);
+      text-transform: lowercase;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .art-hint a:hover { color: rgba(232,224,208,0.9); }
+    .art-hint a::after { content: ' →'; }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/fachrichtungen/">fachrichtungen</a>
+  <h1 id="page-name">stadt</h1>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · fachrichtungen · 07 · stadt</div>
+
+    <div class="intro">
+      <p>Jedes Haus einer Stadt hat jemand entworfen, jede Straße hat jemand angelegt, jede Ampel hat jemand programmiert. Und doch hat niemand die Stadt gemacht: ihren Rhythmus, ihre Viertel, ihre Staus, ihre Lebendigkeit. Sie entsteht aus den Entscheidungen von Millionen Menschen, die jeweils nur ihren eigenen Weg gehen.</p>
+      <p>Die Stadt ist das größte Werk, das Menschen hervorbringen, und das einzige, das keiner von ihnen überblickt.</p>
+      <p class="punch">Städte werden geplant. Die Stadt plant niemand.</p>
+    </div>
+
+    <div class="block">
+      <h2>das viertel</h2>
+      <p>1961 veröffentlichte die Journalistin Jane Jacobs in New York ein Buch, das die Stadtplanung erschütterte: <em>Tod und Leben großer amerikanischer Städte</em>. Die Planer jener Jahre rissen alte Viertel ab und ersetzten sie durch Wohnblöcke, Grünflächen und Schnellstraßen, sauber nach Funktionen getrennt. Jacobs beobachtete das Gegenteil. Lebendig und sicher waren gerade die alten, dichten, gemischten Straßen, in denen Läden, Werkstätten und Wohnungen nebeneinanderlagen.</p>
+      <p>Sicherheit, schrieb sie, entsteht nicht durch Polizei, sondern durch die vielen Augen auf der Straße: den Ladenbesitzer, der vor seiner Tür fegt, die Nachbarin am Fenster, die Kinder auf dem Heimweg. Niemand ist dafür zuständig, und gerade deshalb funktioniert es. Sie nannte es das Ballett des Bürgersteigs. Im letzten Kapitel ihres Buches griff sie einen Begriff des Mathematikers Warren Weaver auf: Eine Stadt sei ein Problem der <em>organisierten Komplexität</em>, weder einfach wie eine Maschine noch bloßer Zufall wie ein Gas.</p>
+      <p>Dass Viertel auch eine Kehrseite haben, zeigte 1971 der Ökonom Thomas Schelling. In seinem Modell möchte jeder Bewohner nur, dass etwa ein Drittel seiner Nachbarn ihm ähnlich ist. Ist das nicht der Fall, zieht er um. Niemand verlangt Abgrenzung, die meisten wären mit einer gemischten Nachbarschaft zufrieden. Und doch ordnen sich nach einigen Runden fast vollständig getrennte Viertel. Das Ergebnis will keiner, und keiner hat es verursacht. Alle zusammen haben es hervorgebracht.</p>
+    </div>
+
+    <div class="block">
+      <h2>der stau aus dem nichts</h2>
+      <p>Jeder kennt ihn: Man steht auf der Autobahn, kriecht ein paar Kilometer, und dann löst sich der Stau auf, ohne dass ein Unfall, eine Baustelle oder eine Auffahrt zu sehen wäre. 1992 beschrieben die deutschen Physiker Kai Nagel und Michael Schreckenberg dieses Phänomen mit einem Modell aus nur vier Regeln. Jedes Auto beschleunigt, wenn es kann. Es bremst, wenn der Vordermann zu nahe ist. Es trödelt manchmal ohne Grund ein wenig. Dann fährt es.</p>
+      <p>Die dritte Regel genügt. Ab einer bestimmten Dichte schaukelt sich das kleine Zögern eines Einzelnen auf: Der Hintermann bremst etwas stärker, dessen Hintermann noch stärker, bis irgendwo jemand steht. Der Stau ist eine Welle, die gegen die Fahrtrichtung läuft, mit etwa fünfzehn bis zwanzig Kilometern pro Stunde, während die Autos selbst vorne aus ihm herausfahren und hinten neue hineingeraten. Er bewegt sich, obwohl kein Auto in ihm bleibt. 2008 ließen japanische Forscher zweiundzwanzig Autos auf einem Kreis von 230 Metern Umfang fahren, mit der Bitte, gleichmäßig zu fahren. Nach wenigen Minuten stand ein Stau auf der Strecke.</p>
+      <p>Im Hintergrund dieser Seite läuft dieses Modell. Jede Linie ist eine ringförmige Straße, oben mit wenigen Autos, nach unten immer dichter. Oben fließt der Verkehr. Weiter unten bilden sich kupferfarbene Klumpen stehender Autos, die langsam nach links wandern, gegen die Fahrtrichtung. Wo genau ein Stau entsteht, lässt sich nicht vorhersagen. Dass er entsteht, schon: Es ist ein Phasenübergang wie bei Wasser, das gefriert.</p>
+      <p>Der Verkehr hält noch eine zweite Überraschung bereit. 1968 bewies der Bochumer Mathematiker Dietrich Braess, dass eine zusätzliche Straße in einem Netz alle Fahrer langsamer machen kann, wenn jeder nur seinen eigenen schnellsten Weg sucht. Umgekehrt kann eine Stadt flüssiger werden, wenn sie eine Straße schließt. Seoul begann 2003, eine Hochstraße durch die Innenstadt abzureißen, und legte an ihrer Stelle einen Bach frei. Der Verkehr ist nicht zusammengebrochen.</p>
+    </div>
+
+    <div class="block">
+      <h2>wege, die niemand anlegt</h2>
+      <p>In jedem Park gibt es sie: schmale, ausgetretene Pfade quer über den Rasen, dort, wo kein Weg geplant war. Jeder Fußgänger folgt lieber einer vorhandenen Spur als dem frischen Gras, und jeder, der ihr folgt, macht sie deutlicher. Dirk Helbing und Kollegen haben 1997 gezeigt, dass solche Trampelpfadnetze einem Kompromiss folgen, den keiner berechnet hat: Sie sind kürzer als die angelegten Wege und bündeln sich doch so, dass nicht jeder seinen eigenen Pfad braucht. Manche Universitäten haben ihre Wege erst gepflastert, nachdem die Studenten sie ausgetreten hatten.</p>
+      <p>Wie gut solche Netze sein können, zeigte 2010 ein ungewöhnliches Experiment. Forscher in Japan legten Haferflocken an die Stellen der Städte rund um Tokio und setzten in die Mitte einen Schleimpilz. Der Pilz, ein Wesen ohne Gehirn, wuchs zu den Nahrungsquellen hin, zog sich von überflüssigen Verbindungen zurück und bildete nach einem Tag ein Netz, das dem Tokioter Bahnnetz in Länge, Effizienz und Ausfallsicherheit erstaunlich nahekam. Ingenieure hatten dafür Jahrzehnte gebraucht.</p>
+      <p>Auch das Gesamtbild einer Stadt folgt Mustern, die niemand entworfen hat. Von oben gesehen gleichen wachsende Städte mit ihren Ausläufern entlang der Straßen eher Flechten oder Eisblumen als geometrischen Plänen. Michael Batty und Paul Longley haben in den 1990er Jahren gezeigt, dass ihre Ränder fraktal sind, ähnlich wie Küstenlinien.</p>
+    </div>
+
+    <div class="block">
+      <h2>skalengesetze</h2>
+      <p>Verdoppelt man die Einwohnerzahl einer Stadt, verdoppelt sich nicht alles andere. 2007 werteten Luís Bettencourt, Geoffrey West und Kollegen Daten aus Hunderten von Städten in mehreren Ländern aus. Die Infrastruktur, die Länge der Straßen, der Kabel, die Zahl der Tankstellen, wächst nur um etwa fünfundachtzig Prozent. Die Stadt wird sparsamer. Löhne, Patente, Wirtschaftsleistung wachsen dagegen um etwa hundertfünfzehn Prozent. Jeder Einwohner einer doppelt so großen Stadt verdient, erfindet und produziert im Schnitt rund fünfzehn Prozent mehr.</p>
+      <p>Allerdings gilt dasselbe für Kriminalität und ansteckende Krankheiten. Die Stadt verstärkt alles, was aus Begegnungen entsteht, das Gute wie das Schlechte. Selbst die Menschen gehen in großen Städten schneller. Bemerkenswert ist der Vergleich mit dem Leben: Ein Elefant lebt langsamer als eine Maus, sein Herz schlägt seltener, sein Stoffwechsel pro Kilogramm ist geringer. Große Organismen werden träger. Große Städte werden schneller.</p>
+      <p>Auch die Größen der Städte eines Landes folgen einer Regel. Schon 1913 bemerkte der Physiker Felix Auerbach, dass die zweitgrößte Stadt oft etwa halb so groß ist wie die größte, die dritte etwa ein Drittel so groß, und so weiter. Für Deutschland passt das erstaunlich gut: Berlin hat knapp vier Millionen Einwohner, Hamburg knapp zwei, München etwa anderthalb, Köln gut eine. Kein Gesetz hat diese Verteilung verordnet.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>was die stadt zeigt</h2>
+      <p>Die Stadt ist ein Ort, an dem man Emergenz jeden Tag erleben kann, auf dem Weg zur Arbeit, im Stau, im Gedränge eines Marktes, in der Stille einer Straße am Sonntagmorgen. Und sie ist ein Lehrstück darüber, was Planung kann und was nicht.</p>
+      <p>Die großen Fehlschläge der Stadtplanung entstanden dort, wo man glaubte, das Ganze entwerfen zu können: Trabantenstädte, die nie lebendig wurden, Schnellstraßen, die mehr Verkehr erzeugten, als sie aufnahmen. Die gelungenen Eingriffe sind oft bescheidener. Sie schaffen Bedingungen, unter denen sich etwas entwickeln kann: Dichte, Mischung, kurze Wege, Plätze, an denen man sich begegnet. Ein guter Stadtplaner arbeitet eher wie ein Gärtner als wie ein Architekt.</p>
+      <p>Dass Ordnung entsteht, ohne dass jemand sie anordnet, beschreibt auch die <a href="/emergenz/fachrichtungen/soziologie/">Soziologie</a>. Die Stadt macht es sichtbar. Man muss nur hinschauen, von oben, aus dem Fenster oder vom Rand eines Platzes aus.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="art-hint">
+      <p>Wie aus lokalen Regeln Ordnung entsteht, ohne dass jemand sie anordnet, zeigt die Selbstorganisation im künstlerischen Teil der Site.</p>
+      <a href="/start/selbstorganisation/">art erkunden</a>
+    </div>
+
+  </div>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/" aria-current="page">emergenz</a></li>
+      <li><a href="/punkt/">punkt</a></li>
+      <li><a href="/start/">art</a></li>
+      <li><a href="/literatur/">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+<script>
+// Hintergrund: das Verkehrsmodell von Nagel und Schreckenberg (1992).
+// Jede Linie ist eine ringförmige Straße aus Zellen. Pro Schritt beschleunigt jedes Auto
+// um 1 (bis VMAX), bremst auf den Abstand zum Vordermann, trödelt mit Wahrscheinlichkeit
+// P_DAWDLE um 1 und fährt dann. Oben wenige Autos, nach unten dichter: ab einer kritischen
+// Dichte entstehen Staus ohne Ursache, die gegen die Fahrtrichtung wandern.
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+const CELL = 5;           // Pixel pro Zelle
+const VMAX = 5;
+const P_DAWDLE = 0.25;
+const STEP_FRAMES = 14;   // Frames pro Modellschritt (ruhig)
+let W, H, lanes, frame, startFrame;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  const n = Math.max(6, Math.min(12, Math.round(H / 75)));
+  const L = Math.ceil(W / CELL) + 2;
+  lanes = [];
+  for (let k = 0; k < n; k++) {
+    const density = 0.05 + 0.25 * k / (n - 1);     // 5 % oben bis 30 % unten
+    const cars = Math.max(2, Math.round(density * L));
+    const pos = [];
+    const taken = new Set();
+    while (pos.length < cars) {
+      const c = (Math.random() * L) | 0;
+      if (!taken.has(c)) { taken.add(c); pos.push(c); }
+    }
+    pos.sort((a, b) => a - b);
+    lanes.push({
+      y: H * (k + 0.5) / n,
+      L,
+      x: Int32Array.from(pos),
+      prev: Int32Array.from(pos),
+      v: new Int8Array(cars).fill(1)
+    });
+  }
+  frame = 0; startFrame = 0;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function stepLane(l) {
+  const n = l.x.length;
+  for (let i = 0; i < n; i++) {
+    const ahead = l.x[(i + 1) % n];
+    let gap = (ahead - l.x[i] - 1 + l.L) % l.L;
+    if (n === 1) gap = l.L - 1;
+    let v = Math.min(l.v[i] + 1, VMAX);
+    v = Math.min(v, gap);
+    if (v > 0 && Math.random() < P_DAWDLE) v--;
+    l.v[i] = v;
+  }
+  for (let i = 0; i < n; i++) {
+    l.prev[i] = l.x[i];
+    l.x[i] = (l.x[i] + l.v[i]) % l.L;
+  }
+}
+
+function draw() {
+  if (frame % STEP_FRAMES === 0) for (const l of lanes) stepLane(l);
+  const t = (frame % STEP_FRAMES) / STEP_FRAMES;   // Zwischenschritt für ruhige Bewegung
+  frame++;
+  const fade = Math.min(1, (frame - startFrame) / 240);
+
+  ctx.clearRect(0, 0, W, H);
+  for (const l of lanes) {
+    // die Straße als feine Linie
+    ctx.fillStyle = `rgba(232,214,186,${0.035 * fade})`;
+    ctx.fillRect(0, l.y, W, 1);
+    for (let i = 0; i < l.x.length; i++) {
+      let px = l.prev[i] + (l.x[i] - l.prev[i] + (l.x[i] < l.prev[i] ? l.L : 0)) * t;
+      px = (px % l.L) * CELL - CELL;
+      const v = l.v[i];
+      if (v === 0) {
+        ctx.fillStyle = `rgba(176,96,58,${0.55 * fade})`;          // stehend: kupfer
+      } else {
+        ctx.fillStyle = `rgba(232,214,186,${(0.12 + 0.04 * v) * fade})`;  // fahrend: hell
+      }
+      ctx.fillRect(px, l.y - 1.5, CELL - 1.5, 3);
+    }
+  }
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
