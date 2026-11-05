@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Künstliche Intelligenz — Punkt — Emergenz</title>
+  <meta name="description" content="Die Schwelle, die niemand sieht – ein Essay über künstliche Intelligenz, Emergenz in neuronalen Netzen und die Frage, ob AGI ein Kipppunkt ist.">
+  <link rel="canonical" href="https://emergenz.art/punkt/ki/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Künstliche Intelligenz — Punkt — Emergenz">
+  <meta property="og:description" content="Die Schwelle, die niemand sieht – ein Essay über künstliche Intelligenz, Emergenz in neuronalen Netzen und die Frage, ob AGI ein Kipppunkt ist.">
+  <meta property="og:url" content="https://emergenz.art/punkt/ki/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    .essay-title {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2rem,4vh,3rem);
+    }
+
+    .essay-title h1 {
+      font-size: clamp(1.6rem,3vw,2.4rem);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: rgba(232,224,208,0.92);
+      line-height: 1.3;
+      margin-bottom: 0.6em;
+    }
+
+    .essay-title .subtitle {
+      font-size: clamp(0.88rem,1.4vw,1.05rem);
+      font-style: italic;
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.42);
+      line-height: 1.6;
+    }
+
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.3s; }
+    .block:nth-of-type(2) { animation-delay: 0.4s; }
+    .block:nth-of-type(3) { animation-delay: 0.5s; }
+    .block:nth-of-type(4) { animation-delay: 0.6s; }
+    .block:nth-of-type(5) { animation-delay: 0.7s; }
+    .block:nth-of-type(6) { animation-delay: 0.8s; }
+    .block:nth-of-type(7) { animation-delay: 0.9s; }
+    .block:nth-of-type(8) { animation-delay: 1.0s; }
+    .block:nth-of-type(9) { animation-delay: 1.1s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.35rem,2.4vw,1.85rem);
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.92);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .roman {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.25);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.5em;
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .block p strong { font-weight: 400; color: rgba(232,224,208,0.92); }
+
+    .block.coda p { color: rgba(232,224,208,0.82); }
+
+    /* Hervorgehobene Aussage */
+    .block.statement {
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.22);
+    }
+    .block.statement p {
+      font-style: italic;
+      color: rgba(232,224,208,0.88);
+      font-size: clamp(1.1rem,1.9vw,1.4rem);
+    }
+
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+      opacity: 0;
+      animation: rise 0.9s ease 1.2s forwards;
+    }
+
+    /* Quellen */
+    .quellen {
+      opacity: 0;
+      animation: rise 0.9s ease 1.25s forwards;
+    }
+
+    .quellen h3 {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.35);
+      text-transform: lowercase;
+      font-weight: 300;
+      margin-bottom: clamp(1rem,2vh,1.5rem);
+    }
+
+    .quellen ul {
+      list-style: none;
+    }
+
+    .quellen li {
+      font-size: clamp(0.78rem,1.1vw,0.92rem);
+      line-height: 1.75;
+      letter-spacing: 0.03em;
+      color: rgba(232,224,208,0.32);
+      margin-bottom: 0.85em;
+      padding-left: 1.2em;
+      position: relative;
+    }
+    .quellen li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: rgba(232,224,208,0.2);
+    }
+
+    .quellen li a {
+      color: rgba(232,224,208,0.28);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .quellen li a:hover { color: rgba(232,224,208,0.7); }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/punkt/">punkt</a>
+  <div id="page-name">künstliche intelligenz</div>
+
+  <div id="content">
+
+    <div class="section-label">punkt · künstliche intelligenz</div>
+
+    <div class="essay-title">
+      <h1>Die Schwelle, die niemand sieht</h1>
+      <p class="subtitle">Ein Essay über künstliche Intelligenz, Emergenz<br>und die Frage, ob es einen Kipppunkt gibt</p>
+    </div>
+
+    <div class="block">
+      <span class="roman">I</span>
+      <h2>was niemand programmiert hat</h2>
+      <p>Ein großes Sprachmodell wird mit einer einzigen Aufgabe trainiert: das nächste Wort eines Textes vorherzusagen. Milliarden von Malen, an Milliarden von Sätzen. Ein Fehler wird gemessen, die Gewichte im Netz werden ein wenig verschoben, und das Ganze beginnt von vorn. Das ist das vollständige Verfahren.</p>
+      <p>Niemand hat diesen Modellen beigebracht zu übersetzen, Gedichte zu deuten, Programme zu schreiben oder einen Denkfehler in einem Argument zu finden. Diese Fähigkeiten sind aus der einen, schlichten Aufgabe hervorgegangen, so wie die Gestalt eines Vogelschwarms aus drei Regeln hervorgeht. Sie sind, im genauen Sinn dieses Wortes, emergent.</p>
+      <p>Das ist keine Behauptung über Bewusstsein, über Verstehen oder über einen Geist in der Maschine. Es ist eine Beobachtung über Struktur: Aus einfachen Regeln und sehr vielen Wiederholungen entsteht etwas, das in den Regeln nicht steht.</p>
+    </div>
+
+    <div class="block">
+      <span class="roman">II</span>
+      <h2>sprünge im inneren</h2>
+      <p>Die Forschung hat in den letzten Jahren begonnen, diesen Vorgang nicht nur von außen zu bestaunen, sondern ihn im Inneren der Netze zu beobachten. Drei Befunde sind besonders deutlich.</p>
+      <p><strong>Grokking.</strong> 2022 trainierte eine Gruppe bei OpenAI kleine Netze auf einfache Rechenaufgaben. Die Netze lernten die Beispiele zunächst auswendig: perfekt bei bekannten Aufgaben, hilflos bei neuen. Trainierte man weiter, lange nachdem sich scheinbar nichts mehr tat, kam ein Moment, in dem das Netz plötzlich auch die neuen Aufgaben löste. Es hatte die Regel gefunden. Die Forscher nannten das <em>Grokking</em>, nach einem Wort aus einem Science-Fiction-Roman für tiefes, intuitives Begreifen.</p>
+      <p><strong>Induktionsköpfe.</strong> Im selben Jahr beschrieben Forscher bei Anthropic, wie Sprachmodelle die Fähigkeit erwerben, aus Beispielen im Text zu lernen. Sie erscheint im Training nicht allmählich, sondern in einem kurzen Abschnitt, gemeinsam mit einer bestimmten Schaltung im Netz, die sich von selbst bildet. In der Lernkurve sieht man an dieser Stelle einen deutlichen Knick. Die Forscher sprachen von einem <em>Phasenübergang</em>.</p>
+      <p><strong>Ein Brett, das niemand gezeigt hat.</strong> 2023 trainierte eine Gruppe aus Harvard ein Modell ausschließlich auf Zugfolgen des Brettspiels Othello, als bloße Listen von Feldnamen. Das Modell sah nie ein Spielbrett. Trotzdem fand man in seinem Inneren eine Darstellung des Bretts, die sich auslesen und sogar gezielt verändern ließ, worauf das Modell andere Züge vorschlug. Aus Zeichenketten war ein Bild der Welt entstanden, das niemand hineingelegt hatte.</p>
+    </div>
+
+    <div class="block">
+      <span class="roman">III</span>
+      <h2>der streit um die sprünge</h2>
+      <p>2022 veröffentlichte eine Gruppe um Jason Wei eine vielbeachtete Arbeit über <em>emergente Fähigkeiten</em> großer Sprachmodelle: Fähigkeiten, die bei kleinen Modellen praktisch fehlen und ab einer bestimmten Größe plötzlich auftauchen. Ein Jahr später hielten Rylan Schaeffer und Kollegen dagegen. Viele dieser Sprünge, so ihr Argument, entstehen erst durch die Art der Messung. Wer nur zählt, ob eine Antwort ganz richtig ist, sieht einen Sprung. Wer misst, wie nahe sie der richtigen kommt, sieht oft eine stetige Kurve.</p>
+      <p>Der Streit ist lehrreich, weil er etwas über Emergenz selbst zeigt. Ob ein Übergang plötzlich erscheint, hängt auch davon ab, wie man hinschaut. Aber er löst nicht alles auf. Grokking und die Induktionsköpfe zeigen sich auch in stetigen Messgrößen als echter Umbruch im Inneren. Es gibt Sprünge, die im Auge des Betrachters liegen. Und es gibt Sprünge, die im Netz liegen.</p>
+      <p>Im Hintergrund dieser Seite läuft ein Bild für die zweite Art. Hunderte kleiner Taktgeber schwingen, jeder mit eigenem Tempo, und jeder spürt schwach den gemeinsamen Takt aller anderen. Diese Kopplung wird langsam stärker, ganz gleichmäßig. Lange geschieht wenig. Dann, ab einer Schwelle, finden die Taktgeber zueinander, und aus dem Durcheinander entsteht in kurzer Zeit eine gemeinsame Ordnung. Es ist kein Modell eines Sprachmodells. Es zeigt nur, wie ein stetig wachsender Regler einen sprunghaften Übergang erzeugen kann.</p>
+    </div>
+
+    <div class="block statement">
+      <p>Die Frage ist nicht, ob etwas aus diesen Systemen hervorgeht, das niemand hineingelegt hat. Das ist längst geschehen. Die Frage ist, was als Nächstes hervorgeht.</p>
+    </div>
+
+    <div class="block">
+      <span class="roman">IV</span>
+      <h2>ist agi ein kipppunkt?</h2>
+      <p>Die öffentliche Debatte kreist um ein Kürzel: AGI, allgemeine künstliche Intelligenz, eine Maschine, die alles kann, was ein Mensch geistig kann. Meist wird sie als Ereignis gedacht, als Tag, an dem es so weit ist. Manche denken sie als Kipppunkt im strengen Sinn. Schon 1965 schrieb der Mathematiker I. J. Good, eine Maschine, die klüger ist als ihre Konstrukteure, könnte noch klügere Maschinen bauen, und so fort. Die erste solche Maschine wäre die letzte Erfindung, die der Mensch machen müsste. Das ist die Logik einer sich selbst verstärkenden Rückkopplung, die Logik einer Lawine.</p>
+      <p>Die Seite <a href="/planetare-kognition/">planetare kognition</a> widerspricht diesem Bild. Sie sagt: Es gibt keinen Stichtag, sondern eine allmähliche Verdichtung von Vernetzung und Rückkopplung. Kein Neuron hat je bemerkt, dass es Teil eines Geistes wurde.</p>
+      <p>Bemerkenswert ist, dass beide Bilder Emergenz beschreiben. Sie unterscheiden sich nicht darin, ob etwas Neues entsteht, sondern in der Dynamik: Sprung oder Verdichtung, Lawine oder Wachstum. Und die bisherigen Beobachtungen passen zu beidem. Über große Bereiche wachsen die Fähigkeiten der Modelle stetig mit ihrer Größe. Im Inneren gibt es trotzdem Umbrüche. Ehrlich gesagt weiß niemand, welches Bild am Ende recht behält, oder ob es eine Mischung aus beiden ist: eine lange Verdichtung, in der es hier und da kippt.</p>
+    </div>
+
+    <div class="block">
+      <span class="roman">V</span>
+      <h2>der weg zurück</h2>
+      <p>Wer über Kipppunkte spricht, muss auch über <a href="/punkt/hysterese/">Hysterese</a> sprechen. Denn auch hier gibt es Wege, die sich nicht zurückgehen lassen.</p>
+      <p>Ein Modell, dessen Gewichte einmal veröffentlicht sind, lässt sich nicht zurückrufen. Es ist kopiert, verändert, weitergegeben. Eine Fähigkeit, die einmal in der Welt ist, verschwindet nicht, wenn man sie bereut. Und Institutionen, Berufe, Gewohnheiten, die sich um eine Technik herum neu geordnet haben, kehren nicht in ihren alten Zustand zurück, nur weil man die Technik wieder abschaltet. Das ist keine Warnung vor dem Untergang. Es ist die nüchterne Feststellung, dass auch die Entwicklung der künstlichen Intelligenz ein System mit Gedächtnis ist.</p>
+    </div>
+
+    <div class="block">
+      <span class="roman">VI</span>
+      <h2>verantwortung</h2>
+      <p>Hier liegt die eigentliche Herausforderung. Die Systeme, um die es geht, sind gebaut, aber nicht entworfen. Man legt die Architektur fest, die Daten, das Verfahren. Was dabei herauskommt, lernt man erst durch Beobachtung kennen. Die Forschung, die das Innere der Modelle untersucht, arbeitet deshalb wie eine Naturwissenschaft: mit Experimenten, Hypothesen, Überraschungen.</p>
+      <p>Für den Umgang mit solchen Systemen gelten die Lehren, die sich auch auf den anderen Seiten dieser Site finden. Wo Folgen sich nicht zurücknehmen lassen, ist Vorsicht billig, solange man noch vor der Schwelle steht. Hans Jonas nannte das die Heuristik der Furcht, der Essay über <a href="/punkt/politik/">Politik</a> beschreibt sie. Und wer ein emergentes System steuern will, kann nicht sein Verhalten festlegen, nur seine Regeln: Prüfungen vor der Veröffentlichung, Transparenz darüber, was getestet wurde und was nicht, Grenzen dafür, wo solche Systeme ohne menschliche Kontrolle handeln dürfen. Die Europäische Union hat 2024 mit ihrer KI-Verordnung einen ersten Versuch unternommen, solche Regeln zu setzen.</p>
+      <p>Die Verantwortung liegt nicht bei den Maschinen. Sie liegt bei denen, die die Bedingungen festlegen, unter denen etwas emergiert.</p>
+    </div>
+
+    <div class="block coda">
+      <span class="roman">VII</span>
+      <h2>koda: ein text über sich selbst</h2>
+      <p>Dieser Essay ist mit Hilfe eines Sprachmodells entstanden, also eines Systems von genau der Art, von der er handelt. Das Modell kann über die Forschung berichten, die hier beschrieben ist. Es kann nicht in sich selbst hineinsehen und sagen, was in ihm geschieht. Seine Auskünfte über sich selbst wären selbst nur ein weiteres Ergebnis des Vorgangs, den sie erklären sollen.</p>
+      <p>Darin liegt vielleicht die genaueste Beschreibung der Lage. Wir haben Systeme gebaut, die sich selbst nicht durchschauen, und wir durchschauen sie auch nicht ganz. Das ist kein Grund zur Panik und keiner zur Begeisterung. Es ist ein Grund, sehr genau hinzusehen, auf das, was entsteht, und auf die Regeln, unter denen es entsteht.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="quellen">
+      <h3>quellen &amp; weiterführende literatur</h3>
+      <ul>
+        <li>Good, I. J. (1965): Speculations Concerning the First Ultraintelligent Machine. <em>Advances in Computers</em> 6. — Die Idee der sich selbst verstärkenden Intelligenz.</li>
+        <li>Power, A. et al. (2022): Grokking: Generalization Beyond Overfitting on Small Algorithmic Datasets. <a href="https://arxiv.org/abs/2201.02177" target="_blank">arXiv:2201.02177</a></li>
+        <li>Olsson, C. et al. (2022): In-context Learning and Induction Heads. <em>Transformer Circuits Thread.</em> — Der Phasenübergang im Training.</li>
+        <li>Wei, J. et al. (2022): Emergent Abilities of Large Language Models. <em>Transactions on Machine Learning Research.</em></li>
+        <li>Li, K. et al. (2023): Emergent World Representations: Exploring a Sequence Model Trained on a Synthetic Task. <em>ICLR 2023.</em> — Das Othello-Brett im Inneren des Modells.</li>
+        <li>Schaeffer, R., Miranda, B. &amp; Koyejo, S. (2023): Are Emergent Abilities of Large Language Models a Mirage? <em>NeurIPS 2023.</em></li>
+        <li>Europäische Union (2024): Verordnung (EU) 2024/1689 über künstliche Intelligenz (KI-Verordnung).</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/">emergenz</a></li>
+      <li><a href="/punkt/" aria-current="page">punkt</a></li>
+      <li><a href="/start/">art</a></li>
+      <li><a href="/literatur/">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+<script>
+// Hintergrund: gekoppelte Taktgeber (Kuramoto-Modell).
+// Jeder Taktgeber hat sein eigenes Tempo und spürt schwach den gemeinsamen Takt aller anderen.
+// Die Kopplung K wird langsam stärker und wieder schwächer. Unterhalb einer Schwelle bleibt es
+// beim Durcheinander; oberhalb finden die Taktgeber in kurzer Zeit zu einem gemeinsamen Rhythmus.
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H, GW, GH, SP, phase, omega;
+
+const SPREAD = 0.45;   // Streuung der Eigentempi
+const K_MAX  = 1.6;    // die Schwelle liegt bei etwa 0,72
+const CYCLE  = 5400;   // Bilder für einen Durchgang (etwa 90 Sekunden)
+const DT     = 0.03;
+let frame = 0;
+
+function gauss() {
+  return Math.sqrt(-2 * Math.log(Math.random() || 1e-9)) * Math.cos(2 * Math.PI * Math.random());
+}
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  SP = Math.max(22, Math.min(34, Math.round(Math.min(W, H) / 22)));
+  GW = Math.ceil(W / SP) + 1;
+  GH = Math.ceil(H / SP) + 1;
+  const n = GW * GH;
+  phase = new Float32Array(n);
+  omega = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    phase[i] = Math.random() * Math.PI * 2;
+    omega[i] = 0.25 + gauss() * SPREAD;
+  }
+}
+resize();
+window.addEventListener('resize', resize);
+
+function draw() {
+  frame++;
+  const K = K_MAX * (0.5 - 0.5 * Math.cos(2 * Math.PI * frame / CYCLE));
+
+  // gemeinsamer Takt: Stärke r und Phase psi des Mittelwerts
+  let cs = 0, sn = 0;
+  for (let i = 0; i < phase.length; i++) { cs += Math.cos(phase[i]); sn += Math.sin(phase[i]); }
+  const r = Math.hypot(cs, sn) / phase.length, psi = Math.atan2(sn, cs);
+  for (let i = 0; i < phase.length; i++) {
+    phase[i] += DT * (omega[i] + K * r * Math.sin(psi - phase[i]));
+  }
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.lineWidth = 1;
+  const L = SP * 0.32;
+  for (let y = 0; y < GH; y++) {
+    for (let x = 0; x < GW; x++) {
+      const p = phase[y * GW + x];
+      // wie sehr dieser Taktgeber im gemeinsamen Rhythmus mitschwingt
+      const inStep = r * Math.max(0, Math.cos(p - psi));
+      const cx = x * SP, cy = y * SP;
+      const dx = Math.cos(p) * L, dy = Math.sin(p) * L;
+      ctx.beginPath();
+      ctx.moveTo(cx - dx, cy - dy);
+      ctx.lineTo(cx + dx, cy + dy);
+      ctx.strokeStyle = inStep > 0.35
+        ? `rgba(176,96,58,${0.08 + inStep * 0.4})`
+        : 'rgba(232,224,208,0.07)';
+      ctx.stroke();
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

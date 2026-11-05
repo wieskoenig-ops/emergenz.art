@@ -155,8 +155,14 @@
       opacity: 0;
       animation: rise 0.9s ease 1.25s forwards;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: clamp(0.8rem,2vw,1.4rem);
+      /* breiter als die Textspalte, damit drei Spalten Platz haben */
+      width: min(920px, 92vw);
+      margin-left: calc((100% - min(920px, 92vw)) / 2);
+    }
+    @media (max-width: 640px) {
+      .nav-grid { grid-template-columns: 1fr; width: 100%; margin-left: 0; }
     }
 
     .nav-card {
@@ -261,6 +267,11 @@
         <span class="nav-card-num">04</span>
         <span class="nav-card-title">politik</span>
         <span class="nav-card-sub">kategorienversagen · legislaturperioden · verantwortung</span>
+      </a>
+      <a class="nav-card" href="/punkt/ki/">
+        <span class="nav-card-num">05</span>
+        <span class="nav-card-title">künstliche intelligenz</span>
+        <span class="nav-card-sub">grokking · schwellen · verantwortung</span>
       </a>
     </div>
 
