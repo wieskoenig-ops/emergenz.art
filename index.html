@@ -110,6 +110,18 @@
     }
     #band-top .cell:hover .cell-label { color: rgba(232,224,208,1); }
 
+    /* Unterzeilen: sagen, in welche Tonlage ein Feld führt */
+    .cell-label.has-sub { flex-direction: column; gap: 0.45em; }
+    .cell-sub {
+      font-style: italic;
+      font-size: clamp(0.85rem, 1.05vw, 1.05rem);
+      letter-spacing: 0.14em;
+      color: rgba(232,214,186,0.62);
+      transition: color 0.5s ease;
+    }
+    #band-top .cell-sub { font-size: clamp(0.92rem, 1.25vw, 1.25rem); letter-spacing: 0.16em; }
+    .cell:hover .cell-sub { color: rgba(232,214,186,0.85); }
+
     /* Kontakt und Impressum teilen sich das rechte untere Feld */
     .cell-stack { display: grid; grid-template-rows: 1fr 1fr; }
     .cell-stack .cell-label { font-size: clamp(0.75rem, 1.25vw, 1rem); }
@@ -146,6 +158,8 @@
       .cell-stack .cell-label { font-size: 0.75rem; }
       #top-bar a { font-size: 0.95rem; letter-spacing: 0.25em; }
       #word { font-size: 9vw; letter-spacing: 0.25em; margin-right: -0.25em; }
+      .cell-sub, #band-top .cell-sub { font-size: 0.76rem; letter-spacing: 0.06em; }
+      .cell-label.has-sub { gap: 0.3em; padding: 0 0.3em; }
     }
 
     @keyframes breathe {
@@ -190,9 +204,9 @@
 
   <div id="layout">
     <div class="band" id="band-top">
-      <a class="cell" id="c0" href="/emergenz/"><span class="cell-label">emergenz</span></a>
-      <a class="cell" id="c1" href="/punkt/"><span class="cell-label">punkt</span></a>
-      <a class="cell" id="c2" href="/art/"><span class="cell-label">art</span></a>
+      <a class="cell" id="c0" href="/emergenz/"><span class="cell-label has-sub"><span>emergenz</span><span class="cell-sub">was es ist</span></span></a>
+      <a class="cell" id="c1" href="/punkt/"><span class="cell-label has-sub"><span>punkt</span><span class="cell-sub">wo es kippt</span></span></a>
+      <a class="cell" id="c2" href="/art/"><span class="cell-label has-sub"><span>art</span><span class="cell-sub">sehen und spielen</span></span></a>
     </div>
 
     <div id="middle">
@@ -200,8 +214,8 @@
     </div>
 
     <div class="band" id="band-bot">
-      <a class="cell" id="c3" href="/literatur/"><span class="cell-label">literatur</span></a>
-      <a class="cell" id="c4" href="/planetare-kognition/"><span class="cell-label">planetare kognition</span></a>
+      <a class="cell" id="c3" href="/literatur/"><span class="cell-label has-sub"><span>literatur</span><span class="cell-sub">zum weiterlesen</span></span></a>
+      <a class="cell" id="c4" href="/planetare-kognition/"><span class="cell-label has-sub"><span>planetare kognition</span><span class="cell-sub">eine these</span></span></a>
       <div class="cell-stack">
         <a class="cell" id="c5" href="mailto:mail.emergenz@web.de"><span class="cell-label">kontakt</span></a>
         <a class="cell" id="c6" href="/impressum/"><span class="cell-label">impressum</span></a>
