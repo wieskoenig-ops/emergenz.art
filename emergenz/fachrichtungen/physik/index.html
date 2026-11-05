@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physik — Emergenz</title>
+  <meta name="description" content="Emergenz in der Physik: Phasenübergänge, Supraleitung und Thermodynamik – warum „mehr ist anders“ gerade aus der Wissenschaft vom Kleinsten kommt.">
+  <link rel="canonical" href="https://emergenz.art/emergenz/fachrichtungen/physik/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Physik — Emergenz">
+  <meta property="og:description" content="Emergenz in der Physik: Phasenübergänge, Supraleitung und Thermodynamik – warum „mehr ist anders“ gerade aus der Wissenschaft vom Kleinsten kommt.">
+  <meta property="og:url" content="https://emergenz.art/emergenz/fachrichtungen/physik/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p + p { margin-top: 1.2em; }
+
+    .intro p.punch {
+      margin-top: 1.2em;
+      font-style: italic;
+      color: rgba(232,224,208,0.92);
+    }
+
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.3s; }
+    .block:nth-of-type(2) { animation-delay: 0.45s; }
+    .block:nth-of-type(3) { animation-delay: 0.6s; }
+    .block:nth-of-type(4) { animation-delay: 0.75s; }
+    .block:nth-of-type(5) { animation-delay: 0.9s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.35rem,2.4vw,1.85rem);
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.92);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+
+    .block.coda p { color: rgba(232,224,208,0.82); }
+
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+      opacity: 0;
+      animation: rise 0.9s ease 1.05s forwards;
+    }
+
+    /* Art-Hinweis */
+    .art-hint {
+      opacity: 0;
+      animation: rise 0.9s ease 1.1s forwards;
+      margin-bottom: clamp(2rem,4vh,3rem);
+      padding: clamp(1rem,2vh,1.5rem) clamp(1.2rem,2.5vw,2rem);
+      border: 0.5px solid rgba(232,224,208,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .art-hint p {
+      font-size: clamp(0.88rem,1.4vw,1.05rem);
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.5);
+      font-style: italic;
+    }
+
+    .art-hint a {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(0.82rem,1.2vw,0.95rem);
+      letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.45);
+      text-transform: lowercase;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .art-hint a:hover { color: rgba(232,224,208,0.9); }
+    .art-hint a::after { content: ' →'; }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/fachrichtungen/">fachrichtungen</a>
+  <h1 id="page-name">physik</h1>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · fachrichtungen · 02 · physik</div>
+
+    <div class="intro">
+      <p>Die Physik ist die Heimat des Reduktionismus. Alles, was es gibt, besteht aus wenigen Sorten von Teilchen, die über vier Grundkräfte miteinander wechselwirken. Wer diese Gesetze kennt, so scheint es, kennt im Prinzip alles.</p>
+      <p>Und doch kommt ausgerechnet aus der Physik der berühmteste Satz über Emergenz. Der Festkörperphysiker Philip W. Anderson schrieb ihn 1972 als Titel über einen kurzen Aufsatz:</p>
+      <p class="punch">Mehr ist anders.</p>
+    </div>
+
+    <div class="block">
+      <h2>phasenübergänge</h2>
+      <p>Ein einzelnes Wassermolekül ist weder fest noch flüssig. Es hat keinen Schmelzpunkt, keine Oberflächenspannung, es kann nicht gefrieren. Diese Eigenschaften gibt es erst, wenn sehr viele Moleküle zusammenkommen. Und bei null Grad ordnen sie sich schlagartig neu: Aus einer Flüssigkeit wird ein Kristall. Die Moleküle sind dieselben geblieben. Verändert hat sich ihre Beziehung zueinander.</p>
+      <p>Ähnlich beim Magnetismus. Jedes Eisenatom trägt ein winziges magnetisches Moment, einen Spin. Oberhalb von 770 Grad zeigen die Spins in zufällige Richtungen, das Eisen ist nicht magnetisch. Kühlt man es ab, richten sie sich plötzlich gemeinsam aus, und zwar in eine Richtung, die kein Naturgesetz vorschreibt. Die Gesetze sind in alle Richtungen gleich, der Zustand ist es nicht mehr. Physiker nennen das <em>spontane Symmetriebrechung</em>.</p>
+      <p>Im Hintergrund dieser Seite läuft das einfachste Modell dafür, das Ising-Modell: Jede Zelle ist ein Spin, oben oder unten, und richtet sich nach ihren Nachbarn, gestört von der Wärme. Die Temperatur ist genau auf den kritischen Punkt eingestellt. Dort entstehen geordnete Bereiche aller Größen, von einzelnen Zellen bis zu Inseln über den ganzen Bildschirm, und keiner ist bevorzugt.</p>
+      <p>Am kritischen Punkt zeigt sich noch etwas Erstaunlicheres: <em>Universalität</em>. Ein Magnet, der seine Ordnung verliert, und eine Flüssigkeit an ihrem kritischen Punkt verhalten sich mathematisch identisch, obwohl sie aus völlig verschiedenen Teilchen bestehen. Die Details der Teile spielen keine Rolle mehr. Es zählt nur noch die Struktur des Ganzen. Kenneth Wilson hat dafür die Renormierungsgruppe entwickelt und 1982 den Nobelpreis erhalten.</p>
+    </div>
+
+    <div class="block">
+      <h2>supraleitung</h2>
+      <p>1911 kühlte Heike Kamerlingh Onnes in Leiden Quecksilber auf etwa vier Grad über dem absoluten Nullpunkt. Plötzlich war der elektrische Widerstand verschwunden, nicht nur klein, sondern null. Ein Strom, einmal angestoßen, fließt in einem supraleitenden Ring ohne Antrieb weiter.</p>
+      <p>Es dauerte 46 Jahre, bis John Bardeen, Leon Cooper und Robert Schrieffer das Phänomen erklären konnten. Die Elektronen, die sich eigentlich abstoßen, finden über winzige Schwingungen des Kristallgitters zu Paaren zusammen. Und alle diese Paare gehen gemeinsam in einen einzigen kollektiven Quantenzustand über. Sie bewegen sich nicht mehr einzeln, sondern als Ganzes, und das Ganze kann nicht an Hindernissen gestreut werden.</p>
+      <p>Kein einzelnes Elektron ist supraleitend. Die Eigenschaft existiert nur im Kollektiv. Und sie lässt sich aus den Grundgleichungen nicht einfach ablesen: Die Gleichungen für Elektronen waren seit den 1920er Jahren bekannt, die Supraleitung musste trotzdem erst entdeckt und dann mühsam verstanden werden.</p>
+      <p>Noch weiter geht der fraktionierte Quanten-Hall-Effekt. In dünnen Schichten, bei tiefen Temperaturen und starken Magnetfeldern, verhalten sich Elektronen gemeinsam so, dass neue Teilchen entstehen, die genau ein Drittel der Elektronenladung tragen. Kein Elementarteilchen besitzt eine solche Ladung. Diese Teilchen gibt es nur als Muster des Ganzen. Robert Laughlin, der sie erklärte, wurde später zu einem der deutlichsten Fürsprecher der Emergenz in der Physik.</p>
+    </div>
+
+    <div class="block">
+      <h2>thermodynamik</h2>
+      <p>Ein einzelnes Molekül hat keine Temperatur. Es hat eine Geschwindigkeit, eine Energie, aber Temperatur ist eine Eigenschaft von vielen: ein Maß für die mittlere Bewegung einer großen Menge. Dasselbe gilt für Druck. Die vertrautesten Größen der Physik sind emergent.</p>
+      <p>Am tiefsten zeigt sich das an der Zeit. Die Grundgesetze der Mechanik kennen keine Richtung: Jeder Stoß zweier Teilchen könnte ebenso gut rückwärts ablaufen. Die Welt, die wir erleben, hat aber eine Richtung. Tassen zerbrechen und setzen sich nicht wieder zusammen, Wärme fließt vom Warmen zum Kalten. Ludwig Boltzmann hat gezeigt, woher das kommt: Es gibt unvorstellbar viel mehr ungeordnete als geordnete Anordnungen. Der Pfeil der Zeit steckt in keinem einzelnen Teilchen. Er entsteht aus der Statistik der vielen.</p>
+      <p>Und doch entsteht Ordnung. Fern vom Gleichgewicht, wo Energie hindurchfließt, organisieren sich Systeme selbst. Erhitzt man eine dünne Flüssigkeitsschicht von unten, bilden sich ab einer bestimmten Temperaturdifferenz regelmäßige sechseckige Zellen, die Bénard-Zellen. Ilya Prigogine nannte solche Gebilde <em>dissipative Strukturen</em>: Ordnung, die nur besteht, solange Energie durch sie hindurchströmt. Ein Wirbel, eine Flamme, ein Hurrikan, im weitesten Sinn auch ein Lebewesen.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>was physik zeigt</h2>
+      <p>Andersons Pointe war nicht, dass der Reduktionismus falsch sei. Alles besteht tatsächlich aus Teilchen, die den bekannten Gesetzen gehorchen. Falsch ist nur der Umkehrschluss: dass man aus diesen Gesetzen die Welt wieder aufbauen könnte. Die Fähigkeit, alles auf einfache Gesetze zurückzuführen, ist nicht die Fähigkeit, von diesen Gesetzen aus das Universum zu rekonstruieren.</p>
+      <p>Auf jeder neuen Ebene der Komplexität entstehen neue Eigenschaften und neue Gesetze, die man dort erst entdecken muss. Chemie ist nicht angewandte Physik, Biologie nicht angewandte Chemie. Und manche Physiker vermuten heute, dass sogar das, was wir für fundamental halten, Raum und Zeit eingeschlossen, selbst emergent sein könnte.</p>
+      <p>Die Physik, die Wissenschaft vom Kleinsten, liefert damit das stärkste Argument dafür, dass das Große nicht einfach die Summe des Kleinen ist.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="art-hint">
+      <p>Bénard-Konvektion, Symmetriebrechung und weitere Simulationen sind im künstlerischen Teil der Site erfahrbar.</p>
+      <a href="/start/dissipation/">art erkunden</a>
+    </div>
+
+  </div>
+
+<script>
+// Hintergrund: Ising-Modell am kritischen Punkt.
+// Jede Zelle ist ein Spin (oben/unten), der sich nach seinen vier Nachbarn richtet.
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+const CELL = 6;
+const TC = 2 / Math.log(1 + Math.SQRT2);   // kritische Temperatur ≈ 2,269
+let W, H, GW, GH, spins, off, offCtx, img;
+
+// Akzeptanzwahrscheinlichkeiten für ΔE = 4 und 8
+const P4 = Math.exp(-4 / TC), P8 = Math.exp(-8 / TC);
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  GW = Math.ceil(W / CELL);
+  GH = Math.ceil(H / CELL);
+  spins = new Int8Array(GW * GH);
+  for (let i = 0; i < spins.length; i++) spins[i] = Math.random() < 0.5 ? 1 : -1;
+  off = document.createElement('canvas');
+  off.width = GW; off.height = GH;
+  offCtx = off.getContext('2d');
+  img = offCtx.createImageData(GW, GH);
+}
+resize();
+window.addEventListener('resize', resize);
+
+function sweep() {
+  const n = GW * GH;
+  for (let k = 0; k < n; k++) {
+    const x = (Math.random() * GW) | 0, y = (Math.random() * GH) | 0;
+    const i = y * GW + x;
+    const s = spins[i];
+    const nb = spins[y * GW + (x + 1) % GW] + spins[y * GW + (x - 1 + GW) % GW]
+             + spins[((y + 1) % GH) * GW + x] + spins[((y - 1 + GH) % GH) * GW + x];
+    const dE = 2 * s * nb;
+    if (dE <= 0 || (dE === 4 && Math.random() < P4) || (dE === 8 && Math.random() < P8)) spins[i] = -s;
+  }
+}
+
+function draw() {
+  sweep();
+  const d = img.data;
+  for (let i = 0; i < spins.length; i++) {
+    const j = i * 4;
+    d[j] = 232; d[j + 1] = 224; d[j + 2] = 208;
+    d[j + 3] = spins[i] > 0 ? 16 : 0;
+  }
+  offCtx.putImageData(img, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(off, 0, 0, GW * CELL, GH * CELL);
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
