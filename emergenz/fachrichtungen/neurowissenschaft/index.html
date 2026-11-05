@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neurowissenschaft — Emergenz</title>
+  <meta name="description" content="Emergenz in der Neurowissenschaft: Gedächtnis als Muster, Rhythmen und Lawinen am kritischen Punkt, das Gehirn als Vorhersagemaschine und das schwierige Problem des Bewusstseins.">
+  <link rel="canonical" href="https://emergenz.art/emergenz/fachrichtungen/neurowissenschaft/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Neurowissenschaft — Emergenz">
+  <meta property="og:description" content="Emergenz in der Neurowissenschaft: Gedächtnis als Muster, Rhythmen und Lawinen am kritischen Punkt, das Gehirn als Vorhersagemaschine und das schwierige Problem des Bewusstseins.">
+  <meta property="og:url" content="https://emergenz.art/emergenz/fachrichtungen/neurowissenschaft/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p + p { margin-top: 1.2em; }
+
+    .intro p.punch {
+      margin-top: 1.2em;
+      font-style: italic;
+      color: rgba(232,224,208,0.92);
+    }
+
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.3s; }
+    .block:nth-of-type(2) { animation-delay: 0.45s; }
+    .block:nth-of-type(3) { animation-delay: 0.6s; }
+    .block:nth-of-type(4) { animation-delay: 0.75s; }
+    .block:nth-of-type(5) { animation-delay: 0.9s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.35rem,2.4vw,1.85rem);
+      letter-spacing: 0.18em;
+      color: rgba(232,224,208,0.92);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+
+    .block.coda p { color: rgba(232,224,208,0.82); }
+
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+      opacity: 0;
+      animation: rise 0.9s ease 1.05s forwards;
+    }
+
+    /* Art-Hinweis */
+    .art-hint {
+      opacity: 0;
+      animation: rise 0.9s ease 1.1s forwards;
+      margin-bottom: clamp(2rem,4vh,3rem);
+      padding: clamp(1rem,2vh,1.5rem) clamp(1.2rem,2.5vw,2rem);
+      border: 0.5px solid rgba(232,224,208,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .art-hint p {
+      font-size: clamp(0.88rem,1.4vw,1.05rem);
+      line-height: 1.7;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.5);
+      font-style: italic;
+    }
+
+    .art-hint a {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(0.82rem,1.2vw,0.95rem);
+      letter-spacing: 0.28em;
+      color: rgba(232,224,208,0.45);
+      text-transform: lowercase;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 0.3s ease;
+      flex-shrink: 0;
+    }
+    .art-hint a:hover { color: rgba(232,224,208,0.9); }
+    .art-hint a::after { content: ' →'; }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+  <a id="back" href="/emergenz/fachrichtungen/">fachrichtungen</a>
+  <h1 id="page-name">neurowissenschaft</h1>
+
+  <div id="content">
+
+    <div class="section-label">emergenz · fachrichtungen · 05 · neurowissenschaft</div>
+
+    <div class="intro">
+      <p>Ein Neuron ist eine Zelle, die feuert oder nicht feuert. Es sammelt Signale von anderen Zellen, und wenn genug zusammenkommen, schickt es selbst einen kurzen elektrischen Impuls weiter. Das ist im Kern alles, was es tut.</p>
+      <p>Das menschliche Gehirn besteht aus etwa 86 Milliarden solcher Zellen. Aus ihrem Zusammenspiel entstehen Sehen, Erinnern, Sprechen, Planen, ein Ich, das sich fragt, wie das alles möglich ist.</p>
+      <p class="punch">Kein Neuron denkt. Und doch denkt etwas.</p>
+    </div>
+
+    <div class="block">
+      <h2>das gedächtnis ist nirgends</h2>
+      <p>Lange suchte man den Ort, an dem eine Erinnerung gespeichert ist. Der amerikanische Psychologe Karl Lashley trainierte Ratten auf ein Labyrinth und entfernte dann Stück für Stück Teile ihrer Hirnrinde, um die Spur des Gelernten zu finden. Er fand sie nicht. Die Ratten verloren ihr Können allmählich, je mehr Gewebe fehlte, aber nie an einer bestimmten Stelle. 1950 fasste er dreißig Jahre Suche ironisch zusammen: Eigentlich müsse er schließen, dass Lernen gar nicht möglich sei.</p>
+      <p>Die Erklärung hatte ein Jahr zuvor der kanadische Psychologe Donald Hebb geliefert. Wenn zwei Neuronen wiederholt gemeinsam aktiv sind, wird die Verbindung zwischen ihnen stärker. Eine Erinnerung ist kein Gegenstand, der irgendwo liegt. Sie ist ein Muster von Verbindungsstärken, verteilt über Millionen Synapsen, und sie wird jedes Mal neu erzeugt, wenn man sich erinnert.</p>
+      <p>Das Gedächtnis ist also überall und nirgends. Es ist eine Eigenschaft des Netzes, nicht seiner Teile.</p>
+    </div>
+
+    <div class="block">
+      <h2>rhythmen und lawinen</h2>
+      <p>1924 leitete der Jenaer Psychiater Hans Berger zum ersten Mal die elektrischen Ströme eines menschlichen Gehirns von der Kopfhaut ab. Er fand Wellen, regelmäßige Schwingungen, die sich mit Wachheit, Schlaf und Aufmerksamkeit verändern. Kein Neuron gibt diesen Takt vor. Die Rhythmen entstehen, weil Milliarden Zellen sich gegenseitig anstoßen und hemmen, wie ein Publikum, das ohne Dirigenten in gemeinsames Klatschen findet.</p>
+      <p>2003 entdeckten John Beggs und Dietmar Plenz in Gewebeproben etwas Erstaunliches: Die Aktivität breitet sich in Lawinen aus, kleinen und großen, und ihre Größen folgen demselben Gesetz wie die Bereiche eines Magneten am <a href="/emergenz/fachrichtungen/physik/">kritischen Punkt</a>. Vieles spricht dafür, dass das Gehirn genau an dieser Grenze arbeitet, zwischen Erstarrung und Chaos. Dort kann ein kleiner Reiz verebben oder sich über das ganze Netz ausbreiten, und dort scheint die Verarbeitung von Information am reichsten zu sein.</p>
+      <p>Im Hintergrund dieser Seite läuft ein solches Netz. Jeder Punkt ist ein Neuron, das kurz aufleuchtet, wenn es feuert, und mit gewisser Wahrscheinlichkeit seine Nachbarn anstößt. Die Wahrscheinlichkeit ist so gewählt, dass im Mittel jedes Feuern etwa ein weiteres auslöst. Meist verlöscht ein Funke nach wenigen Schritten. Manchmal wächst er zu einer Lawine, die das halbe Netz erfasst.</p>
+    </div>
+
+    <div class="block">
+      <h2>die vorhersagemaschine</h2>
+      <p>Lange galt das Gehirn als Empfänger: Die Sinne liefern Daten, das Gehirn verarbeitet sie. Heute sehen viele Forscher es umgekehrt. Das Gehirn sagt ständig voraus, was es als Nächstes wahrnehmen wird, und die Sinne melden vor allem, wo die Vorhersage falsch war. Schon Hermann von Helmholtz sprach im 19. Jahrhundert von <em>unbewussten Schlüssen</em>. Karl Friston, Andy Clark und andere haben daraus die Theorie des <em>Predictive Processing</em> gemacht.</p>
+      <p>Der britische Neurowissenschaftler Anil Seth nennt Wahrnehmung deshalb eine <em>kontrollierte Halluzination</em>: Was wir sehen, ist das Modell, das unser Gehirn von der Welt entwirft, laufend korrigiert durch das, was hereinkommt. Optische Täuschungen sind die Stellen, an denen das Modell gewinnt.</p>
+      <p>Damit wird das Gehirn zum Musterfall eines Systems, das seine Zukunft vorwegnimmt. Ob es so etwas auch in größerem Maßstab gibt, verteilt über eine ganze technische Zivilisation, fragt die Seite <a href="/planetare-kognition/">planetare kognition</a>.</p>
+    </div>
+
+    <div class="block">
+      <h2>das ich</h2>
+      <p>Wo im Gehirn sitzt der, der wahrnimmt? Die Suche nach einer Zentrale, in der alles zusammenläuft und jemand zuschaut, ist ebenso gescheitert wie die Suche nach dem Ort der Erinnerung. Der Philosoph Daniel Dennett nannte diese Vorstellung spöttisch das <em>cartesianische Theater</em>: eine Bühne im Kopf, vor der ein kleiner Zuschauer sitzt. Es gibt sie nicht.</p>
+      <p>Der deutsche Philosoph Thomas Metzinger beschreibt das Ich stattdessen als Modell, das das Gehirn von sich selbst erzeugt, so durchsichtig, dass wir es nicht als Modell erkennen, sondern für uns selbst halten. Das Ich wäre dann keine Sache, sondern ein Vorgang. Ein Muster, das sich selbst beobachtet.</p>
+    </div>
+
+    <div class="block">
+      <h2>das schwierige problem</h2>
+      <p>All das erklärt, was das Gehirn <em>tut</em>. Es erklärt nicht, warum es sich nach etwas <em>anfühlt</em>. Warum ist das Sehen von Rot mit einem Erleben verbunden, mit einer Röte, statt einfach nur im Dunkeln abzulaufen, wie in einer Kamera? Der Philosoph David Chalmers nannte das 1995 das <em>schwierige Problem</em> des Bewusstseins (englisch <em>hard problem of consciousness</em>).</p>
+      <p>Hier verläuft die schärfste Linie in der Debatte um Emergenz. Für die einen ist Bewusstsein emergent wie die Nässe des Wassers: schwer zu erklären, aber im Prinzip aus den Teilen verständlich, sobald man genug weiß. Für die anderen ist es der einzige Fall von <em>starker Emergenz</em>, etwas wirklich Neues, das sich aus keiner Beschreibung von Neuronen je ableiten lässt. Die Theorien, die Bewusstsein messen wollen, etwa als Grad der Integration von Information, werden heftig umstritten.</p>
+      <p>Niemand weiß, wer recht hat. Es ist die vielleicht größte offene Frage der Wissenschaft.</p>
+    </div>
+
+    <div class="block coda">
+      <h2>was neurowissenschaft zeigt</h2>
+      <p>Alle anderen Seiten beschreiben Emergenz von außen: den Schwarm, den Markt, die Spirale in der Schale. Das Gehirn ist das einzige emergente System, das wir auch von innen kennen. Wir sind, was dabei herauskommt.</p>
+      <p>Während du diesen Satz liest, feuern Millionen Neuronen in einem Muster, das keine von ihnen kennt. Aus diesem Muster entsteht ein Verstehen, und vielleicht ein Staunen darüber, dass es entsteht. Das ist Emergenz, die sich selbst betrachtet.</p>
+    </div>
+
+    <hr class="rule">
+
+    <div class="art-hint">
+      <p>Conways Game of Life, in dem einfache Zellen ein Eigenleben entwickeln, ist im künstlerischen Teil der Site erfahrbar.</p>
+      <a href="/start/selbstorganisation/">art erkunden</a>
+    </div>
+
+  </div>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/" aria-current="page">emergenz</a></li>
+      <li><a href="/punkt/">punkt</a></li>
+      <li><a href="/start/">art</a></li>
+      <li><a href="/literatur/">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+<script>
+// Hintergrund: ein Netz von Neuronen nahe dem kritischen Punkt.
+// Ein feuerndes Neuron stößt jeden seiner K Nachbarn mit Wahrscheinlichkeit P an.
+// Weil manche Nachbarn sich gerade erholen, löst es im Mittel etwa ein weiteres Feuern aus.
+// So entstehen Lawinen aller Größen.
+const canvas = document.getElementById('bg-canvas');
+const ctx    = canvas.getContext('2d');
+let W, H;
+
+const K = 4;               // Verbindungen pro Neuron
+const P = 0.33;            // Übertragungswahrscheinlichkeit, abgestimmt auf eine Verzweigungsrate nahe 1
+const REFRACTORY = 90;     // Erholungszeit in Bildern
+const SPONTANEOUS = 0.006; // Wahrscheinlichkeit pro Bild, dass irgendwo ein Funke entsteht
+let nodes, pulses;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  const n = Math.round(Math.min(240, Math.max(90, W * H / 6500)));
+  nodes = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, glow: 0, rest: 0, out: [] }));
+  for (const a of nodes) {
+    const near = nodes.filter(b => b !== a)
+      .map(b => ({ b, d: (a.x - b.x) ** 2 + (a.y - b.y) ** 2 }))
+      .sort((p, q) => p.d - q.d).slice(0, K);
+    a.out = near.map(o => o.b);
+  }
+  pulses = [];
+}
+resize();
+window.addEventListener('resize', resize);
+
+function fire(a) {
+  if (a.rest > 0) return;
+  a.glow = 1; a.rest = REFRACTORY;
+  for (const b of a.out) {
+    if (Math.random() < P && pulses.length < 500) {
+      const d = Math.hypot(b.x - a.x, b.y - a.y);
+      pulses.push({ a, b, t: 0, v: 1.1 / Math.max(d, 20) });
+    }
+  }
+}
+
+function draw() {
+  if (Math.random() < SPONTANEOUS) fire(nodes[(Math.random() * nodes.length) | 0]);
+
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.strokeStyle = 'rgba(232,224,208,0.045)';
+  ctx.lineWidth = 0.6;
+  ctx.beginPath();
+  for (const a of nodes) for (const b of a.out) { ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); }
+  ctx.stroke();
+
+  for (let i = pulses.length - 1; i >= 0; i--) {
+    const p = pulses[i];
+    p.t += p.v;
+    if (p.t >= 1) { pulses.splice(i, 1); fire(p.b); continue; }
+    ctx.beginPath();
+    ctx.arc(p.a.x + (p.b.x - p.a.x) * p.t, p.a.y + (p.b.y - p.a.y) * p.t, 1.3, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(176,96,58,0.55)';
+    ctx.fill();
+  }
+
+  for (const a of nodes) {
+    if (a.rest > 0) a.rest--;
+    a.glow *= 0.96;
+    ctx.beginPath();
+    ctx.arc(a.x, a.y, 1.6 + a.glow * 2.2, 0, Math.PI * 2);
+    ctx.fillStyle = a.glow > 0.05
+      ? `rgba(176,96,58,${0.15 + a.glow * 0.6})`
+      : 'rgba(232,224,208,0.13)';
+    ctx.fill();
+  }
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
