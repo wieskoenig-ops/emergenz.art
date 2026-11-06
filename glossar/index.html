@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="dark">
+  <style>html{background:#000;color-scheme:dark}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glossar — emergenz.art</title>
+  <meta name="description" content="Glossar zur Emergenz: Begriffe von Attraktor, Autopoiesis und Bifurkation über Hysterese, Kipppunkt und Phasenübergang bis Selbstorganisation und Symmetriebrechung – kurz erklärt.">
+  <link rel="canonical" href="https://emergenz.art/glossar/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Glossar — emergenz.art">
+  <meta property="og:description" content="Glossar zur Emergenz: Begriffe von Attraktor, Autopoiesis und Bifurkation über Hysterese, Kipppunkt und Phasenübergang bis Selbstorganisation und Symmetriebrechung – kurz erklärt.">
+  <meta property="og:url" content="https://emergenz.art/glossar/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    /* Einleitung — etwas größer, als Einstieg */
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p em { font-style: italic; color: rgba(232,224,208,0.97); }
+
+    /* Kernaussage — groß, allein */
+    .statement {
+      opacity: 0;
+      animation: rise 1s ease 0.3s forwards;
+      margin-bottom: clamp(3rem,6vh,5rem);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.22);
+    }
+
+    .statement p {
+      font-size: clamp(1.3rem,2.4vw,1.85rem);
+      line-height: 1.75;
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.92);
+      font-style: italic;
+    }
+
+    /* Textblöcke */
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.5s; }
+    .block:nth-of-type(2) { animation-delay: 0.65s; }
+    .block:nth-of-type(3) { animation-delay: 0.8s; }
+    .block:nth-of-type(4) { animation-delay: 0.95s; }
+    .block:nth-of-type(5) { animation-delay: 1.1s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.05rem,1.8vw,1.4rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.72);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .block p strong { font-weight: 400; color: rgba(232,224,208,0.92); }
+
+    /* Anderson-Zitat */
+    .block.quote {
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+    }
+    .block.quote p {
+      color: rgba(232,224,208,0.82);
+    }
+
+    /* Abschlussblock — etwas heller, als Coda */
+    .block.coda h2 { color: rgba(232,224,208,0.82); }
+    .block.coda p  { color: rgba(232,224,208,0.82); }
+
+    /* Trennlinie */
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+    }
+
+    /* Verweis-Links am Ende */
+    .nav-hints {
+      opacity: 0;
+      animation: rise 0.9s ease 1.3s forwards;
+      display: flex;
+      gap: clamp(1.5rem,4vw,3rem);
+      flex-wrap: wrap;
+    }
+
+    .nav-hint {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.78rem,1.2vw,0.95rem);
+      letter-spacing: 0.25em;
+      color: rgba(160,210,230,0.55);
+      text-decoration: none;
+      text-transform: lowercase;
+      transition: color 0.3s ease;
+    }
+    .nav-hint:hover { color: rgba(160,210,230,0.9); }
+    .nav-hint::before { content: '→ '; letter-spacing: 0; }
+    .intro p + p { margin-top: 1.2em; }
+
+    /* ── Glossar ── */
+    .buchstaben {
+      display: flex; flex-wrap: wrap; gap: 0.2em 0.9em;
+      margin: 0 0 3rem;
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(1.05rem,1.6vw,1.25rem);
+      letter-spacing: 0.12em;
+    }
+    .buchstaben a { color: rgba(232,214,186,0.7); text-decoration: none; }
+    .buchstaben a:hover { color: var(--kupfer); }
+    .buchstabe {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.6rem,2.6vw,2.1rem); color: var(--kupfer);
+      margin: 2.6rem 0 1.2rem; padding-bottom: 0.3rem;
+      border-bottom: 0.5px solid rgba(232,214,186,0.12);
+      scroll-margin-top: 4.5rem;
+    }
+    .eintrag { margin-bottom: 1.9rem; scroll-margin-top: 4.5rem; }
+    .eintrag:target .begriff { color: var(--kupfer); }
+    .begriff {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(1.15rem,1.8vw,1.38rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.95); margin-bottom: 0.35rem;
+      transition: color 0.6s ease;
+    }
+    .erklaerung {
+      font-size: clamp(1rem,1.55vw,1.15rem); line-height: 1.75;
+      color: rgba(232,214,186,0.8);
+    }
+    .erklaerung em { font-style: italic; color: rgba(232,224,208,0.92); }
+    .verweise {
+      margin-top: 0.35rem;
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(0.9rem,1.25vw,1.02rem); letter-spacing: 0.05em;
+      color: rgba(232,214,186,0.45);
+    }
+    .verweise a { color: var(--kupfer); text-decoration: none; border-bottom: 0.5px solid rgba(176,96,58,0.4); }
+    .verweise a:hover { color: #d08a60; }
+    .verweise::before { content: '→ '; font-style: normal; }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <a id="back" href="/nachschlagen/">nachschlagen</a>
+  <h1 id="page-name">glossar</h1>
+
+  <div id="content">
+
+    <div class="section-label">nachschlagen · glossar</div>
+
+    <div class="intro">
+      <p>Begriffe, die auf dieser Website vorkommen, kurz erklärt. Jeder Eintrag führt zu den Seiten, die ihn ausführlich behandeln.</p>
+    </div>
+    <nav class="buchstaben" aria-label="Buchstaben">
+      <a href="#a">A</a>
+      <a href="#b">B</a>
+      <a href="#d">D</a>
+      <a href="#e">E</a>
+      <a href="#f">F</a>
+      <a href="#g">G</a>
+      <a href="#h">H</a>
+      <a href="#i">I</a>
+      <a href="#k">K</a>
+      <a href="#n">N</a>
+      <a href="#o">O</a>
+      <a href="#p">P</a>
+      <a href="#r">R</a>
+      <a href="#s">S</a>
+      <a href="#v">V</a>
+    </nav>
+
+    <h2 class="buchstabe" id="a">A</h2>
+    <div class="eintrag" id="amoc">
+      <h3 class="begriff">AMOC</h3>
+      <p class="erklaerung">Die Atlantische Umwälzzirkulation, englisch <em>Atlantic Meridional Overturning Circulation</em>. Ein Strömungssystem, das warmes Oberflächenwasser nach Norden trägt, wo es abkühlt, absinkt und in der Tiefe zurückfließt; der Golfstrom gehört dazu. Sie gilt als eines der wichtigsten Kippelemente des Klimas.</p>
+      <p class="verweise"><a href="/punkt/amoc/">punkt · amoc</a></p>
+    </div>
+    <div class="eintrag" id="attraktor">
+      <h3 class="begriff">Attraktor</h3>
+      <p class="erklaerung">Ein Zustand oder Muster, auf das sich ein System von selbst zubewegt und in dem es bleibt: ein Ruhepunkt, ein Zyklus, oder beim deterministischen Chaos eine verwickelte, nie sich wiederholende Bahn, ein <em>seltsamer Attraktor</em>. Systeme mit mehreren Attraktoren können zwischen ihnen kippen.</p>
+      <p class="verweise"><a href="/start/deterministisches-chaos/">deterministisches chaos</a> · <a href="/punkt/hysterese/">hysterese</a></p>
+    </div>
+    <div class="eintrag" id="autokatalyse">
+      <h3 class="begriff">Autokatalyse</h3>
+      <p class="erklaerung">Eine chemische Reaktion, deren Produkt die eigene Entstehung beschleunigt. Je mehr davon da ist, desto schneller entsteht mehr. Autokatalytische Netze gelten als möglicher Übergang von der Chemie zum Leben.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/chemie/">chemie</a></p>
+    </div>
+    <div class="eintrag" id="autopoiesis">
+      <h3 class="begriff">Autopoiesis</h3>
+      <p class="erklaerung">Selbsterschaffung. Begriff der Biologen Humberto Maturana und Francisco Varela (1972) für Systeme, die genau die Bestandteile herstellen, aus denen sie selbst bestehen, wie eine lebende Zelle. Leben erscheint so nicht als Substanz, sondern als Schleife, die sich fortwährend erneuert.</p>
+      <p class="verweise"><a href="/emergenz/selbstbezug/">selbstbezug · rekursion</a></p>
+    </div>
+    <h2 class="buchstabe" id="b">B</h2>
+    <div class="eintrag" id="belousov-zhabotinsky">
+      <h3 class="begriff">Belousov-Zhabotinsky-Reaktion</h3>
+      <p class="erklaerung">Eine chemische Reaktion, die nicht still ins Gleichgewicht läuft, sondern im Takt die Farbe wechselt und in einer flachen Schale Ringe und Spiralen bildet. In den 1950er Jahren zunächst für unmöglich gehalten, heute das Lehrbeispiel einer chemischen Uhr.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/chemie/">chemie</a></p>
+    </div>
+    <div class="eintrag" id="bifurkation">
+      <h3 class="begriff">Bifurkation</h3>
+      <p class="erklaerung">Verzweigung. Der Punkt, an dem sich bei langsamer Änderung eines Parameters das Verhalten eines Systems qualitativ ändert, etwa weil ein stabiler Zustand mit einem instabilen zusammenfällt und verschwindet. Bei dieser <em>Falten-</em> oder <em>Sattel-Knoten-Bifurkation</em> kippt das System sprunghaft in einen anderen Zustand.</p>
+      <p class="verweise"><a href="/punkt/hysterese/">hysterese</a> · <a href="/emergenz/kippunkte/">kipppunkte</a></p>
+    </div>
+    <div class="eintrag" id="boids">
+      <h3 class="begriff">Boids</h3>
+      <p class="erklaerung">Die künstlichen Vögel des Computergrafikers Craig Reynolds (1986). Jeder folgt drei Regeln: Abstand halten, in die mittlere Richtung der Nachbarn fliegen, bei ihnen bleiben. Daraus entsteht ein Schwarm, den keiner von ihnen kennt.</p>
+      <p class="verweise"><a href="/emergenz/das-phaenomen/">das phänomen</a> · <a href="/emergenz/fachrichtungen/informatik/">informatik</a></p>
+    </div>
+    <div class="eintrag" id="braess-paradox">
+      <h3 class="begriff">Braess-Paradox</h3>
+      <p class="erklaerung">Der Befund des Bochumer Mathematikers Dietrich Braess (1968), dass eine zusätzliche Straße in einem Netz alle Fahrer langsamer machen kann, wenn jeder nur seinen eigenen schnellsten Weg sucht. Umgekehrt kann eine geschlossene Straße den Verkehr verbessern.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/stadt/">stadt</a></p>
+    </div>
+    <h2 class="buchstabe" id="d">D</h2>
+    <div class="eintrag" id="deterministisches-chaos">
+      <h3 class="begriff">Deterministisches Chaos</h3>
+      <p class="erklaerung">Verhalten, das vollständig festen Regeln folgt und trotzdem auf lange Sicht unvorhersagbar ist, weil winzige Unterschiede im Anfang exponentiell wachsen. Edward Lorenz entdeckte es 1963 in einem Wettermodell aus drei Gleichungen. Bekannt als Schmetterlingseffekt.</p>
+      <p class="verweise"><a href="/start/deterministisches-chaos/">deterministisches chaos</a> · <a href="/emergenz/fachrichtungen/mathematik/">mathematik</a></p>
+    </div>
+    <div class="eintrag" id="dissipative-struktur">
+      <h3 class="begriff">Dissipative Struktur</h3>
+      <p class="erklaerung">Ordnung, die nur besteht, weil Energie durch ein System hindurchfließt und dabei verbraucht wird: eine Flamme, die Wirbel einer erhitzten Flüssigkeit, eine lebende Zelle. Der Begriff stammt von Ilya Prigogine, der dafür 1977 den Nobelpreis für Chemie erhielt. Versiegt der Energiefluss, zerfällt die Ordnung.</p>
+      <p class="verweise"><a href="/start/dissipation/">dissipation</a> · <a href="/emergenz/fachrichtungen/chemie/">chemie</a> · <a href="/emergenz/fachrichtungen/physik/">physik</a></p>
+    </div>
+    <h2 class="buchstabe" id="e">E</h2>
+    <div class="eintrag" id="emergente-faehigkeiten">
+      <h3 class="begriff">Emergente Fähigkeiten</h3>
+      <p class="erklaerung">Fähigkeiten großer Sprachmodelle, die bei kleinen Modellen fast fehlen und ab einer bestimmten Größe sprunghaft auftauchen sollen, so eine viel zitierte Arbeit von 2022. Ein Jahr später zeigte eine andere Gruppe, dass ein Teil dieser Sprünge an der Art der Messung liegt. Die Debatte ist offen.</p>
+      <p class="verweise"><a href="/punkt/ki/">künstliche intelligenz</a> · <a href="/emergenz/fachrichtungen/informatik/">informatik</a></p>
+    </div>
+    <div class="eintrag" id="emergenz">
+      <h3 class="begriff">Emergenz</h3>
+      <p class="erklaerung">Das Auftreten von Eigenschaften, Mustern oder Verhaltensweisen eines Ganzen, die sich aus den Eigenschaften seiner Teile weder ableiten noch vorhersagen lassen. Ein Vogelschwarm, die Nässe des Wassers, ein Stau, das Bewusstsein. Das Ganze ist nicht die Summe seiner Teile.</p>
+      <p class="verweise"><a href="/emergenz/das-phaenomen/">das phänomen</a> · <a href="/emergenz/scheinbare-emergenz/">scheinbare emergenz</a></p>
+    </div>
+    <h2 class="buchstabe" id="f">F</h2>
+    <div class="eintrag" id="flash-crash">
+      <h3 class="begriff">Flash Crash</h3>
+      <p class="erklaerung">Der Kurssturz vom 6. Mai 2010, bei dem amerikanische Aktien innerhalb von Minuten fast eine Billion Dollar an Wert verloren und sich ebenso schnell wieder erholten. Ausgelöst nicht durch eine Nachricht, sondern durch die Wechselwirkung automatischer Handelsprogramme.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/finanzwelt/">finanzwelt</a> · <a href="/planetare-kognition/">planetare kognition</a></p>
+    </div>
+    <div class="eintrag" id="fraktal">
+      <h3 class="begriff">Fraktal</h3>
+      <p class="erklaerung">Eine Form, die in jedem Maßstab ähnliche Strukturen zeigt, wie eine Küstenlinie, ein Farn oder die Mandelbrot-Menge. Fraktale entstehen oft durch Rekursion, durch eine Regel, die immer wieder auf ihr eigenes Ergebnis angewendet wird. Den Namen prägte Benoît Mandelbrot 1975.</p>
+      <p class="verweise"><a href="/emergenz/selbstbezug/">selbstbezug · rekursion</a> · <a href="/emergenz/fachrichtungen/mathematik/">mathematik</a> · <a href="/emergenz/fachrichtungen/stadt/">stadt</a></p>
+    </div>
+    <div class="eintrag" id="fruehwarnsignal">
+      <h3 class="begriff">Frühwarnsignal</h3>
+      <p class="erklaerung">Ein messbares Zeichen dafür, dass sich ein System einem Kipppunkt nähert. Das wichtigste ist das <em>kritische Verlangsamen</em>: Kurz vor dem Kippen erholt sich ein System immer langsamer von kleinen Störungen, seine Schwankungen werden größer und träger.</p>
+      <p class="verweise"><a href="/punkt/amoc/">punkt · amoc</a> · <a href="/punkt/hysterese/">hysterese</a></p>
+    </div>
+    <h2 class="buchstabe" id="g">G</h2>
+    <div class="eintrag" id="game-of-life">
+      <h3 class="begriff">Game of Life</h3>
+      <p class="erklaerung">Das Spiel des Lebens des Mathematikers John Conway (1970): ein Raster aus Zellen, die nach drei einfachen Regeln leben, sterben oder erwachen. Daraus entstehen Gleiter, Oszillatoren und ganze Maschinen, die niemand programmiert hat.</p>
+      <p class="verweise"><a href="/start/selbstorganisation/">selbstorganisation</a></p>
+    </div>
+    <div class="eintrag" id="glass-muster">
+      <h3 class="begriff">Glass-Muster</h3>
+      <p class="erklaerung">Ein Wahrnehmungseffekt, den Leon Glass 1969 beschrieb: Zufällig verteilte Punkte, jeder mit einem leicht gedrehten Zwilling, erscheinen dem Auge als Wirbel und Kreise. Ein Lehrbeispiel für ein Muster, das im Betrachter entsteht.</p>
+      <p class="verweise"><a href="/emergenz/scheinbare-emergenz/">scheinbare emergenz</a></p>
+    </div>
+    <div class="eintrag" id="grokking">
+      <h3 class="begriff">Grokking</h3>
+      <p class="erklaerung">Ein 2022 beschriebenes Verhalten neuronaler Netze: Sie lernen ihre Trainingsbeispiele zunächst nur auswendig und beginnen dann, lange danach und scheinbar plötzlich, die Regel dahinter zu verstehen. Ein Übergang, der lange im Verborgenen vorbereitet wird.</p>
+      <p class="verweise"><a href="/punkt/ki/">künstliche intelligenz</a></p>
+    </div>
+    <h2 class="buchstabe" id="h">H</h2>
+    <div class="eintrag" id="hyperzyklus">
+      <h3 class="begriff">Hyperzyklus</h3>
+      <p class="erklaerung">Ein Kreislauf von Molekülen, die sich gegenseitig vervielfältigen, beschrieben von Manfred Eigen und Peter Schuster in den 1970er Jahren. In solchen Kreisläufen beginnen Konkurrenz und Auslese, bevor es Lebewesen gibt.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/chemie/">chemie</a></p>
+    </div>
+    <div class="eintrag" id="hysterese">
+      <h3 class="begriff">Hysterese</h3>
+      <p class="erklaerung">Die Abhängigkeit eines Zustands von seiner Vorgeschichte. Ein System mit Hysterese kehrt nicht zurück, wenn man die Ursache rückgängig macht. Der Weg zurück liegt an anderer Stelle als der Weg hin, oft viel weiter entfernt. Bekannt vom Magneten, wichtig beim Klima, in der Wirtschaft und in der Politik.</p>
+      <p class="verweise"><a href="/punkt/hysterese/">hysterese</a> · <a href="/emergenz/kippunkte/">kipppunkte</a></p>
+    </div>
+    <h2 class="buchstabe" id="i">I</h2>
+    <div class="eintrag" id="ising-modell">
+      <h3 class="begriff">Ising-Modell</h3>
+      <p class="erklaerung">Das einfachste Modell eines Magneten: ein Gitter aus kleinen Magneten, die nur nach oben oder unten zeigen und sich nach ihren Nachbarn ausrichten wollen. Unterhalb einer kritischen Temperatur ordnen sie sich von selbst. Vorgeschlagen 1920 von Wilhelm Lenz, untersucht von seinem Schüler Ernst Ising.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/physik/">physik</a></p>
+    </div>
+    <h2 class="buchstabe" id="k">K</h2>
+    <div class="eintrag" id="kipppunkt">
+      <h3 class="begriff">Kipppunkt</h3>
+      <p class="erklaerung">Ein Schwellenwert, ab dem eine kleine weitere Veränderung einen großen, sich selbst verstärkenden Übergang auslöst, oft in einen Zustand, aus dem kein einfacher Weg zurückführt. Beispiele reichen von Eisschilden und Meeresströmungen bis zu Märkten und Meinungen.</p>
+      <p class="verweise"><a href="/emergenz/kippunkte/">kipppunkte</a> · <a href="/punkt/">punkt</a></p>
+    </div>
+    <div class="eintrag" id="komplexitaet">
+      <h3 class="begriff">Komplexität</h3>
+      <p class="erklaerung">Auf dieser Website eine der drei Bedingungen der Emergenz: viele Teile, die nichtlinear miteinander wechselwirken, sodass kleine Ursachen große Wirkungen haben können. Zu unterscheiden von bloßer Kompliziertheit, wie sie ein Uhrwerk besitzt.</p>
+      <p class="verweise"><a href="/start/komplexitaet/">komplexität</a> · <a href="/emergenz/das-phaenomen/">das phänomen</a></p>
+    </div>
+    <div class="eintrag" id="kritischer-punkt">
+      <h3 class="begriff">Kritischer Punkt</h3>
+      <p class="erklaerung">Der Punkt eines Phasenübergangs, an dem ein System zwischen Ordnung und Unordnung balanciert. Dort reichen Zusammenhänge über alle Größenordnungen, und Systeme aus völlig verschiedenen Teilen verhalten sich mathematisch gleich. Manche Forscher vermuten, dass auch das Gehirn nahe einem solchen Punkt arbeitet.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/physik/">physik</a> · <a href="/emergenz/fachrichtungen/neurowissenschaft/">neurowissenschaft</a></p>
+    </div>
+    <h2 class="buchstabe" id="n">N</h2>
+    <div class="eintrag" id="nichtlinearitaet">
+      <h3 class="begriff">Nichtlinearität</h3>
+      <p class="erklaerung">Eine Wirkung ist nichtlinear, wenn sie der Ursache nicht proportional folgt: Doppelt so viel Ursache bringt nicht doppelt so viel Wirkung, sondern vielleicht keine oder eine zehnfache. Nichtlinearität ist die Voraussetzung für Kipppunkte, Chaos und die meisten Formen von Emergenz.</p>
+      <p class="verweise"><a href="/start/komplexitaet/">komplexität</a> · <a href="/emergenz/kippunkte/">kipppunkte</a></p>
+    </div>
+    <h2 class="buchstabe" id="o">O</h2>
+    <div class="eintrag" id="organisierte-komplexitaet">
+      <h3 class="begriff">Organisierte Komplexität</h3>
+      <p class="erklaerung">Begriff des Mathematikers Warren Weaver (1948) für Probleme, die weder einfach sind wie eine Maschine noch bloß zufällig wie ein Gas, sondern aus vielen Teilen bestehen, die zusammenhängend organisiert sind. Jane Jacobs beschrieb die Stadt als ein solches Problem.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/stadt/">stadt</a></p>
+    </div>
+    <h2 class="buchstabe" id="p">P</h2>
+    <div class="eintrag" id="perkolation">
+      <h3 class="begriff">Perkolation</h3>
+      <p class="erklaerung">Durchsickern. Werden in einem Netz nach und nach zufällig Verbindungen hinzugefügt, entsteht bei einer kritischen Dichte plötzlich ein durchgehender Pfad von einem Rand zum anderen. Die Perkolationstheorie beschreibt Waldbrände, Epidemien und die Ausbreitung von Nachrichten.</p>
+      <p class="verweise"><a href="/emergenz/">emergenz</a> · <a href="/emergenz/fachrichtungen/mathematik/">mathematik</a></p>
+    </div>
+    <div class="eintrag" id="phasenuebergang">
+      <h3 class="begriff">Phasenübergang</h3>
+      <p class="erklaerung">Der Wechsel eines Systems von einem Zustand in einen qualitativ anderen an einem bestimmten Schwellenwert, etwa wenn Wasser gefriert oder ein Metall magnetisch wird. Das Vorbild vieler Kipppunkte, vom Stau bis zur Entstehung des Lebens.</p>
+      <p class="verweise"><a href="/emergenz/kippunkte/">kipppunkte</a> · <a href="/emergenz/fachrichtungen/physik/">physik</a></p>
+    </div>
+    <div class="eintrag" id="planetare-kognition">
+      <h3 class="begriff">Planetare Kognition</h3>
+      <p class="erklaerung">These dieser Website: die emergente Fähigkeit der Technosphäre, Informationen global zu erfassen, zu speichern und zu integrieren, Zukunftszustände vorwegzunehmen und daraus koordinierte Anpassungen hervorzubringen, die keinem einzelnen Akteur zugeschrieben werden können.</p>
+      <p class="verweise"><a href="/planetare-kognition/">planetare kognition</a></p>
+    </div>
+    <h2 class="buchstabe" id="r">R</h2>
+    <div class="eintrag" id="reaktions-diffusion">
+      <h3 class="begriff">Reaktions-Diffusion</h3>
+      <p class="erklaerung">Zwei Substanzen, die miteinander reagieren und sich unterschiedlich schnell ausbreiten, bilden von selbst Flecken und Streifen. Alan Turing schlug dieses Prinzip 1952 als Erklärung für die Muster auf Tierfellen vor.</p>
+      <p class="verweise"><a href="/start/komplexitaet/">komplexität</a> · <a href="/emergenz/fachrichtungen/chemie/">chemie</a></p>
+    </div>
+    <div class="eintrag" id="rechnerische-irreduzibilitaet">
+      <h3 class="begriff">Rechnerische Irreduzibilität</h3>
+      <p class="erklaerung">Begriff von Stephen Wolfram für Systeme, deren Verhalten sich durch keine Abkürzung vorhersagen lässt. Um zu wissen, was sie tun, muss man sie Schritt für Schritt ablaufen lassen.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/informatik/">informatik</a></p>
+    </div>
+    <div class="eintrag" id="reflexivitaet">
+      <h3 class="begriff">Reflexivität</h3>
+      <p class="erklaerung">Die Rückwirkung von Erwartungen auf das, was erwartet wird: Steigen alle in einen Markt ein, weil sie steigende Preise erwarten, steigen die Preise. Verwandt mit der sich selbst erfüllenden Prophezeiung, die Robert K. Merton 1948 beschrieb. Grundlage vieler Blasen und Crashs.</p>
+      <p class="verweise"><a href="/emergenz/selbstbezug/">selbstbezug · rekursion</a> · <a href="/emergenz/fachrichtungen/finanzwelt/">finanzwelt</a></p>
+    </div>
+    <div class="eintrag" id="rekursion">
+      <h3 class="begriff">Rekursion</h3>
+      <p class="erklaerung">Eine Regel, die auf ihr eigenes Ergebnis angewendet wird, immer wieder. Aus kurzen rekursiven Regeln entstehen Fraktale, Pflanzenformen und unendlich detaillierte Muster.</p>
+      <p class="verweise"><a href="/emergenz/selbstbezug/">selbstbezug · rekursion</a></p>
+    </div>
+    <div class="eintrag" id="resultierend">
+      <h3 class="begriff">Resultierend</h3>
+      <p class="erklaerung">Gegenbegriff zu emergent, geprägt 1875 von George Henry Lewes: Eigenschaften eines Ganzen, die sich durch einfaches Zusammenzählen der Teile ergeben, wie das Gewicht eines Apfelsacks.</p>
+      <p class="verweise"><a href="/emergenz/scheinbare-emergenz/">scheinbare emergenz</a></p>
+    </div>
+    <div class="eintrag" id="rueckkopplung">
+      <h3 class="begriff">Rückkopplung</h3>
+      <p class="erklaerung">Die Wirkung eines Vorgangs auf sich selbst. Negative Rückkopplung dämpft und stabilisiert, wie ein Thermostat. Positive Rückkopplung verstärkt, wie ein Gerücht oder schmelzendes Eis, das weniger Sonnenlicht zurückwirft. Kipppunkte entstehen, wo die verstärkende Rückkopplung die Oberhand gewinnt.</p>
+      <p class="verweise"><a href="/punkt/amoc/">punkt · amoc</a> · <a href="/emergenz/kippunkte/">kipppunkte</a></p>
+    </div>
+    <h2 class="buchstabe" id="s">S</h2>
+    <div class="eintrag" id="scheinbare-emergenz">
+      <h3 class="begriff">Scheinbare Emergenz</h3>
+      <p class="erklaerung">Was wie Emergenz aussieht, es aber nicht ist: eine bloße Summe, eine Ordnung, die ein versteckter Dirigent vorgibt, ein Muster, das nur im Auge des Betrachters liegt, oder ein Sprung, der nur in der Messung steckt.</p>
+      <p class="verweise"><a href="/emergenz/scheinbare-emergenz/">scheinbare emergenz</a></p>
+    </div>
+    <div class="eintrag" id="schelling-modell">
+      <h3 class="begriff">Schelling-Modell</h3>
+      <p class="erklaerung">Ein Modell des Ökonomen Thomas Schelling (1971): Bewohner ziehen um, wenn zu wenige ihrer Nachbarn ihnen ähnlich sind, und selbst bei milden Vorlieben entstehen fast vollständig getrennte Viertel. Ein Ergebnis, das niemand will und alle zusammen hervorbringen.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/stadt/">stadt</a></p>
+    </div>
+    <div class="eintrag" id="schwache-und-starke-emergenz">
+      <h3 class="begriff">Schwache und starke Emergenz</h3>
+      <p class="erklaerung">Schwach emergent ist ein Verhalten, das sich zwar im Prinzip aus den Regeln ergibt, aber nur, wenn man das System ablaufen lässt, wie der Stau oder die Gleiter im Game of Life (Mark Bedau, 1997). Stark emergent wäre etwas, das sich auch im Prinzip nicht aus den Teilen ergibt. Ob es das gibt, ist umstritten; der wichtigste Kandidat ist das Bewusstsein.</p>
+      <p class="verweise"><a href="/emergenz/scheinbare-emergenz/">scheinbare emergenz</a></p>
+    </div>
+    <div class="eintrag" id="schwieriges-problem">
+      <h3 class="begriff">Schwieriges Problem des Bewusstseins</h3>
+      <p class="erklaerung">Englisch <em>hard problem of consciousness</em>, so benannt von David Chalmers 1995: die Frage, warum Vorgänge im Gehirn überhaupt von Erleben begleitet sind, warum es sich nach etwas anfühlt, ein Gehirn zu sein. Bisher hat keine Theorie sie beantwortet.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/neurowissenschaft/">neurowissenschaft</a></p>
+    </div>
+    <div class="eintrag" id="selbstorganisation">
+      <h3 class="begriff">Selbstorganisation</h3>
+      <p class="erklaerung">Die Entstehung von Ordnung aus den Wechselwirkungen der Teile selbst, ohne Dirigenten, Bauplan oder äußere Vorgabe. Auf dieser Website die Schnittmenge von Komplexität und Dissipation.</p>
+      <p class="verweise"><a href="/start/selbstorganisation/">selbstorganisation</a> · <a href="/emergenz/fachrichtungen/chemie/">chemie</a></p>
+    </div>
+    <div class="eintrag" id="seltsame-schleife">
+      <h3 class="begriff">Seltsame Schleife</h3>
+      <p class="erklaerung">Begriff von Douglas Hofstadter (1979) für eine Struktur, die sich auf sich selbst bezieht und dabei die Ebenen wechselt, wie Eschers zwei Hände, die einander zeichnen. Hofstadter hält das Ich für eine solche Schleife: ein Muster im Gehirn, das das Gehirn selbst abbildet.</p>
+      <p class="verweise"><a href="/emergenz/selbstbezug/">selbstbezug · rekursion</a></p>
+    </div>
+    <div class="eintrag" id="skalenfreies-netzwerk">
+      <h3 class="begriff">Skalenfreies Netzwerk</h3>
+      <p class="erklaerung">Ein Netz, in dem die meisten Knoten wenige Verbindungen haben und einige wenige sehr viele, wie das World Wide Web. Es entsteht von selbst, wenn sich neue Knoten bevorzugt mit gut verbundenen verbinden (Barabási und Albert, 1999). Robust gegen Zufallsausfälle, verwundbar an seinen Knotenpunkten.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/informatik/">informatik</a></p>
+    </div>
+    <div class="eintrag" id="skalengesetze">
+      <h3 class="begriff">Skalengesetze</h3>
+      <p class="erklaerung">Regeln, nach denen sich Eigenschaften mit der Größe eines Systems ändern. Verdoppelt sich die Einwohnerzahl einer Stadt, wächst ihre Infrastruktur nur um etwa 85 Prozent, Löhne, Patente und auch Kriminalität aber um etwa 115 Prozent.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/stadt/">stadt</a></p>
+    </div>
+    <div class="eintrag" id="symmetriebrechung">
+      <h3 class="begriff">Symmetriebrechung</h3>
+      <p class="erklaerung">Ein symmetrischer Zustand wird instabil, und das System wählt einen von mehreren gleichwertigen Zuständen: Der Magnet zeigt in eine Richtung, die Flüssigkeit rollt links- oder rechtsherum. Dass die Symmetrie bricht, folgt aus den Regeln. Wohin, entscheidet der Zufall.</p>
+      <p class="verweise"><a href="/start/symmetriebrechung/">symmetriebrechung</a> · <a href="/emergenz/fachrichtungen/physik/">physik</a></p>
+    </div>
+    <div class="eintrag" id="synchronisation">
+      <h3 class="begriff">Synchronisation</h3>
+      <p class="erklaerung">Viele Taktgeber mit leicht verschiedenem Tempo, schwach miteinander gekoppelt, finden ab einer kritischen Kopplungsstärke plötzlich in einen gemeinsamen Takt: Glühwürmchen, Herzschrittmacherzellen, applaudierendes Publikum. Mathematisch beschrieben im Kuramoto-Modell (1975), das im Hintergrund des KI-Essays läuft.</p>
+      <p class="verweise"><a href="/punkt/ki/">künstliche intelligenz</a></p>
+    </div>
+    <div class="eintrag" id="synergetik">
+      <h3 class="begriff">Synergetik</h3>
+      <p class="erklaerung">Die Lehre vom Zusammenwirken, begründet von dem Stuttgarter Physiker Hermann Haken in den 1970er Jahren am Beispiel des Lasers. Ihr Kern ist die zirkuläre Kausalität: Die Teile erzeugen eine Ordnung, und diese Ordnung bestimmt, was die Teile tun.</p>
+      <p class="verweise"><a href="/emergenz/selbstbezug/">selbstbezug · rekursion</a></p>
+    </div>
+    <h2 class="buchstabe" id="v">V</h2>
+    <div class="eintrag" id="vorhersagendes-gehirn">
+      <h3 class="begriff">Vorhersagendes Gehirn</h3>
+      <p class="erklaerung">Die Vorstellung, dass das Gehirn die Welt nicht passiv abbildet, sondern fortwährend vorhersagt, was als Nächstes kommt, und nur die Abweichungen verarbeitet. Bekannt unter dem englischen Namen <em>predictive processing</em>, vertreten unter anderem von Karl Friston und Andy Clark.</p>
+      <p class="verweise"><a href="/emergenz/fachrichtungen/neurowissenschaft/">neurowissenschaft</a> · <a href="/planetare-kognition/">planetare kognition</a></p>
+    </div>
+    <hr class="rule">
+
+    <div class="nav-hints">
+      <a class="nav-hint" href="/literatur/">literatur</a>
+      <a class="nav-hint" href="/emergenz/das-phaenomen/">das phänomen</a>
+    </div>
+
+  </div>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/">emergenz</a></li>
+      <li><a href="/punkt/">punkt</a></li>
+      <li><a href="/art/">art</a></li>
+      <li><a href="/nachschlagen/" aria-current="page">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

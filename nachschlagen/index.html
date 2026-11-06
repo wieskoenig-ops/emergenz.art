@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="dark">
+  <style>html{background:#000;color-scheme:dark}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nachschlagen — emergenz.art</title>
+  <meta name="description" content="Nachschlagen auf emergenz.art: ausgewählte Literatur zur Emergenz und ein Glossar mit den wichtigsten Begriffen, kurz erklärt.">
+  <link rel="canonical" href="https://emergenz.art/nachschlagen/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Nachschlagen — emergenz.art">
+  <meta property="og:description" content="Ausgewählte Literatur zur Emergenz und ein Glossar mit den wichtigsten Begriffen, kurz erklärt.">
+  <meta property="og:url" content="https://emergenz.art/nachschlagen/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    /* Zwei Wege: links die eigenen Arbeiten, rechts die Würdigung */
+    #wege {
+      position: fixed; inset: 0; z-index: 10;
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .weg {
+      position: relative;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: clamp(5rem,12vh,8rem) clamp(1.5rem,6vw,6rem);
+      text-decoration: none;
+      transition: background 1s ease;
+      opacity: 0; animation: auftauchen 2.4s ease forwards;
+    }
+    .weg + .weg { border-left: 0.5px solid rgba(232,214,186,0.12); animation-delay: 0.6s; }
+    .weg:hover, .weg:focus-visible { background: rgba(232,214,186,0.035); outline: none; }
+    @keyframes auftauchen { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .weg-label {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.75rem,1vw,0.88rem); letter-spacing: 0.3em; text-transform: lowercase;
+      color: rgba(232,214,186,0.5); margin-bottom: 1.2rem;
+    }
+    .weg-titel {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.7rem,3.4vw,2.9rem); letter-spacing: 0.14em; line-height: 1.2;
+      text-transform: lowercase; color: rgba(232,224,208,0.92);
+      transition: letter-spacing 0.6s ease, color 0.6s ease;
+    }
+    .weg:hover .weg-titel, .weg:focus-visible .weg-titel { letter-spacing: 0.18em; color: #fff; }
+    .weg-text {
+      font-family: 'Literata', Georgia, serif; font-weight: 300;
+      font-size: clamp(0.98rem,1.25vw,1.12rem); line-height: 1.7;
+      color: rgba(232,214,186,0.72); max-width: 26rem; margin-top: 1.4rem;
+    }
+    .weg-mehr {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(0.9rem,1.15vw,1.02rem); letter-spacing: 0.08em;
+      color: var(--kupfer, #b0603a); margin-top: 1.6rem;
+    }
+    .weg-mehr::after { content: ' →'; }
+
+    .weg.eigen .weg-titel { color: rgba(214,220,246,0.95); }
+
+    @media (max-width: 760px) {
+      html, body { overflow: auto; }
+      #wege { position: relative; grid-template-columns: 1fr; min-height: 100%; }
+      .weg { min-height: 50vh; padding: 4.5rem 1.5rem 2.5rem; }
+      .weg + .weg { border-left: none; border-top: 0.5px solid rgba(232,214,186,0.12); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .weg { animation: none; opacity: 1; }
+    }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <a id="back" href="/">emergenz.art</a>
+  <h1 id="page-name">nachschlagen</h1>
+  <canvas id="bg" aria-hidden="true"></canvas>
+
+  <nav id="wege" aria-label="Nachschlagen">
+    <a class="weg eigen" href="/literatur/">
+      <span class="weg-label">weiterlesen</span>
+      <span class="weg-titel">literatur</span>
+      <span class="weg-text">Bücher und Aufsätze, von Anderson und Prigogine bis Hofstadter und Scheffer, jeweils mit einem Satz dazu, warum sie lesenswert sind.</span>
+      <span class="weg-mehr">lesen</span>
+    </a>
+    <a class="weg fremd" href="/glossar/">
+      <span class="weg-label">nachschlagen</span>
+      <span class="weg-titel">glossar</span>
+      <span class="weg-text">Die wichtigsten Begriffe von Attraktor bis Vorhersagendes Gehirn, kurz erklärt und verknüpft mit den Seiten, die sie ausführlich behandeln.</span>
+      <span class="weg-mehr">nachschlagen</span>
+    </a>
+  </nav>
+
+<script>
+// Hintergrund: links ziehen feine Zeilen wie Text auf einer Seite langsam nach oben,
+// rechts treiben einzelne Buchstaben, aus denen Begriffe werden könnten.
+const cv = document.getElementById('bg');
+const c = cv.getContext('2d');
+let W, H, rows, letters;
+const ABC = 'abcdefghijklmnopqrstuvwxyzäöü';
+
+function resize() {
+  W = cv.width = window.innerWidth;
+  H = cv.height = window.innerHeight;
+  rows = Array.from({ length: 46 }, (_, k) => ({ y: k / 46, len: 0.35 + Math.random() * 0.6, ind: Math.random() < 0.15 }));
+  const n = Math.round(W * H / 26000);
+  letters = Array.from({ length: n }, () => ({
+    x: Math.random(), y: Math.random(), ch: ABC[(Math.random() * ABC.length) | 0],
+    a: Math.random() * Math.PI * 2, s: 0.00003 + Math.random() * 0.00004, size: 11 + Math.random() * 9
+  }));
+}
+resize();
+window.addEventListener('resize', resize);
+const t0 = performance.now();
+
+function draw(now) {
+  const t = (now - t0) / 1000;
+  const fade = Math.min(1, t / 3);
+  const narrow = W <= 760;
+  c.clearRect(0, 0, W, H);
+
+  // linke (obere) Hälfte: Zeilen
+  const x0 = narrow ? W * 0.12 : W * 0.06, x1 = narrow ? W * 0.88 : W * 0.44;
+  const y0 = 0, y1 = narrow ? H / 2 : H;
+  c.fillStyle = `rgba(214,220,246,${0.045 * fade})`;
+  for (const r of rows) {
+    const y = y0 + (((r.y - t * 0.004) % 1 + 1) % 1) * (y1 - y0);
+    const xs = x0 + (r.ind ? (x1 - x0) * 0.06 : 0);
+    c.fillRect(xs, y, (x1 - xs) * r.len, 1.2);
+  }
+
+  // rechte (untere) Hälfte: Buchstaben
+  c.textAlign = 'center';
+  for (const l of letters) {
+    l.a += (Math.random() - 0.5) * 0.04;
+    l.x += Math.cos(l.a) * l.s; l.y += Math.sin(l.a) * l.s;
+    if (l.x < 0) l.x += 1; if (l.x > 1) l.x -= 1;
+    if (l.y < 0) l.y += 1; if (l.y > 1) l.y -= 1;
+    const px = narrow ? l.x * W : W / 2 + l.x * W / 2;
+    const py = narrow ? H / 2 + l.y * H / 2 : l.y * H;
+    c.font = `italic 300 ${l.size}px 'Cormorant Garamond', serif`;
+    c.fillStyle = `rgba(232,214,186,${0.16 * fade})`;
+    c.fillText(l.ch, px, py);
+  }
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
