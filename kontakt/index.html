@@ -261,7 +261,7 @@
       <span class="adresse-mail" id="mail">mail.emergenz@web.de</span>
       <div class="knoepfe">
         <button type="button" class="knopf" id="kopieren">adresse kopieren</button>
-        <a class="knopf" id="schreiben" href="mailto:mail.emergenz@web.de">e-mail schreiben</a>
+        <a class="knopf" id="schreiben" href="mailto:mail.emergenz@web.de" target="_blank" rel="noopener">e-mail schreiben</a>
       </div>
     </div>
 
@@ -277,7 +277,7 @@
           <button type="button" class="knopf" id="text-kopieren">text kopieren</button>
         </div>
       </form>
-      <p class="kleingedrucktes">Diese Seite verschickt und speichert nichts. Der Knopf öffnet Ihr eigenes E-Mail-Programm mit dem vorbereiteten Text; abgeschickt wird die Nachricht erst dort, von Ihnen. Wer kein E-Mail-Programm eingerichtet hat, kopiert Adresse und Text und schreibt aus dem Webmail heraus.</p>
+      <p class="kleingedrucktes">Diese Seite verschickt und speichert nichts. Der Knopf öffnet Ihr eigenes E-Mail-Programm mit dem vorbereiteten Text in einem neuen Fenster, diese Seite bleibt offen; abgeschickt wird die Nachricht erst dort, von Ihnen. Wer kein E-Mail-Programm eingerichtet hat, kopiert Adresse und Text und schreibt aus dem Webmail heraus.</p>
     </div>
 
   </div>
@@ -324,7 +324,11 @@
     e.preventDefault();
     const b = betreff.value.trim() || 'Nachricht über emergenz.art';
     const n = nachricht.value.trim();
-    location.href = 'mailto:' + ADR + '?subject=' + encodeURIComponent(b) + (n ? '&body=' + encodeURIComponent(n) : '');
+    const url = 'mailto:' + ADR + '?subject=' + encodeURIComponent(b) + (n ? '&body=' + encodeURIComponent(n) : '');
+    // wie der Knopf „e-mail schreiben“: in neuem Tab öffnen, damit emergenz.art offen bleibt
+    const link = document.createElement('a');
+    link.href = url; link.target = '_blank'; link.rel = 'noopener';
+    document.body.appendChild(link); link.click(); link.remove();
   });
   const k2 = document.getElementById('text-kopieren');
   k2.addEventListener('click', () => {
