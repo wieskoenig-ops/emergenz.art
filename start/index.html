@@ -41,18 +41,30 @@
 
     #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
 
-    #hint-begriffe {
+    /* Lesehilfe: Position wird in positionLabels() nach dem freien Platz gesetzt */
+    #legende {
       position: fixed;
-      bottom: clamp(8px,1.8vh,20px);
-      left: 0; right: 0;
-      text-align: center;
-      font-family: 'Cormorant Garamond', serif; font-weight: 300;
-      font-size: clamp(0.6rem,0.95vw,0.8rem); letter-spacing: 0.22em;
-      color: #b0603a; text-transform: lowercase;
-      pointer-events: none; z-index: 20;
+      z-index: 20; pointer-events: none;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.85rem, 1.1vw, 1.02rem); letter-spacing: 0.05em; line-height: 1.55;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      padding: 0.8em 1.1em;
+      border-left: 0.5px solid rgba(176,96,58,0.5);
       opacity: 0;
       animation: fadein 2s ease 12s forwards;
     }
+    #legende.below { text-align: center; border-left: none; transform: translateX(-50%); }
+    #legende p + p { margin-top: 0.35em; }
+    #legende .small { font-style: italic; font-size: 0.88em; color: #b0603a; margin-top: 0.6em; }
+    #legende .k  { color: rgb(200,200,240); }
+    #legende .d  { color: rgb(255,210,80); }
+    #legende .n  { color: rgb(160,255,180); }
+    #legende .kd { color: rgb(255,210,140); font-style: italic; }
+    #legende .dn { color: rgb(140,210,200); font-style: italic; }
+    #legende .nk { color: rgb(200,160,255); font-style: italic; }
+    #legende .e  { color: rgba(240,230,214,1); letter-spacing: 0.18em; }
     @keyframes fadein { from { opacity:0; } to { opacity:1; } }
     .sat-label {
       position: fixed;
@@ -85,7 +97,12 @@
 <body>
   <h1 class="sr-only">Art – Bedingungen der Emergenz</h1>
   <a id="back" href="/">emergenz.art</a>
-  <div id="hint-begriffe">die begriffe werden auf den folgenden seiten erläutert</div>
+  <div id="legende">
+    <p>ein denkbild in drei kreisen: <span class="k">komplexität</span>, <span class="d">dissipation</span>, <span class="n">notwendigkeit</span>.</p>
+    <p>wo sich zwei überschneiden, zeigen sich <span class="kd">selbstorganisation</span>, <span class="dn">symmetriebrechung</span> oder <span class="nk">deterministisches chaos</span>.</p>
+    <p>wo alle drei zusammenkommen, entsteht <span class="e">emergenz</span> in ihrer reichsten form: lebendig und sich selbst erhaltend.</p>
+    <p class="small">jeder begriff im bild führt zu seiner seite.</p>
+  </div>
   <canvas id="canvas"></canvas>
 
   <a class="sat-label" id="lbl-komplexitaet" href="/start/komplexitaet/"><span>Komplexität</span></a>
@@ -124,6 +141,36 @@ function calcGeometry() {
   CX = W/2; CY = H/2;
   R     = Math.min(W,H) * 0.30;
   ORBIT = R * 0.62;
+  placeLegend();
+}
+
+// Lesehilfe: neben die Kreise, wenn seitlich Platz ist, sonst darunter.
+// Ist auch darunter zu wenig Platz, rücken die Kreise etwas nach oben und werden kleiner.
+function placeLegend() {
+  const leg = document.getElementById('legende');
+  if (!leg) return;
+  leg.style.left = leg.style.top = leg.style.bottom = leg.style.width = '';
+  const side = W / 2 - 1.56 * R;                  // freier Rand neben den Kreisen
+  if (side >= 260) {
+    leg.className = 'side';
+    leg.style.left = '28px';
+    leg.style.bottom = '28px';
+    leg.style.width = Math.min(340, side - 56) + 'px';
+    return;
+  }
+  leg.className = 'below';
+  leg.style.left = '50%';
+  leg.style.width = Math.min(620, W - 32) + 'px';
+  const legH = leg.offsetHeight + 16;
+  let bottomOfCircles = CY + ORBIT * 0.5 + R;
+  if (H - bottomOfCircles < legH) {
+    // Gesamthöhe der Kreise: 1.62 R über und 1.31 R unter dem Mittelpunkt
+    R = Math.min(R, (H - legH - 16) / 2.93);
+    ORBIT = R * 0.62;
+    CY = 12 + 1.62 * R;
+    bottomOfCircles = CY + ORBIT * 0.5 + R;
+  }
+  leg.style.top = (bottomOfCircles + Math.min(20, (H - bottomOfCircles - legH + 16) / 2)) + 'px';
 }
 
 function satCenter(i) {
