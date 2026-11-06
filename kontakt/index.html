@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="dark">
+  <style>html{background:#000;color-scheme:dark}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontakt — emergenz.art</title>
+  <meta name="description" content="Kontakt zu emergenz.art: Fragen, Hinweise, Einwände und eigene Beobachtungen zur Emergenz.">
+  <link rel="canonical" href="https://emergenz.art/kontakt/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Kontakt — emergenz.art">
+  <meta property="og:description" content="Kontakt zu emergenz.art: Fragen, Hinweise, Einwände und eigene Beobachtungen zur Emergenz.">
+  <meta property="og:url" content="https://emergenz.art/kontakt/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    /* Einleitung — etwas größer, als Einstieg */
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p em { font-style: italic; color: rgba(232,224,208,0.97); }
+
+    /* Kernaussage — groß, allein */
+    .statement {
+      opacity: 0;
+      animation: rise 1s ease 0.3s forwards;
+      margin-bottom: clamp(3rem,6vh,5rem);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.22);
+    }
+
+    .statement p {
+      font-size: clamp(1.3rem,2.4vw,1.85rem);
+      line-height: 1.75;
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.92);
+      font-style: italic;
+    }
+
+    /* Textblöcke */
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.5s; }
+    .block:nth-of-type(2) { animation-delay: 0.65s; }
+    .block:nth-of-type(3) { animation-delay: 0.8s; }
+    .block:nth-of-type(4) { animation-delay: 0.95s; }
+    .block:nth-of-type(5) { animation-delay: 1.1s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.05rem,1.8vw,1.4rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.72);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .block p strong { font-weight: 400; color: rgba(232,224,208,0.92); }
+
+    /* Anderson-Zitat */
+    .block.quote {
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+    }
+    .block.quote p {
+      color: rgba(232,224,208,0.82);
+    }
+
+    /* Abschlussblock — etwas heller, als Coda */
+    .block.coda h2 { color: rgba(232,224,208,0.82); }
+    .block.coda p  { color: rgba(232,224,208,0.82); }
+
+    /* Trennlinie */
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+    }
+
+    /* Verweis-Links am Ende */
+    .nav-hints {
+      opacity: 0;
+      animation: rise 0.9s ease 1.3s forwards;
+      display: flex;
+      gap: clamp(1.5rem,4vw,3rem);
+      flex-wrap: wrap;
+    }
+
+    .nav-hint {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.78rem,1.2vw,0.95rem);
+      letter-spacing: 0.25em;
+      color: rgba(160,210,230,0.55);
+      text-decoration: none;
+      text-transform: lowercase;
+      transition: color 0.3s ease;
+    }
+    .nav-hint:hover { color: rgba(160,210,230,0.9); }
+    .nav-hint::before { content: '→ '; letter-spacing: 0; }
+    .intro p + p { margin-top: 1.2em; }
+
+    /* ── Kontakt ── */
+    .adresse {
+      margin: 0.4rem 0 2.6rem;
+      padding: 1.6rem 1.6rem 1.4rem;
+      border: 0.5px solid rgba(232,214,186,0.16);
+      background: rgba(255,255,255,0.015);
+      text-align: center;
+    }
+    .adresse-mail {
+      display: block;
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(1.35rem, 3.4vw, 2.1rem); letter-spacing: 0.08em;
+      color: rgba(232,224,208,0.95);
+      user-select: all; word-break: break-all;
+    }
+    .knoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; margin-top: 1.3rem; }
+    .knopf {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(0.95rem,1.3vw,1.08rem);
+      letter-spacing: 0.18em; text-transform: lowercase; text-decoration: none;
+      color: rgba(232,214,186,0.88); background: rgba(0,0,0,0.5);
+      border: 0.5px solid rgba(176,96,58,0.6); padding: 0.45em 1.2em; cursor: pointer;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+    .knopf:hover, .knopf:focus-visible { color: #fff; border-color: #d08a60; outline: none; }
+    .knopf.ok { border-color: rgba(160,255,180,0.6); color: rgb(190,240,200); }
+
+    .formular { margin-top: 0.6rem; }
+    .formular label {
+      display: block; margin: 1.3rem 0 0.4rem;
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(0.92rem,1.3vw,1.05rem);
+      letter-spacing: 0.2em; text-transform: lowercase; color: rgba(232,214,186,0.6);
+    }
+    .formular input, .formular textarea {
+      width: 100%;
+      font-family: 'Literata', Georgia, serif; font-size: clamp(1rem,1.5vw,1.1rem); line-height: 1.6;
+      color: rgba(232,224,208,0.95); background: rgba(255,255,255,0.025);
+      border: 0.5px solid rgba(232,214,186,0.2); padding: 0.7em 0.9em;
+      transition: border-color 0.3s ease;
+    }
+    .formular textarea { min-height: 11em; resize: vertical; }
+    .formular input:focus, .formular textarea:focus { outline: none; border-color: rgba(176,96,58,0.8); }
+    .formular .knoepfe { justify-content: flex-start; margin-top: 1.4rem; }
+    .kleingedrucktes {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(0.88rem,1.2vw,1rem); line-height: 1.65;
+      color: rgba(232,214,186,0.55); margin-top: 1.4rem;
+    }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <a id="back" href="/">emergenz.art</a>
+  <h1 id="page-name">kontakt</h1>
+
+  <div id="content">
+
+    <div class="section-label">emergenz.art · kontakt</div>
+
+    <div class="intro">
+      <p>Fragen, Hinweise auf Fehler, Einwände, Literaturtipps oder eigene Beobachtungen zur Emergenz sind willkommen.</p>
+    </div>
+
+    <div class="adresse">
+      <span class="adresse-mail" id="mail">mail.emergenz@web.de</span>
+      <div class="knoepfe">
+        <button type="button" class="knopf" id="kopieren">adresse kopieren</button>
+        <a class="knopf" id="schreiben" href="mailto:mail.emergenz@web.de">e-mail schreiben</a>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>oder hier vorbereiten</h2>
+      <form class="formular" id="formular" novalidate>
+        <label for="betreff">betreff</label>
+        <input id="betreff" name="betreff" type="text" maxlength="140" autocomplete="off">
+        <label for="nachricht">nachricht</label>
+        <textarea id="nachricht" name="nachricht" maxlength="1500"></textarea>
+        <div class="knoepfe">
+          <button type="submit" class="knopf">im e-mail-programm öffnen</button>
+          <button type="button" class="knopf" id="text-kopieren">text kopieren</button>
+        </div>
+      </form>
+      <p class="kleingedrucktes">Diese Seite verschickt und speichert nichts. Der Knopf öffnet Ihr eigenes E-Mail-Programm mit dem vorbereiteten Text; abgeschickt wird die Nachricht erst dort, von Ihnen. Wer kein E-Mail-Programm eingerichtet hat, kopiert Adresse und Text und schreibt aus dem Webmail heraus.</p>
+    </div>
+
+  </div>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/">emergenz</a></li>
+      <li><a href="/punkt/">punkt</a></li>
+      <li><a href="/art/">art</a></li>
+      <li><a href="/nachschlagen/">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/kontakt/" aria-current="page">kontakt</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+<script>
+// Kontakt ohne Server: nichts wird übertragen oder gespeichert.
+// Kopieren über die Zwischenablage, Senden über das eigene E-Mail-Programm (mailto).
+(function () {
+  const ADR = 'mail.emergenz@web.de';
+  function kopiere(text, knopf, label) {
+    const fertig = () => {
+      knopf.textContent = 'kopiert'; knopf.classList.add('ok');
+      setTimeout(() => { knopf.textContent = label; knopf.classList.remove('ok'); }, 2200);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(fertig, () => auswahl(text, fertig));
+    } else auswahl(text, fertig);
+  }
+  function auswahl(text, fertig) {          // Rückfall für ältere Browser
+    const t = document.createElement('textarea');
+    t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+    document.body.appendChild(t); t.select();
+    try { document.execCommand('copy'); fertig(); } catch (e) {}
+    t.remove();
+  }
+  const k1 = document.getElementById('kopieren');
+  k1.addEventListener('click', () => kopiere(ADR, k1, 'adresse kopieren'));
+
+  const form = document.getElementById('formular');
+  const betreff = document.getElementById('betreff');
+  const nachricht = document.getElementById('nachricht');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const b = betreff.value.trim() || 'Nachricht über emergenz.art';
+    const n = nachricht.value.trim();
+    location.href = 'mailto:' + ADR + '?subject=' + encodeURIComponent(b) + (n ? '&body=' + encodeURIComponent(n) : '');
+  });
+  const k2 = document.getElementById('text-kopieren');
+  k2.addEventListener('click', () => {
+    const text = (betreff.value.trim() ? 'Betreff: ' + betreff.value.trim() + '\n\n' : '') + nachricht.value.trim();
+    kopiere(text || ADR, k2, 'text kopieren');
+  });
+})();
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

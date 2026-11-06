@@ -136,6 +136,15 @@
       position: relative;
       display: flex; align-items: center; justify-content: center;
     }
+    /* derselbe feine Rahmen wie bei den Kacheln */
+    #middle::after {
+      content: '';
+      position: absolute; inset: 0;
+      border: 0.5px solid rgba(232,224,208,0);
+      transition: border-color 0.4s ease;
+      pointer-events: none;
+    }
+    #middle:hover::after { border-color: rgba(232,224,208,0.25); }
 
     #word {
       font-family: 'Cormorant Garamond', serif;
@@ -219,7 +228,7 @@
       <a class="cell" id="c3" href="/nachschlagen/"><span class="cell-label has-sub"><span>literatur</span><span class="cell-sub">bücher und begriffe</span></span></a>
       <a class="cell" id="c4" href="/planetare-kognition/"><span class="cell-label has-sub"><span>planetare kognition</span><span class="cell-sub">eine these</span></span></a>
       <div class="cell-stack">
-        <a class="cell" id="c5" href="mailto:mail.emergenz@web.de"><span class="cell-label">kontakt</span></a>
+        <a class="cell" id="c5" href="/kontakt/"><span class="cell-label">kontakt</span></a>
         <a class="cell" id="c6" href="/impressum/"><span class="cell-label">impressum</span></a>
       </div>
     </div>
@@ -356,6 +365,17 @@ cells.forEach(cell => {
       setTimeout(() => { window.location.href = href; }, 320);
     }
   });
+});
+
+// Mittleres Feld: Funken an den waagerechten Grenzen zu den Kachelreihen oben und unten.
+// Das Feld ist breit, deshalb mehrere Funkengruppen je Kante, damit die Dichte zu den Kacheln passt.
+const middleField = document.getElementById('middle');
+middleField.addEventListener('mouseenter', () => {
+  const r = middleField.getBoundingClientRect();
+  for (let k = 0; k < 3; k++) {
+    spawnBorderSparks(r.top, 'h', r, false);
+    spawnBorderSparks(r.bottom, 'h', r, false);
+  }
 });
 
 // ══════════════════════════════════════════
