@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="dark">
+  <style>html{background:#000;color-scheme:dark}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergenz in der Kunst — emergenz.art</title>
+  <meta name="description" content="Emergenz in der Kunst: Ligeti, Riley, Reich, Eno, Xenakis, Forsythe, Nees, Molnár, Richter, Haacke, Huyghe, Frei Otto, Bridget Riley, Lem – Werke, die ihre Bedingungen gestalten statt sich selbst.">
+  <link rel="canonical" href="https://emergenz.art/art/kunst/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Emergenz in der Kunst — emergenz.art">
+  <meta property="og:description" content="Emergenz in der Kunst: Ligeti, Riley, Reich, Eno, Xenakis, Forsythe, Nees, Molnár, Richter, Haacke, Huyghe, Frei Otto, Bridget Riley, Lem – Werke, die ihre Bedingungen gestalten statt sich selbst.">
+  <meta property="og:url" content="https://emergenz.art/art/kunst/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 30;
+    }
+
+    #content {
+      position: relative;
+      z-index: 10;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem);
+      letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38);
+      text-transform: lowercase;
+      margin-bottom: clamp(2.5rem,6vh,4.5rem);
+    }
+
+    /* Einleitung — etwas größer, als Einstieg */
+    .intro {
+      opacity: 0;
+      animation: rise 1s ease 0.1s forwards;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    }
+
+    .intro p {
+      font-size: clamp(1.12rem,1.9vw,1.42rem);
+      line-height: 2.1;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.82);
+    }
+
+    .intro p em { font-style: italic; color: rgba(232,224,208,0.97); }
+
+    /* Kernaussage — groß, allein */
+    .statement {
+      opacity: 0;
+      animation: rise 1s ease 0.3s forwards;
+      margin-bottom: clamp(3rem,6vh,5rem);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.22);
+    }
+
+    .statement p {
+      font-size: clamp(1.3rem,2.4vw,1.85rem);
+      line-height: 1.75;
+      letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.92);
+      font-style: italic;
+    }
+
+    /* Textblöcke */
+    .block {
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+      opacity: 0;
+      animation: rise 0.9s ease forwards;
+    }
+    .block:nth-of-type(1) { animation-delay: 0.5s; }
+    .block:nth-of-type(2) { animation-delay: 0.65s; }
+    .block:nth-of-type(3) { animation-delay: 0.8s; }
+    .block:nth-of-type(4) { animation-delay: 0.95s; }
+    .block:nth-of-type(5) { animation-delay: 1.1s; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .block h2 {
+      font-size: clamp(1.05rem,1.8vw,1.4rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.72);
+      text-transform: lowercase;
+      font-weight: 400;
+      margin-bottom: clamp(0.9rem,2vh,1.4rem);
+    }
+
+    .block p {
+      font-size: clamp(1.05rem,1.7vw,1.25rem);
+      line-height: 2;
+      letter-spacing: 0.04em;
+      color: rgba(232,224,208,0.75);
+      margin-bottom: 1.2em;
+    }
+    .block p:last-child { margin-bottom: 0; }
+
+    .block p em { font-style: italic; color: rgba(232,224,208,0.95); }
+    .block p strong { font-weight: 400; color: rgba(232,224,208,0.92); }
+
+    /* Anderson-Zitat */
+    .block.quote {
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      padding-left: clamp(1.2rem,2.5vw,2.2rem);
+    }
+    .block.quote p {
+      color: rgba(232,224,208,0.82);
+    }
+
+    /* Abschlussblock — etwas heller, als Coda */
+    .block.coda h2 { color: rgba(232,224,208,0.82); }
+    .block.coda p  { color: rgba(232,224,208,0.82); }
+
+    /* Trennlinie */
+    .rule {
+      border: none;
+      border-top: 0.5px solid rgba(232,224,208,0.08);
+      margin: clamp(2rem,4vh,3rem) 0;
+    }
+
+    /* Verweis-Links am Ende */
+    .nav-hints {
+      opacity: 0;
+      animation: rise 0.9s ease 1.3s forwards;
+      display: flex;
+      gap: clamp(1.5rem,4vw,3rem);
+      flex-wrap: wrap;
+    }
+
+    .nav-hint {
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.78rem,1.2vw,0.95rem);
+      letter-spacing: 0.25em;
+      color: rgba(160,210,230,0.55);
+      text-decoration: none;
+      text-transform: lowercase;
+      transition: color 0.3s ease;
+    }
+    .nav-hint:hover { color: rgba(160,210,230,0.9); }
+    .nav-hint::before { content: '→ '; letter-spacing: 0; }
+    /* ── Werke ── */
+    .werk { margin-bottom: 2.2em; }
+    .werk:last-child { margin-bottom: 0; }
+    .werk-kopf {
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(1rem,1.5vw,1.15rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.92); margin-bottom: 0.45em;
+    }
+    .werk-kopf .jahr { color: rgba(232,214,186,0.5); }
+    .werk-kopf em { font-style: italic; }
+    .werk-links {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(0.85rem,1.2vw,0.98rem); letter-spacing: 0.04em;
+      margin-top: -0.4em;
+    }
+    .werk-links a { color: var(--kupfer); text-decoration: none; border-bottom: 0.5px solid rgba(176,96,58,0.45); }
+    .werk-links a:hover { color: #d08a60; }
+    .block h2 .zu {
+      font-size: 0.62em; letter-spacing: 0.12em; margin-left: 0.8em;
+      color: rgba(232,214,186,0.45); text-decoration: none;
+    }
+    .block h2 .zu:hover { color: var(--kupfer); }
+    .block h2 .zu::before { content: '→ '; }
+    .h-k  { color: rgb(200,200,240); }
+    .h-d  { color: rgb(255,210,80); }
+    .h-n  { color: rgb(160,255,180); }
+    .h-kd { color: rgb(255,210,140); }
+    .h-dn { color: rgb(140,210,200); }
+    .h-nk { color: rgb(200,160,255); }
+
+    /* ── Hommagen ── */
+    .hommage {
+      margin: 1.6em 0 0.4em;
+      border: 0.5px solid rgba(232,214,186,0.14);
+      background: rgba(255,255,255,0.015);
+    }
+    .hommage canvas { display: block; width: 100%; }
+    .hommage-zeile {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 1em;
+      padding: 0.6em 0.9em;
+      border-top: 0.5px solid rgba(232,214,186,0.1);
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(0.82rem,1.15vw,0.95rem); letter-spacing: 0.04em;
+      color: rgba(232,214,186,0.62);
+    }
+    .hommage button {
+      flex: none;
+      font-family: 'Cormorant Garamond', serif; font-style: normal;
+      font-size: 1em; letter-spacing: 0.18em; text-transform: lowercase;
+      color: rgba(232,214,186,0.85); background: rgba(0,0,0,0.5);
+      border: 0.5px solid rgba(176,96,58,0.6); padding: 0.3em 0.9em; cursor: pointer;
+    }
+    .hommage button:hover, .hommage button:focus-visible { color: #fff; border-color: #d08a60; }
+    .hinweis-bild {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: clamp(0.85rem,1.2vw,0.98rem); line-height: 1.6;
+      color: rgba(232,214,186,0.55); margin-top: 1.4em;
+    }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <a id="back" href="/art/">art</a>
+  <h1 id="page-name">in der kunst</h1>
+
+  <div id="content">
+
+    <div class="section-label">art · würdigung · emergenz in der kunst</div>
+
+    <div class="intro">
+      <p>Lange bevor Physiker von Selbstorganisation sprachen, haben Künstler damit gearbeitet. Sie schrieben Regeln statt Noten, bauten Versuchsanordnungen statt Skulpturen, ließen Zufall, Wasser, Bienen oder Seifenhaut das Werk vollenden. Was dabei entstand, hatten sie nicht im Einzelnen entworfen.</p>
+    </div>
+
+    <div class="statement">
+      <p>Sie gestalten nicht das Werk, sondern die Bedingungen, unter denen es entsteht.</p>
+    </div>
+
+    <p class="hinweis-bild">Abbildungen der Werke zeigen wir hier nicht, sie sind urheberrechtlich geschützt. Die Links führen zu ihnen. Wo sich ein Prinzip selbst vorführen lässt, steht stattdessen eine kleine Hommage, die nach diesem Prinzip arbeitet.</p>
+
+    <div class="block">
+      <h2><span class="h-kd">selbstorganisation</span> · musik, die sich selbst erzeugt <a class="zu" href="/start/selbstorganisation/">zur seite</a></h2>
+
+      <div class="werk">
+        <div class="werk-kopf">György Ligeti · <em>Poème symphonique für 100 Metronome</em> <span class="jahr">· 1962</span></div>
+        <p>Hundert mechanische Metronome werden aufgezogen, auf verschiedene Tempi gestellt und zugleich in Gang gesetzt. Zuerst ein dichtes Prasseln, in dem kein einzelner Schlag zu hören ist. Dann laufen die Metronome eines nach dem anderen ab, das Geräusch lichtet sich, Rhythmen tauchen auf, die niemand notiert hat, bis zuletzt ein einziges allein weitertickt. Der Komponist bestimmt nur den Anfang. Den Verlauf schreibt die Mechanik.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Gy%C3%B6rgy_Ligeti" rel="noopener">György Ligeti bei Wikipedia</a></p>
+      </div>
+
+      <div class="werk">
+        <div class="werk-kopf">Terry Riley · <em>In C</em> <span class="jahr">· 1964</span></div>
+        <p>Die Partitur besteht aus 53 kurzen Phrasen. Jeder Musiker spielt sie der Reihe nach und entscheidet selbst, wie oft er eine wiederholt, bevor er zur nächsten geht. Ein gleichmäßiger Puls auf dem hohen C hält alles zusammen, eine Anregung von Steve Reich, der bei der Uraufführung mitspielte. Keine Aufführung gleicht der anderen, und doch ist jede erkennbar <em>In C</em>. Die Form entsteht aus vielen unabhängigen Entscheidungen.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/In_C" rel="noopener">In C bei Wikipedia</a></p>
+      </div>
+
+      <div class="werk">
+        <div class="werk-kopf">Steve Reich · <em>Piano Phase</em> <span class="jahr">· 1967</span></div>
+        <p>Zwei Pianisten spielen dieselbe kurze Figur aus zwölf Tönen. Einer beschleunigt ganz allmählich, bis er einen Ton voraus ist, hält inne, und beschleunigt wieder. Während die beiden Stimmen gegeneinander wandern, hört man Melodien, die keiner der beiden spielt. Reich nannte sie <em>resulting patterns</em> und beschrieb seine Musik 1968 als „allmählichen Prozess“: Man setzt ihn in Gang, und dann läuft er von selbst.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Steve_Reich" rel="noopener">Steve Reich bei Wikipedia</a></p>
+
+        <div class="hommage" id="hommage-phase">
+          <canvas id="phase-canvas" height="300" aria-label="Zwei Kreise mit je zwölf Tönen, deren Zeiger langsam gegeneinander wandern"></canvas>
+          <div class="hommage-zeile">
+            <span>nach dem prinzip von steve reich: zwei gleiche schleifen aus zwölf tönen, die zweite um ein prozent schneller. eigene tonfolge.</span>
+            <button type="button" id="phase-ton" aria-pressed="false">ton an</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="werk">
+        <div class="werk-kopf">Brian Eno · <em>Music for Airports</em> <span class="jahr">· 1978</span></div>
+        <p>Eno nahm einzelne Töne und Phrasen auf Tonbandschleifen ungleicher Länge auf und ließ sie gleichzeitig laufen. Weil die Schleifen sich nie im selben Takt treffen, ergeben sie immer neue Zusammenklänge. Später nannte er diese Arbeitsweise <em>generative Musik</em> und berief sich dabei ausdrücklich auf Conways Spiel des Lebens: Man lege die Regeln fest und lasse die Musik wachsen, statt sie zu bauen.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Brian_Eno" rel="noopener">Brian Eno bei Wikipedia</a></p>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2><span class="h-k">komplexität</span> · viele stimmen, ein ganzes <a class="zu" href="/start/komplexitaet/">zur seite</a></h2>
+
+      <div class="werk">
+        <div class="werk-kopf">Iannis Xenakis · <em>Pithoprakta</em> <span class="jahr">· 1956</span></div>
+        <p>Xenakis war Ingenieur und Architekt, bevor er Komponist wurde. In <em>Pithoprakta</em> behandelt er ein Streichorchester wie ein Gas. Die Glissandi der einzelnen Instrumente folgen den Geschwindigkeiten von Molekülen, berechnet nach der kinetischen Gastheorie. Kein einzelner Ton ist wichtig. Hörbar wird die Masse: Wolken, Schwärme, Dichte und Temperatur des Klangs.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Iannis_Xenakis" rel="noopener">Iannis Xenakis bei Wikipedia</a></p>
+      </div>
+
+      <div class="werk">
+        <div class="werk-kopf">William Forsythe · <em>Synchronous Objects</em> <span class="jahr">· 2009</span></div>
+        <p>In Forsythes Stück <em>One Flat Thing, reproduced</em> bewegen sich die Tänzer zwischen Reihen von Tischen. Sie folgen keiner festen Choreographie im Ganzen, sondern einem System von Hinweisen, die sie einander geben. Mit der Ohio State University ließ der langjährige Leiter des Frankfurter Balletts sichtbar machen, wie daraus ein Kontrapunkt entsteht, den keiner der Tänzer allein überblickt.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/William_Forsythe" rel="noopener">William Forsythe bei Wikipedia</a></p>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2><span class="h-dn">symmetriebrechung</span> · ordnung und zufall <a class="zu" href="/start/symmetriebrechung/">zur seite</a></h2>
+
+      <div class="werk">
+        <div class="werk-kopf">Georg Nees · <em>Schotter</em> <span class="jahr">· um 1968</span></div>
+        <p>Im Februar 1965 zeigte Georg Nees in Stuttgart, auf Einladung des Philosophen Max Bense, eine der ersten Ausstellungen von Computergrafik überhaupt. Sein bekanntestes Blatt, <em>Schotter</em>, ist ein Raster aus Quadraten, das oben streng geordnet ist. Zeile für Zeile lässt das Programm mehr Zufall zu, die Quadrate verdrehen und verschieben sich, bis sie unten wie lose Steine durcheinanderliegen. Der Übergang von Ordnung zu Unordnung wird selbst zum Bild.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Georg_Nees" rel="noopener">Georg Nees bei Wikipedia</a></p>
+
+        <div class="hommage">
+          <canvas id="nees-canvas" height="320" aria-label="Ein Raster aus Quadraten, oben geordnet, nach unten zunehmend verdreht"></canvas>
+          <div class="hommage-zeile">
+            <span>nach dem prinzip von georg nees: jede zeile ein wenig mehr zufall. die quadrate suchen sich langsam neue lagen.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="werk">
+        <div class="werk-kopf">Vera Molnár</div>
+        <p>Die Malerin Vera Molnár arbeitete seit 1968 mit dem Computer, als eine der ersten Künstlerinnen überhaupt. Ihr Prinzip war strenge Ordnung, Quadrate, Linien, Raster, in die sie gezielt ein wenig Unordnung einführte: <em>1 % désordre</em>. Erst die kleine Störung macht die Ordnung sichtbar, und erst die Ordnung macht die Störung bedeutsam. Sie arbeitete bis zu ihrem Tod 2023, mit 99 Jahren.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Vera_Moln%C3%A1r" rel="noopener">Vera Molnár bei Wikipedia</a></p>
+      </div>
+
+      <div class="werk">
+        <div class="werk-kopf">Gerhard Richter · <em>Fenster im Südquerhaus des Kölner Doms</em> <span class="jahr">· 2007</span></div>
+        <p>Über elftausend farbige Glasquadrate in 72 Farben, verteilt zum Teil durch einen Zufallsgenerator, zum Teil gespiegelt. Aus der Nähe ein Rauschen ohne Motiv, aus der Ferne ein Leuchten, das mit dem Licht des Tages wandert. Zufall und Symmetrie in einem Werk: genau das Paar, das die Seite Symmetriebrechung beschreibt.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Richter-Fenster" rel="noopener">Das Richter-Fenster bei Wikipedia</a></p>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2><span class="h-d">dissipation</span> · das werk als prozess <a class="zu" href="/start/dissipation/">zur seite</a></h2>
+
+      <div class="werk">
+        <div class="werk-kopf">Hans Haacke · <em>Condensation Cube</em> <span class="jahr">· 1963–1965</span></div>
+        <p>Ein geschlossener Würfel aus Plexiglas, auf seinem Boden etwas Wasser. Je nach Licht und Wärme im Raum verdunstet es, schlägt sich an den Wänden nieder, bildet Tropfen, Schlieren, Rinnsale. Das Bild ist nie fertig, es ist der Prozess selbst, angetrieben von der Energie, die durch den Raum fließt. Der Kritiker Jack Burnham nannte solche Arbeiten 1968 <em>Systemästhetik</em>: Kunst als ein System, das sich mit seiner Umgebung austauscht.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Hans_Haacke" rel="noopener">Hans Haacke bei Wikipedia</a></p>
+      </div>
+
+      <div class="werk">
+        <div class="werk-kopf">Pierre Huyghe · <em>Untilled</em> <span class="jahr">· documenta 13, Kassel 2012</span></div>
+        <p>Am Rand der Karlsaue richtete Huyghe einen Komposthaufen als Garten ein: Pflanzen, Insekten, ein Hund mit einem rosa Bein, eine liegende Frauenfigur, deren Kopf ein lebendes Bienenvolk war. Dann überließ er das Ganze sich selbst. Was die Besucher sahen, hatte niemand angeordnet. Das Werk war ein Ökosystem, das sich während der Ausstellung von selbst weiterentwickelte.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Pierre_Huyghe" rel="noopener">Pierre Huyghe bei Wikipedia</a></p>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2><span class="h-n">notwendigkeit</span> · die form, die so werden muss <a class="zu" href="/start/notwendigkeit/">zur seite</a></h2>
+
+      <div class="werk">
+        <div class="werk-kopf">Frei Otto · <em>Dach des Münchner Olympiaparks</em> <span class="jahr">· 1972</span></div>
+        <p>Frei Otto entwarf seine Bauten nicht am Zeichentisch. In seinem Stuttgarter Institut für leichte Flächentragwerke tauchte er Drahtrahmen in Seifenlauge und ließ die Seifenhaut die Form finden, die mit der geringsten Fläche auskommt. Er hängte Ketten und Netze auf und ließ die Schwerkraft die Linien ziehen. Die Physik entscheidet, der Architekt wählt nur die Randbedingungen. Das Zeltdach über dem Münchner Olympiapark, gemeinsam mit Günter Behnisch, ist die berühmteste dieser Formen. 2015 erhielt Otto den Pritzker-Preis, einen Tag nach seinem Tod.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Frei_Otto" rel="noopener">Frei Otto bei Wikipedia</a></p>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2><span class="h-nk">deterministisches chaos</span> · der attraktor in der hand <a class="zu" href="/start/deterministisches-chaos/">zur seite</a></h2>
+
+      <div class="werk">
+        <div class="werk-kopf">Hinke Osinga und Bernd Krauskopf · <em>Die gehäkelte Lorenz-Fläche</em> <span class="jahr">· 2004</span></div>
+        <p>Die beiden Mathematiker an der Universität Bristol hatten berechnet, wie sich die Fläche, die das Chaos des Lorenz-Systems ordnet, im Raum windet. Um sie anfassen zu können, häkelten sie sie, Masche für Masche, nach den Zahlen ihres Algorithmus. Heraus kam ein wolliges Gebilde aus Tausenden Maschen, das sich auf unerwartete Weise in sich selbst dreht: das deterministische Chaos als Handarbeit.</p>
+      </div>
+    </div>
+
+    <div class="block quote">
+      <h2>muster im auge · scheinbare emergenz <a class="zu" href="/emergenz/scheinbare-emergenz/">zur seite</a></h2>
+
+      <div class="werk">
+        <div class="werk-kopf">Bridget Riley · Op-Art <span class="jahr">· seit 1961</span></div>
+        <p>Schwarze und weiße Linien, Wellen, Quadrate, streng gezeichnet und vollkommen still. Und doch beginnen die Bilder zu flimmern, zu wogen, sich zu drehen. Die Bewegung ist nicht auf der Leinwand. Sie entsteht in unserem Sehsystem, das aus den Kanten Muster macht. Rileys Bilder sind die genaueste Vorführung dessen, was die Seite scheinbare Emergenz das Muster im Auge nennt.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Bridget_Riley" rel="noopener">Bridget Riley bei Wikipedia</a></p>
+      </div>
+    </div>
+
+    <div class="block coda">
+      <h2>ein denkender ozean · planetare kognition <a class="zu" href="/planetare-kognition/">zur seite</a></h2>
+
+      <div class="werk">
+        <div class="werk-kopf">Stanisław Lem · <em>Solaris</em> <span class="jahr">· 1961</span></div>
+        <p>Ein Planet, ganz von einem Ozean bedeckt, der seine eigene Umlaufbahn stabilisiert, Gebilde von der Größe von Städten formt und wieder auflöst und auf die Forscher in der Station über ihm antwortet, auf eine Weise, die keiner versteht. Ist er ein Organismus, ein Gehirn, ein Gott? Lems Roman ist die literarische Urszene einer Intelligenz ohne Zentrum, verteilt über einen ganzen Planeten. Und eine Warnung: Vielleicht erkennen wir eine solche Intelligenz nicht einmal, wenn wir vor ihr stehen.</p>
+        <p class="werk-links"><a href="https://de.wikipedia.org/wiki/Solaris_(Roman)" rel="noopener">Solaris bei Wikipedia</a></p>
+      </div>
+    </div>
+
+    <hr class="rule">
+
+    <div class="nav-hints">
+      <a class="nav-hint" href="/art/">art</a>
+      <a class="nav-hint" href="/start/">eigene arbeiten</a>
+      <a class="nav-hint" href="/literatur/">literatur</a>
+    </div>
+
+  </div>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/">emergenz</a></li>
+      <li><a href="/punkt/">punkt</a></li>
+      <li><a href="/art/" aria-current="page">art</a></li>
+      <li><a href="/literatur/">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+<script>
+// ── Hommage nach dem Prinzip von Georg Nees ──────────────────────────
+// Ein Raster aus Quadraten; die Zufallsabweichung (Drehung, Versatz) wächst Zeile für Zeile.
+// Alle paar Sekunden wählt jedes Quadrat neue Zufallsziele und gleitet langsam dorthin.
+(function () {
+  const cv = document.getElementById('nees-canvas');
+  const c = cv.getContext('2d');
+  const COLS = 18, ROWS = 10;
+  let cells = [], w, h, size, ox, oy, lastPick = 0;
+
+  function fit() {
+    const dpr = window.devicePixelRatio || 1;
+    w = cv.clientWidth; h = Math.round(w * 0.56);
+    cv.style.height = h + 'px';
+    cv.width = w * dpr; cv.height = h * dpr;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    size = Math.min((w - 40) / COLS, (h - 40) / ROWS);
+    ox = (w - size * COLS) / 2; oy = (h - size * ROWS) / 2;
+  }
+  function pick(cell, r) {
+    const k = r / (ROWS - 1);              // 0 oben, 1 unten
+    cell.ta = (Math.random() - 0.5) * k * 1.6;
+    cell.tx = (Math.random() - 0.5) * k * size * 0.7;
+    cell.ty = (Math.random() - 0.5) * k * size * 0.7;
+  }
+  fit(); window.addEventListener('resize', fit);
+  for (let r = 0; r < ROWS; r++) for (let q = 0; q < COLS; q++) {
+    const cell = { r, q, a: 0, x: 0, y: 0 };
+    pick(cell, r); cell.a = cell.ta; cell.x = cell.tx; cell.y = cell.ty;
+    cells.push(cell);
+  }
+
+  function draw(t) {
+    if (t - lastPick > 7000) { cells.forEach(cl => pick(cl, cl.r)); lastPick = t; }
+    c.clearRect(0, 0, w, h);
+    c.lineWidth = 0.9;
+    for (const cl of cells) {
+      cl.a += (cl.ta - cl.a) * 0.012; cl.x += (cl.tx - cl.x) * 0.012; cl.y += (cl.ty - cl.y) * 0.012;
+      const cx = ox + (cl.q + 0.5) * size + cl.x, cy = oy + (cl.r + 0.5) * size + cl.y;
+      c.save(); c.translate(cx, cy); c.rotate(cl.a);
+      c.strokeStyle = `rgba(232,214,186,${0.75 - 0.35 * cl.r / ROWS})`;
+      c.strokeRect(-size * 0.42, -size * 0.42, size * 0.84, size * 0.84);
+      c.restore();
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+// ── Hommage nach dem Prinzip von Steve Reich ─────────────────────────
+// Zwei Stimmen spielen dieselbe Schleife aus zwölf Tönen (eigene Tonfolge, pentatonisch),
+// die zweite um ein Prozent schneller. Sie wandern langsam gegeneinander und treffen sich
+// nach zwölf Versätzen wieder. Ton nur nach Klick (Web Audio, nichts wird geladen).
+(function () {
+  const cv = document.getElementById('phase-canvas');
+  const c = cv.getContext('2d');
+  const btn = document.getElementById('phase-ton');
+  const PATTERN = [0, 4, 7, 9, 7, 12, 9, 4, 14, 12, 7, 2];   // Halbtöne über dem Grundton
+  const BASE = 293.66;                                     // d'
+  const STEP = 0.2;                                        // Sekunden pro Ton, Stimme 1
+  const EPS = 0.01;                                        // Stimme 2 ist 1 % schneller
+  const N = PATTERN.length;
+  let w, h, ac = null, playing = false, timer = null, next = [0, 0], idx = [0, 0];
+  const t0 = performance.now() / 1000;
+  const flash = [new Float32Array(N), new Float32Array(N)];
+
+  function fit() {
+    const dpr = window.devicePixelRatio || 1;
+    w = cv.clientWidth; h = Math.round(Math.min(320, w * 0.5));
+    cv.style.height = h + 'px';
+    cv.width = w * dpr; cv.height = h * dpr;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  fit(); window.addEventListener('resize', fit);
+
+  const pos = (t, v) => t / (STEP / (v ? 1 + EPS : 1));     // Position in Tönen
+
+  function note(time, semis, pan) {
+    const o = ac.createOscillator(), g = ac.createGain(), p = ac.createStereoPanner();
+    o.type = 'triangle';
+    o.frequency.value = BASE * Math.pow(2, semis / 12);
+    g.gain.setValueAtTime(0, time);
+    g.gain.linearRampToValueAtTime(0.09, time + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0008, time + 0.32);
+    p.pan.value = pan;
+    o.connect(g).connect(p).connect(ac.destination);
+    o.start(time); o.stop(time + 0.34);
+  }
+
+  function schedule() {
+    const lead = 0.12;
+    for (let v = 0; v < 2; v++) {
+      while (next[v] < ac.currentTime + lead) {
+        note(next[v], PATTERN[idx[v] % N], v ? 0.55 : -0.55);
+        idx[v]++;
+        next[v] += STEP / (v ? 1 + EPS : 1);
+      }
+    }
+  }
+
+  btn.addEventListener('click', () => {
+    if (!playing) {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      ac.resume();
+      const t = performance.now() / 1000 - t0;
+      for (let v = 0; v < 2; v++) {
+        const p = pos(t, v);
+        idx[v] = Math.ceil(p);
+        next[v] = ac.currentTime + 0.05 + (Math.ceil(p) - p) * STEP / (v ? 1 + EPS : 1);
+      }
+      timer = setInterval(schedule, 25);
+      playing = true; btn.textContent = 'ton aus'; btn.setAttribute('aria-pressed', 'true');
+    } else {
+      clearInterval(timer); playing = false;
+      btn.textContent = 'ton an'; btn.setAttribute('aria-pressed', 'false');
+    }
+  });
+
+  let lastIdx = [-1, -1];
+  function draw() {
+    const t = performance.now() / 1000 - t0;
+    c.clearRect(0, 0, w, h);
+    const R = Math.min(h * 0.36, w * 0.18);
+    const centers = [[w * 0.3, h * 0.5], [w * 0.7, h * 0.5]];
+    for (let v = 0; v < 2; v++) {
+      const p = pos(t, v), i = Math.floor(p) % N;
+      if (Math.floor(p) !== lastIdx[v]) { flash[v][i] = 1; lastIdx[v] = Math.floor(p); }
+      const [cx, cy] = centers[v];
+      c.strokeStyle = 'rgba(232,214,186,0.12)'; c.lineWidth = 0.6;
+      c.beginPath(); c.arc(cx, cy, R, 0, Math.PI * 2); c.stroke();
+      for (let k = 0; k < N; k++) {
+        const a = -Math.PI / 2 + k / N * Math.PI * 2;
+        const rr = 2 + PATTERN[k] / 14 * 4;                   // höhere Töne: größere Punkte
+        flash[v][k] *= 0.93;
+        c.fillStyle = `rgba(${v ? '176,96,58' : '232,214,186'},${0.25 + 0.7 * flash[v][k]})`;
+        c.beginPath(); c.arc(cx + Math.cos(a) * R, cy + Math.sin(a) * R, rr, 0, Math.PI * 2); c.fill();
+      }
+      const a = -Math.PI / 2 + (p % N) / N * Math.PI * 2;
+      c.strokeStyle = `rgba(${v ? '176,96,58' : '232,214,186'},0.55)`; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.cos(a) * R * 0.86, cy + Math.sin(a) * R * 0.86); c.stroke();
+    }
+    const shift = (pos(t, 1) - pos(t, 0)) % N;
+    c.fillStyle = 'rgba(232,214,186,0.5)';
+    c.font = `italic ${Math.max(12, Math.min(15, w / 40))}px 'Cormorant Garamond', serif`;
+    c.textAlign = 'center';
+    c.fillText(`versatz ${shift.toFixed(1)} von ${N} tönen`, w / 2, h - 12);
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
