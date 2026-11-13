@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="dark">
+  <style>html{background:#000;color-scheme:dark}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neu — emergenz.art</title>
+  <meta name="description" content="Was zuletzt auf emergenz.art dazukam: neue Texte, Würdigungen und Begriffe zur Emergenz – auch als RSS-Feed zum Abonnieren.">
+  <link rel="canonical" href="https://emergenz.art/neu/">
+  <link rel="alternate" type="application/rss+xml" title="emergenz.art" href="/feed.xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Neu — emergenz.art">
+  <meta property="og:description" content="Was zuletzt auf emergenz.art dazukam – auch als RSS-Feed zum Abonnieren.">
+  <meta property="og:url" content="https://emergenz.art/neu/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000; color: rgba(232,224,208,0.85);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      min-height: 100vh; overflow-x: hidden;
+    }
+    #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    #back {
+      position: fixed; top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em; z-index: 60;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase; text-decoration: none;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+    #page-name {
+      position: fixed; top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase; pointer-events: none; z-index: 30;
+    }
+    #content {
+      position: relative; z-index: 10; max-width: 680px; margin: 0 auto;
+      padding: clamp(70px,10vh,110px) clamp(24px,5vw,60px) clamp(60px,10vh,100px);
+    }
+    .section-label {
+      font-size: clamp(0.68rem,1vw,0.82rem); letter-spacing: 0.35em;
+      color: rgba(232,224,208,0.38); text-transform: lowercase;
+      margin-bottom: clamp(2rem,5vh,3.5rem);
+    }
+    h1 {
+      font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 300; letter-spacing: 0.08em;
+      color: rgba(232,224,208,0.92); margin-bottom: 0.8em;
+    }
+    .erklaerung {
+      font-family: 'Literata', Georgia, serif; font-weight: 300;
+      font-size: clamp(0.95rem,1.3vw,1.05rem); line-height: 1.85;
+      color: rgba(232,224,208,0.62);
+      padding-left: clamp(1rem,2vw,1.6rem);
+      border-left: 0.5px solid rgba(232,224,208,0.22);
+      margin-bottom: clamp(2.5rem,6vh,4rem);
+    }
+    .erklaerung p + p { margin-top: 0.8em; }
+    .feed-zeile { display: flex; flex-wrap: wrap; gap: 0.6em; align-items: center; margin-top: 0.5em; }
+    .adresse {
+      font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.88em;
+      color: #d08a60; background: rgba(176,96,58,0.08);
+      padding: 0.2em 0.55em; user-select: all; word-break: break-all;
+    }
+    .kopieren {
+      font-family: 'Cormorant Garamond', serif; font-size: 0.95em; letter-spacing: 0.12em;
+      color: rgba(232,214,186,0.78); background: none; cursor: pointer;
+      border: 0.5px solid rgba(232,214,186,0.3); padding: 0.15em 0.7em;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+    .kopieren:hover, .kopieren:focus-visible { color: #fff; border-color: rgba(232,214,186,0.6); outline: none; }
+    ol.neu { list-style: none; }
+    ol.neu li { padding: clamp(1.2rem,2.5vh,1.7rem) 0; border-top: 0.5px solid rgba(232,224,208,0.1); }
+    .eintrag-kopf {
+      font-size: clamp(0.72rem,1vw,0.84rem); letter-spacing: 0.22em;
+      text-transform: lowercase; color: rgba(232,224,208,0.4); margin-bottom: 0.45em;
+    }
+    .eintrag-kopf .rubrik { color: #b0603a; }
+    ol.neu li a {
+      font-size: clamp(1.3rem,2.3vw,1.7rem); letter-spacing: 0.06em;
+      color: rgba(232,224,208,0.92); text-decoration: none; transition: color 0.4s ease;
+    }
+    ol.neu li a:hover, ol.neu li a:focus-visible { color: #fff; }
+    ol.neu li p {
+      font-family: 'Literata', Georgia, serif; font-weight: 300;
+      font-size: clamp(0.98rem,1.4vw,1.08rem); line-height: 1.8;
+      color: rgba(232,224,208,0.68); margin-top: 0.5em;
+    }
+  </style>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <a id="back" href="/">emergenz.art</a>
+  <h1 id="page-name">neu</h1>
+
+  <main id="content">
+
+    <div class="section-label">neu · was zuletzt dazukam</div>
+    <h1>Neues auf emergenz.art</h1>
+
+    <div class="erklaerung">
+      <p>Die Website wächst langsam: neue Texte im punkt, neue Würdigungen in der Kunst, neue Begriffe im Glossar. Hier steht, was zuletzt dazukam.</p>
+      <p>Wer nichts verpassen will, kann den Feed abonnieren, ohne Newsletter und ohne Anmeldung. Die Adresse einfach in einen Feedreader eintragen, etwa Feedly, Inoreader, NetNewsWire oder Thunderbird:</p>
+      <div class="feed-zeile">
+        <span class="adresse">https://emergenz.art/feed.xml</span>
+        <button class="kopieren" type="button" data-text="https://emergenz.art/feed.xml">adresse kopieren</button>
+      </div>
+    </div>
+
+    <ol class="neu">
+      <li>
+        <div class="eintrag-kopf"><span class="rubrik">punkt</span> · <time datetime="2026-11-08">8. November 2026</time></div>
+        <a href="/punkt/kippt-hier-etwas/">Kippt hier etwas?</a>
+        <p>Der Einbruch der KI-Aktien nach den US-Zwischenwahlen 2026, geprüft an den Merkmalen eines Kipppunkts: Sandhaufen, Reflexivität, gekoppelte Kipppunkte und Hysterese.</p>
+      </li>
+      <li>
+        <div class="eintrag-kopf"><span class="rubrik">würdigung</span> · <time datetime="2026-11-06">6. November 2026</time></div>
+        <a href="/art/kunst/">Emergenz in der Kunst</a>
+        <p>Fünfzehn Werke von Ligeti bis Lem, die ihre Bedingungen gestalten statt sich selbst – mit eigenen Hommagen, die das Prinzip zeigen.</p>
+      </li>
+      <li>
+        <div class="eintrag-kopf"><span class="rubrik">nachschlagen</span> · <time datetime="2026-11-06">6. November 2026</time></div>
+        <a href="/glossar/">Glossar</a>
+        <p>47 Begriffe zur Emergenz, von Attraktor und Autopoiesis über Hysterese und Kipppunkt bis Symmetriebrechung, kurz erklärt.</p>
+      </li>
+      <li>
+        <div class="eintrag-kopf"><span class="rubrik">emergenz</span> · <time datetime="2026-11-05">5. November 2026</time></div>
+        <a href="/emergenz/selbstbezug/">Selbstbezug und Rekursion</a>
+        <p>Zirkuläre Kausalität, Fraktale, Gödels Satz, Leben als Autopoiesis, das Ich als seltsame Schleife – und Schleifen, die kippen.</p>
+      </li>
+      <li>
+        <div class="eintrag-kopf"><span class="rubrik">emergenz</span> · <time datetime="2026-11-05">5. November 2026</time></div>
+        <a href="/emergenz/scheinbare-emergenz/">Scheinbare Emergenz</a>
+        <p>Was Emergenz nicht ist: bloße Summen, versteckte Dirigenten, Muster im Auge des Betrachters, Sprünge in der Messung – und ein Prüfstein für echte Emergenz.</p>
+      </li>
+      <li>
+        <div class="eintrag-kopf"><span class="rubrik">emergenz</span> · <time datetime="2026-11-05">5. November 2026</time></div>
+        <a href="/emergenz/fachrichtungen/stadt/">Stadt</a>
+        <p>Lebendige Viertel nach Jane Jacobs, der Stau aus dem Nichts, Trampelpfade und Schleimpilznetze, die Skalengesetze der Städte.</p>
+      </li>
+      <li>
+        <div class="eintrag-kopf"><span class="rubrik">punkt</span> · <time datetime="2026-11-05">5. November 2026</time></div>
+        <a href="/punkt/ki/">Künstliche Intelligenz</a>
+        <p>Die Schwelle, die niemand sieht – über Emergenz in neuronalen Netzen und die Frage, ob AGI ein Kipppunkt ist.</p>
+      </li>
+      <li>
+        <div class="eintrag-kopf"><span class="rubrik">punkt</span> · <time datetime="2026-11-05">5. November 2026</time></div>
+        <a href="/punkt/politik/">Zwei Uhren</a>
+        <p>Klimapolitik, Kipppunkte und die Verantwortung für Prozesse, die länger dauern als eine Legislaturperiode.</p>
+      </li>
+      <li>
+        <div class="eintrag-kopf"><span class="rubrik">punkt</span> · <time datetime="2026-11-04">4. November 2026</time></div>
+        <a href="/punkt/hysterese/">Hysterese</a>
+        <p>Der Weg zurück ist ein anderer – über Irreversibilität, Attraktoren und das Gedächtnis komplexer Systeme.</p>
+      </li>
+    </ol>
+
+  </main>
+
+  <nav class="site-footer" aria-label="Bereiche">
+    <ul>
+      <li><a href="/emergenz/">emergenz</a></li>
+      <li><a href="/punkt/">punkt</a></li>
+      <li><a href="/art/">art</a></li>
+      <li><a href="/nachschlagen/">literatur</a></li>
+      <li><a href="/planetare-kognition/">planetare kognition</a></li>
+    </ul>
+    <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/neu/">neu</a> · <a href="/kontakt/">kontakt</a> · <a href="/impressum/">impressum</a></p>
+  </nav>
+
+<script>
+// Adresse kopieren
+for (const b of document.querySelectorAll('.kopieren')) {
+  b.addEventListener('click', async () => {
+    const t = b.dataset.text, alt = b.textContent;
+    try { await navigator.clipboard.writeText(t); }
+    catch (e) {
+      const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta);
+      ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove();
+    }
+    b.textContent = 'kopiert'; setTimeout(() => { b.textContent = alt; }, 1800);
+  });
+}
+
+// Hintergrund: von oben fallen in langen Abständen einzelne Lichtpunkte,
+// wie Nachrichten, die ankommen, und verglimmen langsam.
+const cv = document.getElementById('bg-canvas');
+const c = cv.getContext('2d');
+let W, H;
+function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+const punkte = [];
+let last = 0;
+function draw(now) {
+  if (now - last > 1600) {
+    last = now;
+    punkte.push({ x: Math.random() * W, y: -10, v: 0.25 + Math.random() * 0.35, a: 1, z: H * (0.3 + Math.random() * 0.6) });
+  }
+  c.clearRect(0, 0, W, H);
+  for (let i = punkte.length - 1; i >= 0; i--) {
+    const p = punkte[i];
+    if (p.y < p.z) p.y += p.v; else p.a *= 0.995;
+    const kupfer = p.y >= p.z;
+    c.fillStyle = kupfer ? `rgba(176,96,58,${0.5 * p.a})` : `rgba(232,224,208,${0.22 * p.a})`;
+    c.beginPath(); c.arc(p.x, p.y, kupfer ? 1.8 : 1.2, 0, Math.PI * 2); c.fill();
+    if (p.a < 0.02) punkte.splice(i, 1);
+  }
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

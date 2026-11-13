@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>emergenz.art</title>
+    <link>https://emergenz.art/</link>
+    <atom:link href="https://emergenz.art/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>Neue Texte, Würdigungen und Begriffe zu Emergenz, Kipppunkten und Kunst.</description>
+    <language>de</language>
+    <lastBuildDate>Sun, 08 Nov 2026 12:00:00 +0100</lastBuildDate>
+    <item>
+      <title>Kippt hier etwas?</title>
+      <link>https://emergenz.art/punkt/kippt-hier-etwas/</link>
+      <guid isPermaLink="true">https://emergenz.art/punkt/kippt-hier-etwas/</guid>
+      <pubDate>Sun, 08 Nov 2026 12:00:00 +0100</pubDate>
+      <category>punkt</category>
+      <description>Der Einbruch der KI-Aktien nach den US-Zwischenwahlen 2026, geprüft an den Merkmalen eines Kipppunkts: Sandhaufen, Reflexivität, gekoppelte Kipppunkte und Hysterese.</description>
+    </item>
+    <item>
+      <title>Emergenz in der Kunst</title>
+      <link>https://emergenz.art/art/kunst/</link>
+      <guid isPermaLink="true">https://emergenz.art/art/kunst/</guid>
+      <pubDate>Fri, 06 Nov 2026 12:00:00 +0100</pubDate>
+      <category>würdigung</category>
+      <description>Fünfzehn Werke von Ligeti bis Lem, die ihre Bedingungen gestalten statt sich selbst – mit eigenen Hommagen, die das Prinzip zeigen.</description>
+    </item>
+    <item>
+      <title>Glossar</title>
+      <link>https://emergenz.art/glossar/</link>
+      <guid isPermaLink="true">https://emergenz.art/glossar/</guid>
+      <pubDate>Fri, 06 Nov 2026 12:00:00 +0100</pubDate>
+      <category>nachschlagen</category>
+      <description>47 Begriffe zur Emergenz, von Attraktor und Autopoiesis über Hysterese und Kipppunkt bis Symmetriebrechung, kurz erklärt.</description>
+    </item>
+    <item>
+      <title>Selbstbezug und Rekursion</title>
+      <link>https://emergenz.art/emergenz/selbstbezug/</link>
+      <guid isPermaLink="true">https://emergenz.art/emergenz/selbstbezug/</guid>
+      <pubDate>Thu, 05 Nov 2026 12:00:00 +0100</pubDate>
+      <category>emergenz</category>
+      <description>Zirkuläre Kausalität, Fraktale, Gödels Satz, Leben als Autopoiesis, das Ich als seltsame Schleife – und Schleifen, die kippen.</description>
+    </item>
+    <item>
+      <title>Scheinbare Emergenz</title>
+      <link>https://emergenz.art/emergenz/scheinbare-emergenz/</link>
+      <guid isPermaLink="true">https://emergenz.art/emergenz/scheinbare-emergenz/</guid>
+      <pubDate>Thu, 05 Nov 2026 12:00:00 +0100</pubDate>
+      <category>emergenz</category>
+      <description>Was Emergenz nicht ist: bloße Summen, versteckte Dirigenten, Muster im Auge des Betrachters, Sprünge in der Messung – und ein Prüfstein für echte Emergenz.</description>
+    </item>
+    <item>
+      <title>Stadt</title>
+      <link>https://emergenz.art/emergenz/fachrichtungen/stadt/</link>
+      <guid isPermaLink="true">https://emergenz.art/emergenz/fachrichtungen/stadt/</guid>
+      <pubDate>Thu, 05 Nov 2026 12:00:00 +0100</pubDate>
+      <category>emergenz</category>
+      <description>Lebendige Viertel nach Jane Jacobs, der Stau aus dem Nichts, Trampelpfade und Schleimpilznetze, die Skalengesetze der Städte.</description>
+    </item>
+    <item>
+      <title>Künstliche Intelligenz</title>
+      <link>https://emergenz.art/punkt/ki/</link>
+      <guid isPermaLink="true">https://emergenz.art/punkt/ki/</guid>
+      <pubDate>Thu, 05 Nov 2026 12:00:00 +0100</pubDate>
+      <category>punkt</category>
+      <description>Die Schwelle, die niemand sieht – über Emergenz in neuronalen Netzen und die Frage, ob AGI ein Kipppunkt ist.</description>
+    </item>
+    <item>
+      <title>Zwei Uhren</title>
+      <link>https://emergenz.art/punkt/politik/</link>
+      <guid isPermaLink="true">https://emergenz.art/punkt/politik/</guid>
+      <pubDate>Thu, 05 Nov 2026 12:00:00 +0100</pubDate>
+      <category>punkt</category>
+      <description>Klimapolitik, Kipppunkte und die Verantwortung für Prozesse, die länger dauern als eine Legislaturperiode.</description>
+    </item>
+    <item>
+      <title>Hysterese</title>
+      <link>https://emergenz.art/punkt/hysterese/</link>
+      <guid isPermaLink="true">https://emergenz.art/punkt/hysterese/</guid>
+      <pubDate>Wed, 04 Nov 2026 12:00:00 +0100</pubDate>
+      <category>punkt</category>
+      <description>Der Weg zurück ist ein anderer – über Irreversibilität, Attraktoren und das Gedächtnis komplexer Systeme.</description>
+    </item>
+  </channel>
+</rss>
