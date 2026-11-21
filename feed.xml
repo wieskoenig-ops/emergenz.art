@@ -6,7 +6,15 @@
     <atom:link href="https://emergenz.art/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Neue Texte, Würdigungen und Begriffe zu Emergenz, Kipppunkten und Kunst.</description>
     <language>de</language>
-    <lastBuildDate>Sun, 08 Nov 2026 12:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 21 Nov 2026 12:00:00 +0100</lastBuildDate>
+    <item>
+      <title>planet.emergenz.art</title>
+      <link>https://planet.emergenz.art/</link>
+      <guid isPermaLink="true">https://planet.emergenz.art/</guid>
+      <pubDate>Sat, 21 Nov 2026 12:00:00 +0100</pubDate>
+      <category>punkt</category>
+      <description>Die Essays über Kipppunkte haben eine eigene Seite bekommen – sachlich zum Lesen und auch auf Englisch. Hier auf emergenz.art bleiben sie ebenfalls stehen.</description>
+    </item>
     <item>
       <title>Kippt hier etwas?</title>
       <link>https://emergenz.art/punkt/kippt-hier-etwas/</link>

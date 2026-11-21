@@ -32,7 +32,7 @@ def rfc822(datum):
 # RSS
 items = []
 for e in eintraege:
-    url = BASE + e['url']
+    url = e['url'] if e['url'].startswith('http') else BASE + e['url']
     items.append(f'''    <item>
       <title>{escape(e['titel'])}</title>
       <link>{url}</link>

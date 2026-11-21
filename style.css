@@ -146,3 +146,9 @@ a.glossar:hover, a.glossar:focus-visible,
   color: #d08a60;
   border-bottom-style: solid;
 }
+
+/* Hinweis auf planet.emergenz.art (Punkt-Rubrik), ergänzt 2026-11-21 */
+.planet-hinweis { font-family: 'Cormorant Garamond', serif; font-size: clamp(0.85rem, 1.2vw, 0.98rem); letter-spacing: 0.04em; color: rgba(232,224,208,0.5); margin-top: 0.9em; }
+.planet-hinweis p { font-size: inherit !important; color: inherit !important; line-height: 1.8; }
+.planet-hinweis a { color: #c8784f; text-decoration: none; border-bottom: 1px solid rgba(200,120,79,0.4); }
+.planet-hinweis a:hover { color: #e0956b; border-bottom-color: currentColor; }
