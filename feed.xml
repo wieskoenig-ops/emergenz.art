@@ -6,7 +6,15 @@
     <atom:link href="https://emergenz.art/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Neue Texte, Würdigungen und Begriffe zu Emergenz, Kipppunkten und Kunst.</description>
     <language>de</language>
-    <lastBuildDate>Sat, 21 Nov 2026 12:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 22 Nov 2026 12:00:00 +0100</lastBuildDate>
+    <item>
+      <title>Der Text, den es nicht gibt</title>
+      <link>https://emergenz.art/punkt/cop31/</link>
+      <guid isPermaLink="true">https://emergenz.art/punkt/cop31/</guid>
+      <pubDate>Sun, 22 Nov 2026 12:00:00 +0100</pubDate>
+      <category>punkt</category>
+      <description>Die COP31 in Antalya endete ohne Abschlusstext. Ein Überblick über schrumpfende Entwürfe, die Konsensregel und das, was unabhängig vom Text weiterläuft. Die Einzelessays zu Overshoot, Strom, Wasser und Recycling stehen auf planet.emergenz.art.</description>
+    </item>
     <item>
       <title>planet.emergenz.art</title>
       <link>https://planet.emergenz.art/</link>
