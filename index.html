@@ -115,7 +115,7 @@
 
     /* Unterzeilen: sagen, in welche Tonlage ein Feld führt */
     .cell-label.has-sub { flex-direction: column; gap: 0.45em; }
-    #c4 .dot { color: #b0603a; }
+    #c4 .dot { display: inline-block; width: 0.34em; height: 0.34em; margin-left: 0.12em; border-radius: 50%; background: #b0603a; vertical-align: baseline; }
     .cell-sub {
       font-style: italic;
       font-size: clamp(0.85rem, 1.05vw, 1.05rem);
@@ -228,7 +228,7 @@
 
     <div class="band" id="band-bot">
       <a class="cell" id="c3" href="/nachschlagen/"><span class="cell-label has-sub"><span>literatur</span><span class="cell-sub">bücher und begriffe</span></span></a>
-      <a class="cell" id="c4" href="https://planet.emergenz.art/"><span class="cell-label has-sub"><span>planet<span class="dot">.</span></span><span class="cell-sub">wo systeme kippen</span></span></a>
+      <a class="cell" id="c4" href="https://planet.emergenz.art/"><span class="cell-label has-sub"><span>planet<span class="dot" aria-hidden="true"></span></span><span class="cell-sub">wo systeme kippen</span></span></a>
       <div class="cell-stack">
         <a class="cell" id="c5" href="/kontakt/"><span class="cell-label">kontakt</span></a>
         <a class="cell" id="c6" href="/impressum/"><span class="cell-label">impressum</span></a>
