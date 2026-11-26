@@ -259,10 +259,10 @@
     </div>
 
     <div class="adresse">
-      <span class="adresse-mail" id="mail">mail.emergenz@web.de</span>
+      <span class="adresse-mail" id="mail">read.me@web.de</span>
       <div class="knoepfe">
         <button type="button" class="knopf" id="kopieren">adresse kopieren</button>
-        <a class="knopf" id="schreiben" href="mailto:mail.emergenz@web.de" target="_blank" rel="noopener">e-mail schreiben</a>
+        <a class="knopf" id="schreiben" href="mailto:read.me@web.de?subject=emergenz.art" target="_blank" rel="noopener">e-mail schreiben</a>
       </div>
     </div>
 
@@ -298,7 +298,7 @@
 // Kontakt ohne Server: nichts wird übertragen oder gespeichert.
 // Kopieren über die Zwischenablage, Senden über das eigene E-Mail-Programm (mailto).
 (function () {
-  const ADR = 'mail.emergenz@web.de';
+  const ADR = 'read.me@web.de';
   function kopiere(text, knopf, label) {
     const fertig = () => {
       knopf.textContent = 'kopiert'; knopf.classList.add('ok');
@@ -323,7 +323,8 @@
   const nachricht = document.getElementById('nachricht');
   form.addEventListener('submit', e => {
     e.preventDefault();
-    const b = betreff.value.trim() || 'Nachricht über emergenz.art';
+    const t = betreff.value.trim();
+    const b = t ? 'emergenz.art: ' + t : 'Nachricht über emergenz.art';
     const n = nachricht.value.trim();
     const url = 'mailto:' + ADR + '?subject=' + encodeURIComponent(b) + (n ? '&body=' + encodeURIComponent(n) : '');
     // wie der Knopf „e-mail schreiben“: in neuem Tab öffnen, damit emergenz.art offen bleibt
@@ -333,7 +334,7 @@
   });
   const k2 = document.getElementById('text-kopieren');
   k2.addEventListener('click', () => {
-    const text = (betreff.value.trim() ? 'Betreff: ' + betreff.value.trim() + '\n\n' : '') + nachricht.value.trim();
+    const text = (betreff.value.trim() ? 'Betreff: emergenz.art: ' + betreff.value.trim() + '\n\n' : '') + nachricht.value.trim();
     kopiere(text || ADR, k2, 'text kopieren');
   });
 })();
