@@ -6,7 +6,15 @@
     <atom:link href="https://emergenz.art/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Neue Texte, Würdigungen und Begriffe zu Emergenz, Kipppunkten und Kunst.</description>
     <language>de</language>
-    <lastBuildDate>Sun, 22 Nov 2026 12:00:00 +0100</lastBuildDate>
+    <lastBuildDate>Fri, 27 Nov 2026 12:00:00 +0100</lastBuildDate>
+    <item>
+      <title>Links</title>
+      <link>https://emergenz.art/links/</link>
+      <guid isPermaLink="true">https://emergenz.art/links/</guid>
+      <pubDate>Fri, 27 Nov 2026 12:00:00 +0100</pubDate>
+      <category>nachschlagen</category>
+      <description>Neben Literatur und Glossar gibt es jetzt eine dritte Seite zum Nachschlagen: ausgewählte Orte im Netz zum Weiterforschen, von Forschungsinstituten und Klimadaten bis zu Simulationen zum Selbstausprobieren.</description>
+    </item>
     <item>
       <title>Der Text, den es nicht gibt</title>
       <link>https://emergenz.art/punkt/cop31/</link>

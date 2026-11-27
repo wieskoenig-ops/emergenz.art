@@ -1,12 +1,331 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="color-scheme" content="dark">
-<style>html{background:#000;color-scheme:dark}</style>
-<title>Emergenz in der Kunst — emergenz.art</title>
-<meta http-equiv="refresh" content="0; url=/art/kunst/">
-<link rel="canonical" href="https://emergenz.art/art/kunst/">
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="dark">
+  <style>html{background:#000;color-scheme:dark}</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Links — emergenz.art</title>
+  <meta name="description" content="Ausgewählte Orte im Netz zu Emergenz, Komplexität und Kipppunkten: Forschungsinstitute, Klimadaten, Simulationen zum Selbstausprobieren und generative Kunst.">
+  <link rel="canonical" href="https://emergenz.art/links/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="emergenz.art">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:title" content="Links — emergenz.art">
+  <meta property="og:description" content="Ausgewählte Orte im Netz zu Emergenz, Komplexität und Kipppunkten: Forschungsinstitute, Klimadaten, Simulationen zum Selbstausprobieren und generative Kunst.">
+  <meta property="og:url" content="https://emergenz.art/links/">
+  <meta property="og:image" content="https://emergenz.art/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate" type="application/rss+xml" title="emergenz.art" href="/feed.xml">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+
+    #back {
+      position: fixed;
+      top: clamp(8px,1.6vh,18px); left: clamp(8px,2vw,30px);
+      padding: 0.35em 0.75em;
+      font-family: 'Cormorant Garamond', serif; font-weight: 400;
+      font-size: clamp(0.95rem,1.5vw,1.15rem); letter-spacing: 0.28em;
+      color: rgba(232,214,186,0.78); text-transform: lowercase;
+      text-decoration: none; z-index: 60;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      text-shadow: 0 0 8px #000;
+      transition: color 0.4s ease, background 0.4s ease;
+    }
+    #back:hover, #back:focus-visible { color: rgba(240,224,196,1); background: rgba(0,0,0,0.7); }
+    #back::before { content: '← '; letter-spacing: 0; }
+
+    #page-name {
+      position: fixed;
+      top: clamp(10px,2vh,22px); right: clamp(14px,2.5vw,36px);
+      font-family: 'Cormorant Garamond', serif; font-weight: 300;
+      font-size: clamp(0.65rem,1.1vw,0.9rem); letter-spacing: 0.28em;
+      color: #b0603a; text-transform: lowercase;
+      pointer-events: none; z-index: 20;
+    }
+
+    #canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; }
+
+    #panel {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      overflow-y: auto;
+      padding: clamp(80px,12vh,140px) clamp(16px,8vw,120px) clamp(60px,10vh,120px);
+      gap: clamp(2rem,4vh,4rem);
+    }
+
+    blockquote {
+      max-width: 580px;
+      opacity: 0;
+      animation: fadein 2s ease 0.6s forwards;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: clamp(1.5rem,3vh,2.5rem) clamp(1.5rem,3vw,2.5rem);
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+      text-align: center;
+    }
+
+    blockquote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: italic;
+      font-size: clamp(1.1rem,2vw,1.6rem);
+      letter-spacing: 0.06em; line-height: 1.8;
+      color: rgba(232,224,208,0.9);
+      margin-bottom: 1.2rem;
+    }
+
+    blockquote cite {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: normal;
+      font-size: clamp(0.65rem,1vw,0.82rem);
+      letter-spacing: 0.22em;
+      color: rgba(232,224,208,0.3);
+      text-transform: lowercase;
+    }
+
+    .note {
+      max-width: 580px;
+      opacity: 0;
+      animation: fadein 1.5s ease 1.4s forwards;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300; font-style: italic;
+      font-size: clamp(0.85rem,1.2vw,1rem);
+      letter-spacing: 0.12em; line-height: 1.8;
+      color: rgba(232,224,208,0.5);
+      text-align: center;
+    }
+
+    /* ── Literaturliste ── */
+    #biblio {
+      width: 100%; max-width: 680px;
+      opacity: 0;
+      animation: fadein 1.5s ease 1.8s forwards;
+      display: flex; flex-direction: column;
+      gap: clamp(1.5rem,3vh,2.5rem);
+    }
+
+    .group {
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: clamp(1.2rem,2.5vh,2rem) clamp(1.2rem,3vw,2.2rem);
+      border-left: 0.5px solid rgba(232,224,208,0.15);
+    }
+
+    .group h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(0.85rem,1.3vw,1rem);
+      letter-spacing: 0.28em;
+      color: #b0603a;
+      text-transform: lowercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .group ul { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+
+    .group li {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(1rem,1.5vw,1.15rem);
+      line-height: 1.55;
+      color: rgba(232,214,186,0.85);
+    }
+
+    .group .author { letter-spacing: 0.04em; }
+    .group .title  { font-style: italic; color: rgba(240,224,196,1); }
+    .group .meta   { color: rgba(232,214,186,0.55); }
+    .group .why {
+      display: block;
+      font-size: 0.88em;
+      color: rgba(232,214,186,0.55);
+      margin-top: 0.15rem;
+    }
+
+    .group a.title { text-decoration: none; border-bottom: 0.5px solid rgba(176,96,58,0.45); transition: border-color 0.4s ease, color 0.4s ease; }
+    .group a.title:hover, .group a.title:focus-visible { border-color: #b0603a; color: #fff; outline: none; }
+    .group a.title::after { content: ' ↗'; font-style: normal; font-size: 0.8em; color: rgba(176,96,58,0.8); }
+    .note a { color: inherit; text-decoration: none; border-bottom: 0.5px solid rgba(176,96,58,0.45); }
+    .note a:hover, .note a:focus-visible { color: rgba(240,224,196,1); outline: none; }
+    .pname { white-space: nowrap; font-style: normal; }
+    .pdot { display: inline-block; width: 0.34em; height: 0.34em; margin-left: 0.12em; margin-right: 0.08em; border-radius: 50%; background: #b0603a; vertical-align: baseline; }
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+  <link rel="stylesheet" href="/style.css">
 </head>
-<body><a href="/art/kunst/">weiter zu emergenz in der kunst</a></body>
+<body>
+  <a id="back" href="/nachschlagen/">nachschlagen</a>
+  <h1 id="page-name">links</h1>
+  <canvas id="canvas" aria-hidden="true"></canvas>
+  <div id="panel">
+    <blockquote>
+      <p>„Wenn wir versuchen, etwas für sich allein herauszugreifen, finden wir es mit allem anderen im Universum verknüpft.“</p>
+      <cite>John Muir · My First Summer in the Sierra, 1911</cite>
+    </blockquote>
+    <div class="note">Orte im Netz, an denen man weiterforschen kann. Jeweils mit einem Satz dazu, was man dort findet.</div>
+    <div id="biblio">
+      <section class="group">
+        <h2>forschung · emergenz und komplexität</h2>
+        <ul>
+          <li><a class="title" href="https://www.santafe.edu/" target="_blank" rel="noopener">Santa Fe Institute</a> <span class="meta">· santafe.edu</span>
+            <span class="why">Seit 1984 der Gründungsort der Komplexitätsforschung, in New Mexico.</span></li>
+          <li><a class="title" href="https://csh.ac.at/" target="_blank" rel="noopener">Complexity Science Hub</a> <span class="meta">· csh.ac.at</span>
+            <span class="why">In Wien: Netzwerke, Wirtschaft und Gesellschaft als komplexe Systeme.</span></li>
+          <li><a class="title" href="https://www.ds.mpg.de/" target="_blank" rel="noopener">Max-Planck-Institut für Dynamik und Selbstorganisation</a> <span class="meta">· ds.mpg.de</span>
+            <span class="why">In Göttingen: von Turbulenz bis zu lebender Materie.</span></li>
+          <li><a class="title" href="https://plato.stanford.edu/entries/properties-emergent/" target="_blank" rel="noopener">Stanford Encyclopedia of Philosophy: Emergent Properties</a> <span class="meta">· plato.stanford.edu</span>
+            <span class="why">Die philosophische Debatte um Emergenz, sorgfältig geordnet.</span></li>
+        </ul>
+      </section>
+      <section class="group">
+        <h2>kipppunkte · klima</h2>
+        <ul>
+          <li><a class="title" href="https://www.pik-potsdam.de/de" target="_blank" rel="noopener">Potsdam-Institut für Klimafolgenforschung</a> <span class="meta">· pik-potsdam.de</span>
+            <span class="why">Kippelemente im Erdsystem, die Atlantikumwälzströmung, planetare Grenzen.</span></li>
+          <li><a class="title" href="https://global-tipping-points.org/" target="_blank" rel="noopener">Global Tipping Points Report</a> <span class="meta">· global-tipping-points.org</span>
+            <span class="why">Kipppunkte im Erdsystem und positive Kipppunkte in der Gesellschaft, federführend von der Universität Exeter.</span></li>
+          <li><a class="title" href="https://www.stockholmresilience.org/" target="_blank" rel="noopener">Stockholm Resilience Centre</a> <span class="meta">· stockholmresilience.org</span>
+            <span class="why">Resilienz von Ökosystemen und das Konzept der planetaren Grenzen.</span></li>
+          <li><a class="title" href="https://rapid.ac.uk/" target="_blank" rel="noopener">RAPID</a> <span class="meta">· rapid.ac.uk</span>
+            <span class="why">Seit 2004 wird die Atlantikumwälzströmung bei 26 Grad Nord gemessen. Die Daten hinter dem Essay über die AMOC.</span></li>
+          <li><a class="title" href="https://www.ipcc.ch/" target="_blank" rel="noopener">Weltklimarat IPCC</a> <span class="meta">· ipcc.ch</span>
+            <span class="why">Die Sachstandsberichte, auf die sich die Klimapolitik beruft.</span></li>
+        </ul>
+      </section>
+      <section class="group">
+        <h2>daten und einordnung</h2>
+        <ul>
+          <li><a class="title" href="https://www.carbonbrief.org/" target="_blank" rel="noopener">Carbon Brief</a> <span class="meta">· carbonbrief.org</span>
+            <span class="why">Klimawissenschaft und Klimaverhandlungen, genau und schnell erklärt.</span></li>
+          <li><a class="title" href="https://ourworldindata.org/co2-and-greenhouse-gas-emissions" target="_blank" rel="noopener">Our World in Data</a> <span class="meta">· ourworldindata.org</span>
+            <span class="why">Emissionen, Energie und Entwicklung als frei nutzbare Grafiken.</span></li>
+          <li><a class="title" href="https://www.klimafakten.de/" target="_blank" rel="noopener">klimafakten.de</a> <span class="meta">· klimafakten.de</span>
+            <span class="why">Klimawissen auf Deutsch, geprüft und verständlich aufbereitet.</span></li>
+          <li><a class="title" href="https://climateactiontracker.org/" target="_blank" rel="noopener">Climate Action Tracker</a> <span class="meta">· climateactiontracker.org</span>
+            <span class="why">Was die Zusagen der Staaten zusammen für die Erwärmung bedeuten.</span></li>
+        </ul>
+      </section>
+      <section class="group">
+        <h2>selbst ausprobieren</h2>
+        <ul>
+          <li><a class="title" href="https://www.complexityexplorer.org/" target="_blank" rel="noopener">Complexity Explorer</a> <span class="meta">· complexityexplorer.org</span>
+            <span class="why">Kostenlose Onlinekurse des Santa Fe Institute, darunter Melanie Mitchells Einführung in die Komplexität.</span></li>
+          <li><a class="title" href="https://www.netlogoweb.org/" target="_blank" rel="noopener">NetLogo Web</a> <span class="meta">· netlogoweb.org</span>
+            <span class="why">Agentenmodelle im Browser: Schwärme, Ameisen, Waldbrände, Segregation. Jede Regel lässt sich verändern.</span></li>
+          <li><a class="title" href="https://ncase.me/polygons/" target="_blank" rel="noopener">Parable of the Polygons</a> <span class="meta">· ncase.me</span>
+            <span class="why">Vi Hart und Nicky Case spielen Schellings Segregationsmodell durch: kleine Vorlieben, große Muster.</span></li>
+          <li><a class="title" href="https://playgameoflife.com/" target="_blank" rel="noopener">Play Game of Life</a> <span class="meta">· playgameoflife.com</span>
+            <span class="why">Conways Spiel des Lebens zum Selbstzeichnen: wenige Regeln, unerschöpfliche Formen.</span></li>
+          <li><a class="title" href="https://www.red3d.com/cwr/boids/" target="_blank" rel="noopener">Boids</a> <span class="meta">· red3d.com</span>
+            <span class="why">Craig Reynolds’ eigene Seite zu seinem Schwarmmodell: die drei Regeln hinter jedem Computerschwarm.</span></li>
+          <li><a class="title" href="https://explorabl.es/" target="_blank" rel="noopener">Explorable Explanations</a> <span class="meta">· explorabl.es</span>
+            <span class="why">Eine Sammlung interaktiver Erklärstücke zu Systemen, Netzwerken und Mathematik.</span></li>
+        </ul>
+      </section>
+      <section class="group">
+        <h2>kunst und code</h2>
+        <ul>
+          <li><a class="title" href="https://natureofcode.com/" target="_blank" rel="noopener">The Nature of Code</a> <span class="meta">· natureofcode.com</span>
+            <span class="why">Daniel Shiffmans freies Buch: natürliche Systeme mit Code simulieren, von Kräften bis zu Schwärmen.</span></li>
+          <li><a class="title" href="https://processing.org/" target="_blank" rel="noopener">Processing</a> <span class="meta">· processing.org</span>
+            <span class="why">Die Programmiersprache, mit der eine ganze Generation generative Kunst gemacht hat.</span></li>
+          <li><a class="title" href="https://zkm.de/" target="_blank" rel="noopener">ZKM Karlsruhe</a> <span class="meta">· zkm.de</span>
+            <span class="why">Zentrum für Kunst und Medien: Medienkunst, Algorithmen und ihre Geschichte.</span></li>
+          <li><a class="title" href="https://ars.electronica.art/" target="_blank" rel="noopener">Ars Electronica</a> <span class="meta">· ars.electronica.art</span>
+            <span class="why">Linz, seit 1979: Festival und Museum zwischen Kunst, Technologie und Gesellschaft.</span></li>
+        </ul>
+      </section>
+    </div>
+    <div class="note">Eine Auswahl, die weiter wächst. Die eigenen Essays über Kipppunkte stehen auf <a href="https://planet.emergenz.art/"><span class="pname">planet<span class="pdot" aria-hidden="true"></span></span></a>.</div>
+    <nav class="site-footer" aria-label="Bereiche">
+      <ul>
+        <li><a href="/emergenz/">emergenz</a></li>
+        <li><a href="/punkt/">punkt</a></li>
+        <li><a href="/art/">art</a></li>
+        <li><a href="/nachschlagen/" aria-current="page">nachschlagen</a></li>
+        <li><a href="/planetare-kognition/">planetare kognition</a></li>
+      </ul>
+      <p class="meta"><a href="/">emergenz.art</a> · <a href="/ueber/">über</a> · <a href="/neu/">neu</a> · <a href="/kontakt/">kontakt</a> · <a href="/impressum/">impressum</a></p>
+    </nav>
+  </div>
+<script>
+// Hintergrund: ein Netz, das langsam wächst. Knoten tauchen auf, nahe Knoten verbinden sich,
+// und ab und zu läuft ein kupferner Impuls über eine Verbindung.
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+let W, H, nodes = [], pulses = [], frame = 0;
+const DIST = 130;
+const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  const n = Math.min(140, Math.floor(W * H / 16000));
+  nodes = Array.from({ length: n }, () => ({
+    x: Math.random() * W, y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.08, vy: (Math.random() - 0.5) * 0.08,
+    r: 0.8 + Math.random() * 1.4, a: still ? 0.3 : 0, born: Math.floor(Math.random() * 400)
+  }));
+  pulses = [];
+}
+resize();
+window.addEventListener('resize', resize);
+
+function draw() {
+  frame++;
+  ctx.clearRect(0, 0, W, H);
+  for (const n of nodes) {
+    if (frame > n.born) n.a = Math.min(0.3, n.a + 0.003);
+    if (!still) {
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    }
+  }
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i < nodes.length; i++) {
+    const a = nodes[i];
+    if (a.a < 0.01) continue;
+    for (let j = i + 1; j < nodes.length; j++) {
+      const b = nodes[j];
+      if (b.a < 0.01) continue;
+      const dx = a.x - b.x, dy = a.y - b.y, d = Math.hypot(dx, dy);
+      if (d < DIST) {
+        const s = (1 - d / DIST) * Math.min(a.a, b.a) * 0.45;
+        ctx.strokeStyle = `rgba(232,224,208,${s})`;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        if (!still && Math.random() < 0.00012) pulses.push({ a, b, t: 0 });
+      }
+    }
+  }
+  for (const n of nodes) {
+    if (n.a < 0.01) continue;
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(232,224,208,${n.a})`; ctx.fill();
+  }
+  pulses = pulses.filter(p => p.t <= 1);
+  for (const p of pulses) {
+    p.t += 0.012;
+    const x = p.a.x + (p.b.x - p.a.x) * p.t, y = p.a.y + (p.b.y - p.a.y) * p.t;
+    ctx.beginPath(); ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(176,96,58,${0.55 * Math.sin(Math.PI * p.t)})`; ctx.fill();
+  }
+  if (!still) requestAnimationFrame(draw);
+}
+draw();
+</script>
+  <script data-goatcounter="https://emergenz.goatcounter.com/count"
+          async src="https://gc.zgo.at/count.js"></script>
+</body>
 </html>
