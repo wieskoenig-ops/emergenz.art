@@ -115,7 +115,7 @@
 
     /* Unterzeilen: sagen, in welche Tonlage ein Feld führt */
     .cell-label.has-sub { flex-direction: column; gap: 0.45em; }
-    #c4 .dot { display: inline-block; width: 0.34em; height: 0.34em; margin-left: 0.12em; border-radius: 50%; background: #b0603a; vertical-align: baseline; }
+    #c1 .dot { display: inline-block; width: 0.4em; height: 0.4em; margin-left: 0.14em; margin-right: 0.1em; border-radius: 50%; background: #b0603a; vertical-align: baseline; }
     .cell-sub {
       font-style: italic;
       font-size: clamp(0.85rem, 1.05vw, 1.05rem);
@@ -173,6 +173,7 @@
       #word { font-size: 9vw; letter-spacing: 0.25em; margin-right: -0.25em; }
       .cell-sub, #band-top .cell-sub { font-size: 0.76rem; letter-spacing: 0.06em; }
       .cell-label.has-sub { gap: 0.3em; padding: 0 0.3em; }
+      #c1 .sub-rest { display: none; } /* Handy: nur „planet●“, damit nichts umbricht */
     }
 
     @keyframes breathe {
@@ -218,7 +219,7 @@
   <div id="layout">
     <div class="band" id="band-top">
       <a class="cell" id="c0" href="/emergenz/"><span class="cell-label has-sub"><span>emergenz</span><span class="cell-sub">was es ist</span></span></a>
-      <a class="cell" id="c1" href="/punkt/"><span class="cell-label has-sub"><span>punkt</span><span class="cell-sub">wo es kippt</span></span></a>
+      <a class="cell" id="c1" href="https://planet.emergenz.art/"><span class="cell-label has-sub"><span>punkt</span><span class="cell-sub">planet<span class="dot" aria-hidden="true"></span><span class="sub-rest"> · was gerade kippt</span></span></span></a>
       <a class="cell" id="c2" href="/art/"><span class="cell-label has-sub"><span>art</span><span class="cell-sub">sehen und spielen</span></span></a>
     </div>
 
@@ -228,7 +229,7 @@
 
     <div class="band" id="band-bot">
       <a class="cell" id="c3" href="/nachschlagen/"><span class="cell-label has-sub"><span>literatur</span><span class="cell-sub">bücher, begriffe, links</span></span></a>
-      <a class="cell" id="c4" href="https://planet.emergenz.art/"><span class="cell-label has-sub"><span>planet<span class="dot" aria-hidden="true"></span></span><span class="cell-sub">was gerade kippt</span></span></a>
+      <a class="cell" id="c4" href="/neu/"><span class="cell-label has-sub"><span>neu</span><span class="cell-sub">zuletzt ergänzt</span></span></a>
       <div class="cell-stack">
         <a class="cell" id="c5" href="/kontakt/"><span class="cell-label">kontakt</span></a>
         <a class="cell" id="c6" href="/impressum/"><span class="cell-label">impressum</span></a>
